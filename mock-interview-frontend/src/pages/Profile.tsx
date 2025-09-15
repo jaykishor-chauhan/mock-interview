@@ -6,8 +6,10 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Mail, Calendar, Trophy, Target, TrendingUp, Edit3, Camera, BarChart3, Clock } from "lucide-react";
+import { Mail, Calendar, Trophy, Target, TrendingUp, BarChart3, Clock } from "lucide-react";
 import {  useState } from "react";
+
+
 
 const Profile = () => {
   const userString = localStorage.getItem("user");
@@ -58,13 +60,6 @@ const Profile = () => {
                       {getInitials(profileDetails.name)}
                     </AvatarFallback>
                   </Avatar>
-                  <Button 
-                    size="sm" 
-                    className="absolute -bottom-2 -right-2 rounded-full w-8 h-8 p-0"
-                    onClick={() => setIsEditing(true)}
-                  >
-                    <Camera className="w-4 h-4" />
-                  </Button>
                 </div>
                 
                 <div className="flex-1">
@@ -77,18 +72,9 @@ const Profile = () => {
                       </div>
                       <div className="flex items-center text-muted-foreground">
                         <Calendar className="w-4 h-4 mr-2" />
-                        Member since {profileDetails.created_at}
+                        Member since {profileDetails.created_at.slice(0, 10)}
                       </div>
                     </div>
-                    
-                    <Button 
-                      variant="outline" 
-                      onClick={() => setIsEditing(!isEditing)}
-                      className="mt-4 md:mt-0"
-                    >
-                      <Edit3 className="w-4 h-4 mr-2" />
-                      {isEditing ? "Cancel" : "Edit Profile"}
-                    </Button>
                   </div>
                 </div>
               </div>

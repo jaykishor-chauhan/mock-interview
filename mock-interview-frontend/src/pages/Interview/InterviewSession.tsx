@@ -1,27 +1,21 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
-import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { WaveformVisualizer } from "./WaveformVisualizer";
 import { AIAvatar } from "./AIAvatar";
-import { Mic, MicOff, SkipForward, Clock, Brain, MessageCircle, Monitor, Target, Zap, Users, CheckCircle, Lightbulb } from "lucide-react";
+import { Clock, Brain, MessageCircle, Monitor, Target, Zap, Users, CheckCircle } from "lucide-react";
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
+import InterviewAssistant from "../InterviewAssistant";
 
 const InterviewSession = () => {
   const navigate = useNavigate();
-  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [isFullscreen, setIsFullscreen] = useState(!!document.fullscreenElement);
   const [timeLeft, setTimeLeft] = useState(600); // 10 minutes
-  const [isRecording, setIsRecording] = useState(false);
-  const [isPaused, setIsPaused] = useState(false);
-  const [answer, setAnswer] = useState("");
-  const [isThinking, setIsThinking] = useState(false);
+  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [completedQuestions, setCompletedQuestions] = useState<number[]>([]);
+
   const [aiMood, setAiMood] = useState<'neutral' | 'thinking' | 'encouraging' | 'analyzing'>('neutral');
   const [aiMessage, setAiMessage] = useState("Ready when you are! Take your time to think through each question.");
-  const [showHints, setShowHints] = useState(false);
-  const [completedQuestions, setCompletedQuestions] = useState<number[]>([]);
-  const [isFullscreen, setIsFullscreen] = useState(!!document.fullscreenElement);
 
   const questions = [
     {
@@ -126,7 +120,6 @@ const InterviewSession = () => {
   const currentQ = questions[currentQuestion];
 
   //----------------- Start Fullscreen setup for the interview ----------------------------------
-
   const requestFullscreen = useCallback(async () => {
     try {
       if (document.documentElement.requestFullscreen) {
@@ -138,17 +131,6 @@ const InterviewSession = () => {
       setIsFullscreen(false);
     }
   }, []);
-
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (!isPaused && timeLeft > 0 && isFullscreen) {
-      interval = setInterval(() => {
-        setTimeLeft(prev => prev - 1);
-      }, 1000);
-    }
-    return () => clearInterval(interval);
-  }, [isPaused, timeLeft, isFullscreen]);
-
   useEffect(() => {
     const handleFullscreenChange = () => {
       setIsFullscreen(!!document.fullscreenElement);
@@ -156,55 +138,12 @@ const InterviewSession = () => {
     document.addEventListener('fullscreenchange', handleFullscreenChange);
     return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
   }, []);
-
-
-  //--------------------------End Fullscreen setup for the interview -------------------------------------------
+  //--------------------------End Fullscreen setup for the interview -----------------------------
 
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
     return `${mins}:${secs.toString().padStart(2, '0')}`;
-  };
-
-  const handleNextQuestion = () => {
-    if (currentQuestion < questions.length - 1) {
-      // Mark current question as completed
-      setCompletedQuestions(prev => [...prev, currentQuestion]);
-      setCurrentQuestion(prev => prev + 1);
-      setAnswer("");
-      setIsThinking(false);
-      setAiMood('neutral');
-      setAiMessage("Great progress! Let's tackle the next question.");
-      setShowHints(false);
-    } else {
-      // End interview simulation
-      setCompletedQuestions(prev => [...prev, currentQuestion]);
-      setAiMood('analyzing');
-      setAiMessage("Excellent work! I'm analyzing your responses now...");
-    }
-  };
-
-  const handleThinking = () => {
-    setIsThinking(true);
-    setAiMood('thinking');
-    setAiMessage("Take your time... I can see you're processing this thoughtfully.");
-
-    setTimeout(() => {
-      setIsThinking(false);
-      setAiMood('encouraging');
-      setAiMessage("Great approach! Remember to explain your reasoning as you go.");
-    }, 4000);
-  };
-
-  const handleRecording = () => {
-    setIsRecording(!isRecording);
-    if (!isRecording) {
-      setAiMood('analyzing');
-      setAiMessage("I'm listening carefully. Speak clearly and take your time.");
-    } else {
-      setAiMood('neutral');
-      setAiMessage("Recording stopped. Feel free to continue typing or start recording again.");
-    }
   };
 
   const getDifficultyColor = (difficulty: string) => {
@@ -263,7 +202,6 @@ const InterviewSession = () => {
       </div>
 
       <div className="relative container mx-auto px-6 py-8">
-        {/* Enhanced Header */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center space-x-6">
             <div className="relative">
@@ -321,94 +259,7 @@ const InterviewSession = () => {
                 </div>
               </CardHeader>
               <CardContent className="space-y-8">
-                <div className="relative p-6 bg-gradient-to-r from-blue-50 to-emerald-50 rounded-xl border border-blue-200/30">
-                  <div className="flex items-start space-x-4">
-                    <MessageCircle className="w-6 h-6 text-blue-600 mt-1 flex-shrink-0" />
-                    <p className="text-lg leading-relaxed text-gray-800 font-medium">{currentQ.question}</p>
-                  </div>
-                  <div className="absolute top-4 right-4">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => setShowHints(!showHints)}
-                      className="bg-white/70"
-                    >
-                      <Lightbulb className="w-4 h-4 mr-1" />
-                      Hints
-                    </Button>
-                  </div>
-                </div>
-
-                {/* Enhanced Hints */}
-                {showHints && currentQ.hints && (
-                  <div className="space-y-3 animate-in slide-in-from-top duration-300">
-                    <h4 className="font-semibold text-amber-700 flex items-center">
-                      <Lightbulb className="w-4 h-4 mr-2" />
-                      Smart Hints
-                    </h4>
-                    <div className="grid gap-2">
-                      {currentQ.hints.map((hint, index) => (
-                        <div key={index} className="flex items-center p-3 bg-amber-50 border border-amber-200 rounded-lg">
-                          <CheckCircle className="w-4 h-4 text-amber-600 mr-3 flex-shrink-0" />
-                          <span className="text-sm text-amber-800">{hint}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* Enhanced Answer Input */}
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <label className="font-semibold text-gray-900 text-lg">Your Response:</label>
-                    <div className="flex space-x-3">
-                      <Button
-                        size="sm"
-                        variant={isRecording ? "destructive" : "outline"}
-                        onClick={handleRecording}
-                        className={isRecording ? "animate-pulse" : ""}
-                      >
-                        {isRecording ? <MicOff className="w-4 h-4 mr-1" /> : <Mic className="w-4 h-4 mr-1" />}
-                        {isRecording ? "Stop" : "Record"}
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={handleThinking}
-                        disabled={isThinking}
-                        className="bg-purple-50 hover:bg-purple-100"
-                      >
-                        <Brain className="w-4 h-4 mr-1" />
-                        {isThinking ? "Processing..." : "Think Mode"}
-                      </Button>
-                    </div>
-                  </div>
-
-                  {/* Waveform Visualizer */}
-                  {isRecording && (
-                    <div className="flex justify-center p-4 bg-gray-50 rounded-lg">
-                      <WaveformVisualizer isActive={isRecording} />
-                    </div>
-                  )}
-
-                  <Textarea
-                    placeholder="Share your thoughts here... Remember to explain your reasoning step by step."
-                    value={answer}
-                    onChange={(e) => setAnswer(e.target.value)}
-                    className="min-h-[180px] resize-none text-base leading-relaxed"
-                  />
-
-                  <div className="flex justify-between items-center pt-4">
-                    <div className="text-sm text-gray-500">
-                      Words: {answer.trim().split(/\s+/).filter(word => word).length} •
-                      Characters: {answer.length}
-                    </div>
-                    <Button onClick={handleNextQuestion} className="px-8">
-                      <SkipForward className="w-4 h-4 mr-2" />
-                      {currentQuestion < questions.length - 1 ? "Next Question" : "Complete Interview"}
-                    </Button>
-                  </div>
-                </div>
+                <InterviewAssistant /> 
               </CardContent>
             </Card>
           </div>

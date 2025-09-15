@@ -22,6 +22,8 @@ import CookiePolicy from "./pages/Basic/CookiePolicy";
 import NewPassword from "./pages/Auth/NewPassword";
 import CheckPermissions from "./pages/Interview/CheckPermissions";
 import InterviewInterface from "./pages/Interview/InterviewInterface";
+// import InterviewAssistant from "./pages/InterviewAssistant";
+
 
 const queryClient = new QueryClient();
 
@@ -41,8 +43,7 @@ const App = () => (
           <Route path="interview/results" element={<InterviewResults />} />
           <Route path="/check-permissions" element={<CheckPermissions />} />
           <Route path="/test-interview" element={<InterviewInterface />} />
-
-
+          {/* <Route path="/interview-assistant" element={<InterviewAssistant /> } /> */}
 
           {/* Layout routes */}
           <Route path="/" element={<Layout />}>

@@ -133,37 +133,6 @@ const InterviewTopics = () => {
             </p>
           </div>
 
-          {/* Quick Start Section */}
-          <div className="mb-12">
-            <h2 className="text-2xl font-semibold mb-6 text-gray-900">Quick Start</h2>
-            <div className="grid md:grid-cols-3 gap-6">
-              {quickStart.map((option, index) => (
-                <Card key={index} >
-                  <CardHeader>
-                    <CardTitle className="text-lg font-medium text-gray-800">{option.title}</CardTitle>
-                    <CardDescription className="text-gray-600">{option.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex justify-between items-center mb-4 text-sm text-gray-500">
-                      <div className="flex items-center">
-                        <Clock className="w-4 h-4 mr-1" />
-                        {option.duration}
-                      </div>
-                      <Badge variant="outline">{option.questions} questions</Badge>
-                    </div>
-                    <Link to="/interview/session">
-                      <Button className="w-full flex items-center justify-center group">
-                        <Play className="w-4 h-4 mr-2 block group-hover:hidden" />
-                        <CircleCheck className="w-4 h-4 mr-2 hidden group-hover:block text-green-500" />
-                        Start Now
-                      </Button>
-                    </Link>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-
           {/* Main Categories */}
           <div className="mb-12">
             <h2 className="text-2xl font-semibold mb-6 text-gray-900">Interview Categories</h2>
@@ -306,6 +275,37 @@ const InterviewTopics = () => {
 
           </div>
 
+          {/* Quick Start Section */}
+          <div className="mb-12">
+            <h2 className="text-2xl font-semibold mb-6 text-gray-900">Quick Start</h2>
+            <div className="grid md:grid-cols-3 gap-6">
+              {quickStart.map((option, index) => (
+                <Card key={index} >
+                  <CardHeader>
+                    <CardTitle className="text-lg font-medium text-gray-800">{option.title}</CardTitle>
+                    <CardDescription className="text-gray-600">{option.description}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex justify-between items-center mb-4 text-sm text-gray-500">
+                      <div className="flex items-center">
+                        <Clock className="w-4 h-4 mr-1" />
+                        {option.duration}
+                      </div>
+                      <Badge variant="outline">{option.questions} questions</Badge>
+                    </div>
+                    <Link to="/interview/session">
+                      <Button className="w-full flex items-center justify-center group">
+                        <Play className="w-4 h-4 mr-2 block group-hover:hidden" />
+                        <CircleCheck className="w-4 h-4 mr-2 hidden group-hover:block text-green-500" />
+                        Start Now
+                      </Button>
+                    </Link>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+          
         </div>
       </div>
     </div>
