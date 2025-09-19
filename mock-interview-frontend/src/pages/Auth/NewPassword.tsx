@@ -19,14 +19,10 @@ const NewPassword = () => {
     const token = searchParams.get("token");
     const userId = searchParams.get("id");
 
-    console.log("Token:", token);
-    console.log("User ID:", userId);
-
     useEffect(() => {
         if (!token || !userId) {
             toast({
                 variant: "destructive",
-                title: "Invalid Link",
                 description: "The password reset link is incomplete.",
             });
             navigate("/forget-password");
@@ -38,7 +34,6 @@ const NewPassword = () => {
         if (password !== confirmPassword) {
             toast({
                 variant: "destructive",
-                title: "Error",
                 description: "Passwords do not match.",
             });
             return;

@@ -20,8 +20,10 @@ import PrivacyPolicy from "./pages/Basic/PrivacyPolicy";
 import TermsOfService from "./pages/Basic/TermsOfService";
 import CookiePolicy from "./pages/Basic/CookiePolicy";
 import NewPassword from "./pages/Auth/NewPassword";
+import EmailVerification from "./pages/Auth/EmailVerification";
 import CheckPermissions from "./pages/Interview/CheckPermissions";
-import InterviewInterface from "./pages/Interview/InterviewInterface";
+import VerificationSent from "./pages/VerificationSent";
+// import InterviewInterface from "./pages/Interview/InterviewInterface";
 // import InterviewAssistant from "./pages/InterviewAssistant";
 
 
@@ -38,11 +40,13 @@ const App = () => (
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route path="/verification" element={<EmailVerification />} />
+          <Route path="verification-sent" element={<VerificationSent />} />
           <Route path="/new-password" element={<NewPassword />} />
           <Route path="interview/session" element={<InterviewSession />} />
           <Route path="interview/results" element={<InterviewResults />} />
           <Route path="/check-permissions" element={<CheckPermissions />} />
-          <Route path="/test-interview" element={<InterviewInterface />} />
+          {/* <Route path="/test-interview" element={<InterviewInterface />} /> */}
           {/* <Route path="/interview-assistant" element={<InterviewAssistant /> } /> */}
 
           {/* Layout routes */}

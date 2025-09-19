@@ -45,7 +45,7 @@ const Register = () => {
         email: formData.email,
         password: formData.password,
       };
-      const response = await fetch("https://mock-interview-backend-nyby.onrender.com/api/mock-interview/user/register", {
+      const response = await fetch("http://localhost:5001/api/mock-interview/user/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -71,7 +71,9 @@ const Register = () => {
         title: "Success!",
         description: "Registration successful! You can now log in.",
       });
-      navigate("/login");
+      const email = payload.email;
+      navigate("/verification-sent", { state: { email } });
+
     } catch (error) {
       console.error("Registration error:", error);
       toast({

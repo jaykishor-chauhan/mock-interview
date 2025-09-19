@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { registerUser, loginUser } = require("../controllers/userController");
+const { registerUser, verifyEmail, loginUser } = require("../controllers/userController");
 const { resetPassword, updatePassword } = require("../controllers/resetController");
 const { getQuestions } = require("../controllers/courseController");
 
@@ -8,6 +8,7 @@ const { getQuestions } = require("../controllers/courseController");
 
 // --- User Authentication Routes ---
 router.post("/user/register", registerUser);
+router.post("/verification", verifyEmail);
 router.post("/user/login", loginUser);
 
 // --- Reset Password and New Password Routes ---
