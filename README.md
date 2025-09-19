@@ -16,7 +16,8 @@ mock-interview-frontend/  # Modern frontend (React + Vite + Tailwind CSS)
 - **middleware/**: Custom middleware (e.g., email for password reset)
 - **models/**: Mongoose models for User, Course, Questions, Token
 - **routes/apiRoutes.js**: Main API routes
-
+- **Hosted on**: rander.com
+  
 ### Frontend (`mock-interview-frontend`)
 - **src/**: Main source code
   - **components/**: Reusable UI components
@@ -25,6 +26,7 @@ mock-interview-frontend/  # Modern frontend (React + Vite + Tailwind CSS)
   - **lib/**: Utility functions
   - **assets/**: Images and static files
 - **public/**: Static assets
+- **Hosted on**: netlify.com
 
 ## Getting Started
 
