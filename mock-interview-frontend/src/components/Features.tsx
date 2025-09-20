@@ -39,10 +39,10 @@ const Features = () => {
     <section className="py-20 bg-muted/30">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl lg:text-4xl font-bold text-foreground mb-4">
+          <h2 className="text-4xl lg:text-5xl font-bold text-foreground leading-tight">
             Why Choose InterviewAI?
           </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-xl text-muted-foreground leading-relaxed mt-2"  >
             Our advanced AI technology provides the most realistic and helpful interview preparation experience.
           </p>
         </div>

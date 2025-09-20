@@ -179,12 +179,22 @@ export default function Header() {
                 </DropdownMenu>
               </>
             ) : (
-              <div className="flex items-center gap-2">
-                <Button onClick={() => navigate("/login")}>Login</Button>
-                <Button variant="outline" onClick={() => navigate("/signup")}>
-                  Sign Up
-                </Button>
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={() => navigate("/login")}
+                  className="text-blue-600 font-medium"
+                >
+                  Sign in
+                </button>
+
+                <button
+                  onClick={() => navigate("/register")}
+                  className="bg-blue-600 text-white px-4 py-2 rounded-md font-medium hover:bg-blue-700 transition"
+                >
+                  Start for free
+                </button>
               </div>
+
             )}
 
           </div>

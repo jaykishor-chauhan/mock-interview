@@ -149,3 +149,10 @@
     border: 1px solid hsl(0 0% 100% / 0.2);
   }
 }
+
+
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+}
