@@ -13,7 +13,7 @@ interface PermissionState {
 function CheckPermissions() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { active, url, formData } = location.state || {};
+  const { active, url, interviewQuestions } = location.state || {};
   const [permissions, setPermissions] = useState<PermissionState>({
     camera: false,
     microphone: false,
@@ -287,7 +287,7 @@ function CheckPermissions() {
                     All systems are ready!
                   </p>
                   <button
-                    onClick={() => navigate(url)}
+                    onClick={() => navigate(url, { state: { interviewQuestions } })}
                     className="mt-2 w-full px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all duration-300 font-bold shadow-lg shadow-green-500/30"
                   >
                     Start Interview

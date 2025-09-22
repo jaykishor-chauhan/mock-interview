@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Mic, Volume2, Play, RotateCcw, Clock, Brain, MessageCircle, Monitor, CheckCircle } from "lucide-react";
 import { useState, useEffect, useCallback, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { AIAvatar } from "./AIAvatar";
 
 type InterviewState = 'idle' | 'speaking_question' | 'listening_answer' | 'processing' | 'completed';
@@ -14,7 +14,6 @@ interface Question {
   question: string;
   category: string;
   difficulty: string;
-  hints: string[];
   expectedDuration: string;
 }
 
@@ -35,6 +34,9 @@ interface Conversation {
 
 const InterviewSession = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { interviewQuestions } = location.state || {};
+  
   const [isFullscreen, setIsFullscreen] = useState(!!document.fullscreenElement);
   const [timeLeft, setTimeLeft] = useState(600); // 10 minutes
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -70,104 +72,13 @@ const InterviewSession = () => {
   const synthRef = useRef<SpeechSynthesis | null>(null);
   const shouldContinueListening = useRef(false);
 
-  const questions: Question[] = [
-    {
-      id: 1,
-      category: "Technical",
-      difficulty: "Medium",
-      question: "Explain the difference between == and === in JavaScript, and provide examples of when you would use each.",
-      hints: ["Think about type coercion", "Consider strict vs loose equality", "Performance implications matter"],
-      expectedDuration: "3-5 minutes"
-    },
-    {
-      id: 2,
-      category: "Technical",
-      difficulty: "Hard",
-      question: "Design a function that finds the longest palindromic substring in a given string. What's the time complexity?",
-      hints: ["Consider dynamic programming", "Think about expanding around centers", "Optimize space complexity"],
-      expectedDuration: "5-7 minutes"
-    },
-    {
-      id: 3,
-      category: "Behavioral",
-      difficulty: "Medium",
-      question: "Tell me about a time when you had to work with a difficult team member. How did you handle the situation?",
-      hints: ["Use the STAR method", "Focus on your actions and the outcome", "Show emotional intelligence"],
-      expectedDuration: "4-6 minutes"
-    },
-    {
-      id: 4,
-      category: "System Design",
-      difficulty: "Hard",
-      question: "How would you design a scalable chat application that supports millions of users?",
-      hints: ["Consider microservices", "Think about real-time communication", "Database partitioning strategies"],
-      expectedDuration: "7-10 minutes"
-    },
-    {
-      id: 5,
-      category: "Technical",
-      difficulty: "Easy",
-      question: "What is the difference between null and undefined in JavaScript?",
-      hints: ["Think about variable declaration", "Consider function return values", "Memory allocation differences"],
-      expectedDuration: "2-3 minutes"
-    },
-    {
-      id: 6,
-      category: "Behavioral",
-      difficulty: "Medium",
-      question: "Describe a project you're particularly proud of. What made it successful?",
-      hints: ["Highlight your specific contributions", "Discuss challenges overcome", "Quantify the impact"],
-      expectedDuration: "4-6 minutes"
-    },
-    {
-      id: 7,
-      category: "Technical",
-      difficulty: "Medium",
-      question: "Explain how you would optimize a slow-loading web page.",
-      hints: ["Consider various optimization techniques", "Think about both frontend and backend", "Mention performance metrics"],
-      expectedDuration: "4-5 minutes"
-    },
-    {
-      id: 8,
-      category: "Behavioral",
-      difficulty: "Medium",
-      question: "How do you handle tight deadlines and pressure?",
-      hints: ["Provide specific examples", "Show your problem-solving process", "Demonstrate stress management"],
-      expectedDuration: "3-4 minutes"
-    },
-    {
-      id: 9,
-      category: "Technical",
-      difficulty: "Hard",
-      question: "Implement a LRU (Least Recently Used) cache with O(1) operations.",
-      hints: ["Think about data structures needed", "Consider hashmap + doubly linked list", "Handle edge cases"],
-      expectedDuration: "8-10 minutes"
-    },
-    {
-      id: 10,
-      category: "Behavioral",
-      difficulty: "Medium",
-      question: "Tell me about a time when you disagreed with your manager. How did you handle it?",
-      hints: ["Show respect for authority", "Focus on constructive communication", "Highlight positive outcomes"],
-      expectedDuration: "4-5 minutes"
-    },
-    {
-      id: 11,
-      category: "System Design",
-      difficulty: "Medium",
-      question: "Design a URL shortening service like bit.ly. What are the key components?",
-      hints: ["Consider encoding algorithms", "Think about database design", "Plan for scalability"],
-      expectedDuration: "6-8 minutes"
-    },
-    {
-      id: 12,
-      category: "Technical",
-      difficulty: "Medium",
-      question: "What are the differences between SQL and NoSQL databases? When would you use each?",
-      hints: ["Compare ACID properties", "Consider scalability differences", "Think about use cases"],
-      expectedDuration: "4-6 minutes"
-    }
-  ];
+  const questions: Question[] = interviewQuestions.map((item, index) => ({
+    id: item._id,
+    category: item.subType.interviewType.name,
+    difficulty: item.difficulty,
+    question: item.question,
+    expectedDuration: item.expectedDuration + " minutes"
+  }));
 
   const currentQ = questions[currentQuestion];
 
@@ -789,7 +700,7 @@ const InterviewSession = () => {
                 className="flex items-center space-x-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg shadow-lg transition-colors duration-300"
               >
                 <CheckCircle className="w-5 h-5" />
-                <span 
+                <span
                   className="font-semibold"
                 >Submit Interview</span>
               </button>

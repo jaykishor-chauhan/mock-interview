@@ -5,7 +5,7 @@ import { Code, Users, Building, Clock, Star, Play, ArrowRight, CircleCheck, Turt
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import Modal from "./Modal"
-import { verify } from "crypto";
+import { toast } from "@/hooks/use-toast";
 
 const InterviewTopics = () => {
   const navigate = useNavigate();
@@ -41,21 +41,59 @@ const InterviewTopics = () => {
   };
 
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (formData.difficulty.length === 0) {
-      alert("Please select at least one difficulty level.");
+      toast({
+        variant: "destructive",
+        description: "Please select at least one difficulty level."
+      });
       return;
     }
-    console.log('Form data:', formData);
-    navigate('/check-permissions', {
-      state: {
-        active: true,
-        url: `/interview/session?type=${selectedCategory.id}`,
-        formData: formData,
+
+    try {
+      const response = await fetch("https://mock-interview-backend-nyby.onrender.com/api/mock-interview/get-questions", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem("authToken")}`,
+        },
+        body: JSON.stringify({
+          interviewType: selectedCategory.id,
+          subType: formData.course,
+          difficulty: formData.difficulty,
+        }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        toast({
+          variant: "destructive",
+          description: data.message || "An unknown error occurred.",
+        });
+        return;
       }
 
-    });
+      const data = await response.json(); 
+      console.log("Questions received:", data.questions); // Debugging line
+
+      navigate('/check-permissions', {
+        state: {
+          active: true,
+          url: `/interview/session?type=${selectedCategory.id}`,
+          interviewQuestions: data.questions,
+        }
+      });
+
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        description: "Server error. Could not connect to the server.",
+      });
+      return;
+    }
+
   };
 
 
@@ -121,8 +159,8 @@ const InterviewTopics = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <div className="py-12">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="py-8 sm:py-12">
+        <div className="max-w-4xl mx-auto px-2 sm:px-4 lg:px-8">
           {/* Header */}
           <div className="text-center mb-12">
             <h1 className="text-4xl font-semibold mb-4 text-gray-900">
@@ -136,7 +174,7 @@ const InterviewTopics = () => {
           {/* Main Categories */}
           <div className="mb-12">
             <h2 className="text-2xl font-semibold mb-6 text-gray-900">Interview Categories</h2>
-            <div className="grid lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
               {categories.map((category) => (
                 <Card key={category.id} >
                   <CardHeader>
@@ -145,13 +183,13 @@ const InterviewTopics = () => {
                         <CardTitle className="text-xl font-semibold text-gray-900 flex items-center justify-between">
                           {category.title}
                         </CardTitle>
-                        <CardDescription className="text-gray-600 truncate">
+                        <CardDescription className="text-gray-600">
                           {category.description}
                         </CardDescription>
                       </div>
                     </div>
                   </CardHeader>
-                  <div className="px-6 pb-6">
+                  <div className="px-4 pb-4 sm:px-6 sm:pb-6">
                     <button
                       onClick={() => setSelectedCategory(category)}
                       className="group text-primary hover:text-primary-hover font-semibold transition-colors duration-200 flex items-center space-x-1"
@@ -197,8 +235,8 @@ const InterviewTopics = () => {
                   <p className="mb-6 text-gray-700">{selectedCategory.description}</p>
 
                   <form onSubmit={handleSubmit}>
-                    <div className="bg-white rounded-lg p-6 shadow-sm space-y-6 text-sm text-gray-700">
-                      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="bg-white rounded-lg p-4 sm:p-6 shadow-sm space-y-6 text-sm text-gray-700">
+                      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
                         <div>
                           <label
                             htmlFor="course"
@@ -240,7 +278,7 @@ const InterviewTopics = () => {
                         <p className="uppercase tracking-wide text-xs font-semibold text-gray-500 mb-2">
                           Difficulty
                         </p>
-                        <div className="flex flex-wrap gap-4 text-sm text-gray-800">
+                        <div className="flex flex-wrap gap-2 sm:gap-4 text-sm text-gray-800">
                           {selectedCategory.level.map((level) => (
                             <label
                               key={level}
@@ -278,7 +316,7 @@ const InterviewTopics = () => {
           {/* Quick Start Section */}
           <div className="mb-12">
             <h2 className="text-2xl font-semibold mb-6 text-gray-900">Quick Start</h2>
-            <div className="grid md:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
               {quickStart.map((option, index) => (
                 <Card key={index} >
                   <CardHeader>
@@ -286,7 +324,7 @@ const InterviewTopics = () => {
                     <CardDescription className="text-gray-600">{option.description}</CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="flex justify-between items-center mb-4 text-sm text-gray-500">
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 text-sm text-gray-500 gap-2 sm:gap-0">
                       <div className="flex items-center">
                         <Clock className="w-4 h-4 mr-1" />
                         {option.duration}
@@ -305,7 +343,7 @@ const InterviewTopics = () => {
               ))}
             </div>
           </div>
-          
+
         </div>
       </div>
     </div>

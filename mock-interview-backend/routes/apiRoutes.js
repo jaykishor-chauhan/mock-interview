@@ -2,7 +2,9 @@ const express = require("express");
 const router = express.Router();
 const { registerUser, verifyEmail, loginUser } = require("../controllers/userController");
 const { resetPassword, updatePassword } = require("../controllers/resetController");
-const { getQuestions } = require("../controllers/courseController");
+const { getQuestions } = require("../controllers/questionController");
+
+const { addQuestion } = require("../controllers/addQuestionController");
 
 
 
@@ -16,7 +18,12 @@ router.post("/reset-password", resetPassword);
 router.post("/update-password", updatePassword);
 
 // --- Interview Routes ---
-router.get("/get-questions/course:name", getQuestions);
+router.post("/get-questions", getQuestions);
 
+
+
+
+// Admin Routes can be added here
+router.post("/admin/add-question", addQuestion);
 
 module.exports = router; 

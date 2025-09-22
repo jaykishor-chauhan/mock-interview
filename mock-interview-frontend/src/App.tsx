@@ -23,6 +23,7 @@ import NewPassword from "./pages/Auth/NewPassword";
 import EmailVerification from "./pages/Auth/EmailVerification";
 import CheckPermissions from "./pages/Interview/CheckPermissions";
 import VerificationSent from "./pages/VerificationSent";
+import AddQuestionForm from "./pages/AddQuestionForm";
 // import InterviewInterface from "./pages/Interview/InterviewInterface";
 // import InterviewAssistant from "./pages/InterviewAssistant";
 
@@ -48,6 +49,10 @@ const App = () => (
           <Route path="/check-permissions" element={<CheckPermissions />} />
           {/* <Route path="/test-interview" element={<InterviewInterface />} /> */}
           {/* <Route path="/interview-assistant" element={<InterviewAssistant /> } /> */}
+
+
+
+          <Route path="/add-question" element={<AddQuestionForm />} />
 
           {/* Layout routes */}
           <Route path="/" element={<Layout />}>
