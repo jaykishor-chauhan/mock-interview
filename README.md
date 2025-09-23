@@ -79,11 +79,10 @@ The frontend will typically run on `http://localhost:5173` and the backend on `h
 - User profile management
 - Responsive and modern UI
 
-## Contributing
-Contributions are welcome! Please open issues or submit pull requests for improvements or bug fixes.
+
+🔗 [View Live Website](https://aipoweredmockinterview.netlify.app)
+
+
 
 ## License
 This project is licensed under the MIT License.
-
----
-Feel free to update this README as the project evolves.

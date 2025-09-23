@@ -28,7 +28,7 @@ export default function NotFound() {
             </div>
 
             {/* Actions */}
-            <div className="flex flex-col sm:flex-row gap-3 pt-4">
+            <div className="flex justify-center pt-4">
               <Button 
                 onClick={() => navigate(-1)} 
                 variant="outline" 
@@ -37,33 +37,6 @@ export default function NotFound() {
                 <ArrowLeft className="h-4 w-4" />
                 Go Back
               </Button>
-              <Button asChild className="flex items-center gap-2">
-                <Link to="/">
-                  <Home className="h-4 w-4" />
-                  Go Home
-                </Link>
-              </Button>
-            </div>
-
-            {/* Helpful Links */}
-            <div className="pt-4 border-t">
-              <p className="text-sm text-muted-foreground mb-3">
-                You might be looking for:
-              </p>
-              <div className="flex flex-wrap gap-2 justify-center">
-                <Button asChild variant="ghost" size="sm">
-                  <Link to="/interviews">Interviews</Link>
-                </Button>
-                <Button asChild variant="ghost" size="sm">
-                  <Link to="/profile">Profile</Link>
-                </Button>
-                <Button asChild variant="ghost" size="sm">
-                  <Link to="/blogs">Blogs</Link>
-                </Button>
-                <Button asChild variant="ghost" size="sm">
-                  <Link to="/contact">Contact</Link>
-                </Button>
-              </div>
             </div>
           </CardContent>
         </Card>
