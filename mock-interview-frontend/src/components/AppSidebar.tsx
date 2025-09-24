@@ -58,12 +58,11 @@ export function AppSidebar() {
 
   const getNavClassName = (isActiveRoute: boolean) => {
     const baseClasses = "flex items-center gap-3 w-full rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-300";
-
-    const activeClasses = "bg-primary/20 text-primary shadow-md hover:bg-primary/30";
-    const inactiveClasses = "text-gray-600 hover:bg-primary/10 hover:text-primary";
-
+    const activeClasses = "bg-blue-100 text-blue-700 shadow-md hover:bg-blue-200"; 
+    const inactiveClasses = "text-gray-600 hover:bg-blue-50 hover:text-blue-700";
     return `${baseClasses} ${isActiveRoute ? activeClasses : inactiveClasses}`;
   };
+
 
 
   if (!token) return null; // Return nothing if no token

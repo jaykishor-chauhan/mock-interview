@@ -6,9 +6,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
-import { 
-  Send, 
-  Users, 
+import {
+  Send,
+  Users,
   Building,
   Zap,
   Shield,
@@ -45,7 +45,7 @@ const RequestQuote = () => {
   const handleFeatureChange = (feature: string, checked: boolean) => {
     setFormData(prev => ({
       ...prev,
-      features: checked 
+      features: checked
         ? [...prev.features, feature]
         : prev.features.filter(f => f !== feature)
     }));
@@ -89,43 +89,42 @@ const RequestQuote = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gray-50">
       <div className="py-12">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
           <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold mb-4">Request Custom Quote</h1>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            <h1 className="text-4xl font-bold text-gray-900 mb-4">Request Custom Quote</h1>
+            <p className="text-base text-gray-500 max-w-2xl mx-auto">
               Get a personalized solution for your organization's interview training needs
             </p>
           </div>
 
           {/* Service Options */}
           <div className="mb-12">
-            <h2 className="text-2xl font-semibold mb-6 text-center">Choose Your Service</h2>
+            <h2 className="text-2xl font-semibold text-gray-900 mb-6 text-center">Choose Your Service</h2>
             <div className="grid lg:grid-cols-3 gap-6">
               {services.map((service, index) => (
-                <Card 
-                  key={index} 
-                  className={`group hover:shadow-xl transition-all duration-300 hover:-translate-y-1 cursor-pointer ${
-                    formData.serviceType === service.title ? 'ring-2 ring-primary bg-primary/5' : ''
-                  }`}
+                <Card
+                  key={index}
+                  className={`group hover:shadow-md transition-all duration-300 hover:-translate-y-1 cursor-pointer bg-white border border-gray-200 rounded-xl ${formData.serviceType === service.title ? "ring-2 ring-primary bg-primary/5" : ""
+                    }`}
                   onClick={() => handleInputChange("serviceType", service.title)}
                 >
                   <CardHeader>
                     <div className="flex items-center justify-between">
                       <service.icon className="w-8 h-8 text-primary" />
                       {service.popular && (
-                        <Badge className="bg-yellow-500 text-yellow-950">Popular</Badge>
+                        <Badge className="bg-yellow-100 text-yellow-800 border border-yellow-300">Popular</Badge>
                       )}
                     </div>
-                    <CardTitle className="text-xl">{service.title}</CardTitle>
-                    <CardDescription>{service.description}</CardDescription>
+                    <CardTitle className="text-lg font-semibold text-gray-900">{service.title}</CardTitle>
+                    <CardDescription className="text-sm text-gray-500">{service.description}</CardDescription>
                   </CardHeader>
                   <CardContent>
                     <ul className="space-y-2">
                       {service.features.map((feature, idx) => (
-                        <li key={idx} className="flex items-center text-sm">
+                        <li key={idx} className="flex items-center text-sm text-gray-600">
                           <CheckCircle className="w-4 h-4 text-green-500 mr-2" />
                           {feature}
                         </li>
@@ -139,10 +138,10 @@ const RequestQuote = () => {
 
           <div className="grid lg:grid-cols-2 gap-12">
             {/* Quote Form */}
-            <Card className="bg-gradient-card border-0">
+            <Card className="bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md">
               <CardHeader>
-                <CardTitle>Tell Us About Your Needs</CardTitle>
-                <CardDescription>
+                <CardTitle className="text-xl font-semibold text-gray-900">Tell Us About Your Needs</CardTitle>
+                <CardDescription className="text-sm text-gray-500">
                   Fill out this form and we'll prepare a custom quote within 24 hours
                 </CardDescription>
               </CardHeader>
@@ -150,7 +149,7 @@ const RequestQuote = () => {
                 <form onSubmit={handleSubmit} className="space-y-6">
                   {/* Contact Information */}
                   <div className="space-y-4">
-                    <h3 className="font-semibold">Contact Information</h3>
+                    <h3 className="font-semibold text-gray-900">Contact Information</h3>
                     <div className="grid md:grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label htmlFor="name">Full Name *</Label>
@@ -200,7 +199,7 @@ const RequestQuote = () => {
 
                   {/* Project Details */}
                   <div className="space-y-4">
-                    <h3 className="font-semibold">Project Details</h3>
+                    <h3 className="font-semibold text-gray-900">Project Details</h3>
                     <div className="grid md:grid-cols-2 gap-4">
                       <div className="space-y-2">
                         <Label htmlFor="employees">Company Size</Label>
@@ -252,7 +251,7 @@ const RequestQuote = () => {
 
                   {/* Features */}
                   <div className="space-y-4">
-                    <h3 className="font-semibold">Desired Features</h3>
+                    <h3 className="font-semibold text-gray-900">Desired Features</h3>
                     <div className="grid grid-cols-2 gap-3">
                       {availableFeatures.map((feature) => (
                         <div key={feature} className="flex items-center space-x-2">
@@ -261,7 +260,9 @@ const RequestQuote = () => {
                             checked={formData.features.includes(feature)}
                             onCheckedChange={(checked) => handleFeatureChange(feature, checked as boolean)}
                           />
-                          <Label htmlFor={feature} className="text-sm">{feature}</Label>
+                          <Label htmlFor={feature} className="text-sm text-gray-600">
+                            {feature}
+                          </Label>
                         </div>
                       ))}
                     </div>
@@ -290,62 +291,50 @@ const RequestQuote = () => {
             {/* Information Panel */}
             <div className="space-y-6">
               {/* Process */}
-              <Card>
+              <Card className="bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md">
                 <CardHeader>
-                  <CardTitle>Our Process</CardTitle>
-                  <CardDescription>How we deliver your custom solution</CardDescription>
+                  <CardTitle className="text-lg font-semibold text-gray-900">Our Process</CardTitle>
+                  <CardDescription className="text-sm text-gray-500">How we deliver your custom solution</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="flex items-start space-x-3">
-                    <div className="w-6 h-6 bg-primary rounded-full flex items-center justify-center text-primary-foreground text-sm font-semibold">1</div>
-                    <div>
-                      <h4 className="font-medium">Requirements Analysis</h4>
-                      <p className="text-sm text-muted-foreground">We analyze your needs and prepare a detailed proposal</p>
+                  {[
+                    { step: "1", title: "Requirements Analysis", desc: "We analyze your needs and prepare a detailed proposal" },
+                    { step: "2", title: "Custom Quote", desc: "Receive a detailed quote within 24 hours" },
+                    { step: "3", title: "Implementation", desc: "Our team delivers your solution on time" },
+                    { step: "4", title: "Ongoing Support", desc: "Continuous support and optimization" },
+                  ].map((item) => (
+                    <div key={item.step} className="flex items-start space-x-3">
+                      <div className="w-6 h-6 bg-primary rounded-full flex items-center justify-center text-primary-foreground text-sm font-semibold">
+                        {item.step}
+                      </div>
+                      <div>
+                        <h4 className="font-medium text-gray-900">{item.title}</h4>
+                        <p className="text-sm text-gray-500">{item.desc}</p>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <div className="w-6 h-6 bg-primary rounded-full flex items-center justify-center text-primary-foreground text-sm font-semibold">2</div>
-                    <div>
-                      <h4 className="font-medium">Custom Quote</h4>
-                      <p className="text-sm text-muted-foreground">Receive a detailed quote within 24 hours</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <div className="w-6 h-6 bg-primary rounded-full flex items-center justify-center text-primary-foreground text-sm font-semibold">3</div>
-                    <div>
-                      <h4 className="font-medium">Implementation</h4>
-                      <p className="text-sm text-muted-foreground">Our team delivers your solution on time</p>
-                    </div>
-                  </div>
-                  <div className="flex items-start space-x-3">
-                    <div className="w-6 h-6 bg-primary rounded-full flex items-center justify-center text-primary-foreground text-sm font-semibold">4</div>
-                    <div>
-                      <h4 className="font-medium">Ongoing Support</h4>
-                      <p className="text-sm text-muted-foreground">Continuous support and optimization</p>
-                    </div>
-                  </div>
+                  ))}
                 </CardContent>
               </Card>
 
               {/* Contact Options */}
-              <Card>
+              <Card className="bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md">
                 <CardHeader>
-                  <CardTitle>Prefer to Talk?</CardTitle>
-                  <CardDescription>Get in touch with our sales team directly</CardDescription>
+                  <CardTitle className="text-lg font-semibold text-gray-900">Prefer to Talk?</CardTitle>
+                  <CardDescription className="text-sm text-gray-500">Get in touch with our sales team directly</CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="flex items-center space-x-3">
                     <Phone className="w-5 h-5 text-primary" />
                     <div>
-                      <p className="font-medium">Call us directly</p>
-                      <p className="text-sm text-muted-foreground">+1 (555) 123-4567</p>
+                      <p className="font-medium text-gray-900">Call us directly</p>
+                      <p className="text-sm text-gray-500">+1 (555) 123-4567</p>
                     </div>
                   </div>
                   <div className="flex items-center space-x-3">
                     <Calendar className="w-5 h-5 text-primary" />
                     <div>
-                      <p className="font-medium">Schedule a demo</p>
-                      <p className="text-sm text-muted-foreground">Book a 30-minute consultation</p>
+                      <p className="font-medium text-gray-900">Schedule a demo</p>
+                      <p className="text-sm text-gray-500">Book a 30-minute consultation</p>
                     </div>
                   </div>
                   <Button variant="outline" className="w-full">
@@ -356,9 +345,9 @@ const RequestQuote = () => {
               </Card>
 
               {/* Guarantee */}
-              <Card className="bg-green-50 border-green-200">
+              <Card className="bg-green-50 border border-green-200 rounded-xl shadow-sm hover:shadow-md">
                 <CardHeader>
-                  <CardTitle className="flex items-center text-green-800">
+                  <CardTitle className="flex items-center text-green-800 text-lg font-semibold">
                     <Shield className="w-5 h-5 mr-2" />
                     Our Guarantee
                   </CardTitle>
@@ -389,6 +378,7 @@ const RequestQuote = () => {
         </div>
       </div>
     </div>
+
   );
 };
 

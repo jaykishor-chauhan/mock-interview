@@ -3,10 +3,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { 
-  Search, 
-  Calendar, 
-  Clock, 
+import {
+  Search,
+  Calendar,
+  Clock,
   User,
   ArrowRight,
   TrendingUp,
@@ -14,7 +14,6 @@ import {
   Filter
 } from "lucide-react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
 
 const Blogs = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -120,32 +119,33 @@ const Blogs = () => {
 
   const filteredPosts = blogPosts.filter(post => {
     const matchesSearch = post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         post.excerpt.toLowerCase().includes(searchTerm.toLowerCase());
+      post.excerpt.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === "All" || post.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gray-50">
       <div className="py-12">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+
           {/* Header */}
           <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold mb-4">Interview Insights Blog</h1>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            <h1 className="text-3xl font-bold text-gray-900 mb-4">Interview Insights Blog</h1>
+            <p className="text-lg text-gray-500 max-w-2xl mx-auto">
               Expert tips, success stories, and industry insights to help you ace your interviews
             </p>
           </div>
 
-          {/* Search and Filter */}
+          {/* Search & Filter */}
           <div className="flex flex-col md:flex-row gap-4 mb-8">
             <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
               <Input
                 placeholder="Search articles..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
+                className="pl-10 border border-gray-200"
               />
             </div>
             <div className="flex gap-2 overflow-x-auto">
@@ -154,8 +154,12 @@ const Blogs = () => {
                   key={category}
                   variant={selectedCategory === category ? "default" : "outline"}
                   size="sm"
+                  className={
+                    selectedCategory === category
+                      ? "bg-green-500 text-white hover:shadow-md"
+                      : "border border-gray-200 text-gray-900"
+                  }
                   onClick={() => setSelectedCategory(category)}
-                  className="whitespace-nowrap"
                 >
                   {category}
                 </Button>
@@ -166,13 +170,13 @@ const Blogs = () => {
           {/* Featured Posts */}
           {selectedCategory === "All" && (
             <div className="mb-12">
-              <h2 className="text-2xl font-semibold mb-6 flex items-center">
-                <Star className="w-5 h-5 mr-2 text-yellow-500" />
+              <h2 className="text-xl font-semibold text-gray-900 mb-6 flex items-center">
+                <Star className="w-5 h-5 mr-2 text-amber-500" />
                 Featured Articles
               </h2>
               <div className="grid lg:grid-cols-2 gap-6">
                 {featuredPosts.map((post) => (
-                  <Card key={post.id} className="group hover:shadow-xl transition-all duration-300 overflow-hidden">
+                  <Card key={post.id} className="group hover:shadow-md hover:-translate-y-1 transition-all border border-gray-200">
                     <div className="aspect-video overflow-hidden">
                       <img
                         src={post.image}
@@ -182,16 +186,16 @@ const Blogs = () => {
                     </div>
                     <CardHeader>
                       <div className="flex items-center justify-between mb-2">
-                        <Badge>{post.category}</Badge>
-                        <div className="flex items-center text-sm text-muted-foreground">
+                        <Badge className="bg-gray-100 text-gray-900 border border-gray-200">{post.category}</Badge>
+                        <div className="flex items-center text-xs text-gray-500">
                           <TrendingUp className="w-4 h-4 mr-1" />
                           {post.views} views
                         </div>
                       </div>
-                      <CardTitle className="text-xl group-hover:text-primary transition-colors">
+                      <CardTitle className="text-lg font-semibold text-gray-900 group-hover:text-green-600 transition-colors">
                         {post.title}
                       </CardTitle>
-                      <CardDescription className="text-base leading-relaxed">
+                      <CardDescription className="text-sm text-gray-500 leading-relaxed">
                         {post.excerpt}
                       </CardDescription>
                     </CardHeader>
@@ -200,12 +204,12 @@ const Blogs = () => {
                         <div className="flex items-center space-x-3">
                           <Avatar className="w-8 h-8">
                             <AvatarFallback className="text-xs">
-                              {post.author.split(' ').map(n => n[0]).join('')}
+                              {post.author.split(" ").map((n) => n[0]).join("")}
                             </AvatarFallback>
                           </Avatar>
-                          <div className="text-sm">
-                            <p className="font-medium">{post.author}</p>
-                            <div className="flex items-center text-muted-foreground">
+                          <div className="text-xs text-gray-500">
+                            <p className="font-medium text-gray-900">{post.author}</p>
+                            <div className="flex items-center">
                               <Calendar className="w-3 h-3 mr-1" />
                               {post.date}
                               <Clock className="w-3 h-3 ml-3 mr-1" />
@@ -213,7 +217,7 @@ const Blogs = () => {
                             </div>
                           </div>
                         </div>
-                        <Button size="sm" className="group-hover:translate-x-1 transition-transform">
+                        <Button size="sm" className="bg-green-500 text-white hover:shadow-md flex items-center">
                           Read More
                           <ArrowRight className="w-4 h-4 ml-1" />
                         </Button>
@@ -227,22 +231,28 @@ const Blogs = () => {
 
           {/* All Posts */}
           <div>
-            <h2 className="text-2xl font-semibold mb-6">
+            <h2 className="text-xl font-semibold text-gray-900 mb-6">
               {selectedCategory === "All" ? "Latest Articles" : `${selectedCategory} Articles`}
-              <span className="text-sm font-normal text-muted-foreground ml-2">
+              <span className="text-sm font-normal text-gray-500 ml-2">
                 ({filteredPosts.length} articles)
               </span>
             </h2>
-            
+
             {filteredPosts.length === 0 ? (
-              <Card className="text-center py-12">
+              <Card className="text-center py-12 border border-gray-200">
                 <CardContent>
-                  <Search className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">No articles found</h3>
-                  <p className="text-muted-foreground mb-4">
+                  <Search className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">No articles found</h3>
+                  <p className="text-sm text-gray-500 mb-4">
                     Try adjusting your search or filter criteria
                   </p>
-                  <Button onClick={() => { setSearchTerm(""); setSelectedCategory("All"); }}>
+                  <Button
+                    onClick={() => {
+                      setSearchTerm("");
+                      setSelectedCategory("All");
+                    }}
+                    className="bg-green-500 text-white"
+                  >
                     Clear Filters
                   </Button>
                 </CardContent>
@@ -250,7 +260,10 @@ const Blogs = () => {
             ) : (
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {filteredPosts.map((post) => (
-                  <Card key={post.id} className="group hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
+                  <Card
+                    key={post.id}
+                    className="group hover:shadow-md hover:-translate-y-1 transition-all border border-gray-200"
+                  >
                     <div className="aspect-video overflow-hidden">
                       <img
                         src={post.image}
@@ -260,16 +273,16 @@ const Blogs = () => {
                     </div>
                     <CardHeader>
                       <div className="flex items-center justify-between mb-2">
-                        <Badge variant="outline">{post.category}</Badge>
-                        <div className="flex items-center text-sm text-muted-foreground">
+                        <Badge className="bg-gray-100 text-gray-900 border border-gray-200">{post.category}</Badge>
+                        <div className="flex items-center text-xs text-gray-500">
                           <TrendingUp className="w-4 h-4 mr-1" />
                           {post.views}
                         </div>
                       </div>
-                      <CardTitle className="text-lg group-hover:text-primary transition-colors line-clamp-2">
+                      <CardTitle className="text-base font-semibold text-gray-900 line-clamp-2 group-hover:text-green-600">
                         {post.title}
                       </CardTitle>
-                      <CardDescription className="line-clamp-3">
+                      <CardDescription className="text-sm text-gray-500 line-clamp-3">
                         {post.excerpt}
                       </CardDescription>
                     </CardHeader>
@@ -278,15 +291,15 @@ const Blogs = () => {
                         <div className="flex items-center space-x-2">
                           <Avatar className="w-6 h-6">
                             <AvatarFallback className="text-xs">
-                              {post.author.split(' ').map(n => n[0]).join('')}
+                              {post.author.split(" ").map((n) => n[0]).join("")}
                             </AvatarFallback>
                           </Avatar>
-                          <div className="text-xs text-muted-foreground">
-                            <p>{post.author}</p>
+                          <div className="text-xs text-gray-500">
+                            <p className="text-gray-900">{post.author}</p>
                             <p>{post.date} • {post.readTime}</p>
                           </div>
                         </div>
-                        <Button size="sm" variant="ghost" className="text-primary hover:text-primary-hover">
+                        <Button size="sm" variant="outline" className="border border-gray-200 text-gray-900">
                           Read
                           <ArrowRight className="w-3 h-3 ml-1" />
                         </Button>
@@ -299,10 +312,10 @@ const Blogs = () => {
           </div>
 
           {/* Newsletter Signup */}
-          <Card className="mt-12 bg-gradient-primary text-primary-foreground">
+          <Card className="mt-12 bg-green-500 text-white rounded-xl">
             <CardHeader className="text-center">
-              <CardTitle className="text-2xl">Stay Updated</CardTitle>
-              <CardDescription className="text-primary-foreground/80">
+              <CardTitle className="text-xl font-semibold">Stay Updated</CardTitle>
+              <CardDescription className="text-sm text-white/80">
                 Get the latest interview tips and career insights delivered to your inbox
               </CardDescription>
             </CardHeader>
@@ -312,7 +325,7 @@ const Blogs = () => {
                   placeholder="Enter your email"
                   className="bg-white/10 border-white/20 text-white placeholder:text-white/70"
                 />
-                <Button variant="secondary" className="whitespace-nowrap">
+                <Button className="bg-white text-green-600 hover:bg-gray-100">
                   Subscribe
                 </Button>
               </div>
@@ -321,6 +334,7 @@ const Blogs = () => {
         </div>
       </div>
     </div>
+
   );
 };
 

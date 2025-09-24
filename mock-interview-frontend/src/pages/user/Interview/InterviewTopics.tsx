@@ -75,7 +75,7 @@ const InterviewTopics = () => {
         return;
       }
 
-      const data = await response.json(); 
+      const data = await response.json();
       console.log("Questions received:", data.questions); // Debugging line
 
       navigate('/check-permissions', {
@@ -151,39 +151,46 @@ const InterviewTopics = () => {
     },
     {
       title: "Mixed Practice",
-      description: "Random questions from all categories",
+      description: "Random questions from all",
       duration: "45 min",
       questions: 10
     },
   ];
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="py-8 sm:py-12">
-        <div className="max-w-4xl mx-auto px-2 sm:px-4 lg:px-8">
+    <div className="min-h-screen bg-gray-50">
+      <div className="py-12">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
           <div className="text-center mb-12">
-            <h1 className="text-4xl font-semibold mb-4 text-gray-900">
+            <h1 className="text-3xl font-bold mb-4 text-gray-900">
               Select Your Interview Type
             </h1>
-            <p className="text-base text-gray-600 max-w-xl mx-auto">
-              Choose the interview format that best suits your goals. Each option is designed to prepare you for success in specific professional scenarios.
+            <p className="text-base text-gray-500 max-w-xl mx-auto">
+              Choose the interview format that best suits your goals. Each option is
+              designed to prepare you for success in specific professional
+              scenarios.
             </p>
           </div>
 
           {/* Main Categories */}
           <div className="mb-12">
-            <h2 className="text-2xl font-semibold mb-6 text-gray-900">Interview Categories</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+            <h2 className="text-xl font-semibold mb-6 text-gray-900">
+              Interview Categories
+            </h2>
+            <div className="grid gird-cols-1 md:grid-cols-3 sm:grid-cols-2 gap-4 md:gap-6">
               {categories.map((category) => (
-                <Card key={category.id} >
+                <Card
+                  key={category.id}
+                  className="p-1 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md"
+                >
                   <CardHeader>
                     <div className="flex items-center space-x-4">
                       <div className="flex-1">
-                        <CardTitle className="text-xl font-semibold text-gray-900 flex items-center justify-between">
+                        <CardTitle className="text-lg font-semibold text-gray-900 flex items-center justify-between">
                           {category.title}
                         </CardTitle>
-                        <CardDescription className="text-gray-600">
+                        <CardDescription className="text-sm text-gray-500">
                           {category.description}
                         </CardDescription>
                       </div>
@@ -192,7 +199,7 @@ const InterviewTopics = () => {
                   <div className="px-4 pb-4 sm:px-6 sm:pb-6">
                     <button
                       onClick={() => setSelectedCategory(category)}
-                      className="group text-primary hover:text-primary-hover font-semibold transition-colors duration-200 flex items-center space-x-1"
+                      className="group text-primary hover:text-primary-hover font-semibold transition-colors duration-200 flex items-center space-x-1 text-sm"
                     >
                       <span>View Details</span>
                       <svg
@@ -206,19 +213,15 @@ const InterviewTopics = () => {
                       </svg>
                     </button>
                   </div>
-
                 </Card>
               ))}
             </div>
 
             {/* Modal for showing expanded details */}
-            <Modal
-              isOpen={!!selectedCategory}
-              onClose={() => setSelectedCategory(null)}
-            >
+            <Modal isOpen={!!selectedCategory} onClose={() => setSelectedCategory(null)}>
               {selectedCategory && (
                 <>
-                  <h3 className="text-2xl font-semibold mb-4 flex items-center space-x-3">
+                  <h3 className="text-xl font-semibold mb-4 flex items-center space-x-3 text-gray-900">
                     <div
                       className={`${selectedCategory.color} w-10 h-10 rounded-lg flex items-center justify-center`}
                     >
@@ -226,13 +229,15 @@ const InterviewTopics = () => {
                     </div>
                     <span>{selectedCategory.title}</span>
                     {selectedCategory.popular && (
-                      <Badge className="bg-yellow-400 text-yellow-900 flex items-center px-2 py-0.5 rounded">
+                      <Badge className="bg-yellow-400 text-yellow-900 flex items-center px-2 py-0.5 rounded text-xs">
                         <Star className="w-4 h-4 mr-1" />
                         Popular
                       </Badge>
                     )}
                   </h3>
-                  <p className="mb-6 text-gray-700">{selectedCategory.description}</p>
+                  <p className="mb-6 text-sm text-gray-500">
+                    {selectedCategory.description}
+                  </p>
 
                   <form onSubmit={handleSubmit}>
                     <div className="bg-white rounded-lg p-4 sm:p-6 shadow-sm space-y-6 text-sm text-gray-700">
@@ -250,7 +255,7 @@ const InterviewTopics = () => {
                             value={formData.course}
                             onChange={handleChange}
                             required
-                            className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-800"
+                            className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm bg-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-800 text-sm"
                           >
                             <option value="" disabled>
                               Select a course
@@ -265,13 +270,17 @@ const InterviewTopics = () => {
                           <p className="uppercase tracking-wide text-xs font-semibold text-gray-500 mb-1">
                             Duration
                           </p>
-                          <p className="font-medium text-gray-800">{selectedCategory.duration}</p>
+                          <p className="font-medium text-gray-900 text-sm">
+                            {selectedCategory.duration}
+                          </p>
                         </div>
                         <div>
                           <p className="uppercase tracking-wide text-xs font-semibold text-gray-500 mb-1">
                             Questions
                           </p>
-                          <p className="font-medium text-gray-800">{selectedCategory.questions}+</p>
+                          <p className="font-medium text-gray-900 text-sm">
+                            {selectedCategory.questions}+
+                          </p>
                         </div>
                       </div>
                       <div>
@@ -301,7 +310,7 @@ const InterviewTopics = () => {
 
                     <Button
                       type="submit"
-                      className="w-full bg-primary hover:bg-primary-hover transition-colors duration-200 flex items-center justify-center"
+                      className="w-full bg-primary hover:bg-primary-hover transition-colors duration-200 flex items-center justify-center mt-4 text-sm font-medium"
                     >
                       Start {selectedCategory.title}
                       <ArrowRight className="w-5 h-5 ml-2" />
@@ -310,29 +319,37 @@ const InterviewTopics = () => {
                 </>
               )}
             </Modal>
-
           </div>
 
           {/* Quick Start Section */}
-          <div className="mb-12">
-            <h2 className="text-2xl font-semibold mb-6 text-gray-900">Quick Start</h2>
+          <div className="mb-2">
+            <h2 className="text-xl font-semibold mb-6 text-gray-900">Quick Start</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
               {quickStart.map((option, index) => (
-                <Card key={index} >
+                <Card
+                  key={index}
+                  className="p-1 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md"
+                >
                   <CardHeader>
-                    <CardTitle className="text-lg font-medium text-gray-800">{option.title}</CardTitle>
-                    <CardDescription className="text-gray-600">{option.description}</CardDescription>
+                    <CardTitle className="text-base font-medium text-gray-900">
+                      {option.title}
+                    </CardTitle>
+                    <CardDescription className="text-sm text-gray-500">
+                      {option.description}
+                    </CardDescription>
                   </CardHeader>
                   <CardContent>
-                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 text-sm text-gray-500 gap-2 sm:gap-0">
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 text-xs text-gray-500 gap-2 sm:gap-0">
                       <div className="flex items-center">
                         <Clock className="w-4 h-4 mr-1" />
                         {option.duration}
                       </div>
-                      <Badge variant="outline">{option.questions} questions</Badge>
+                      <Badge variant="outline" className="text-xs">
+                        {option.questions} questions
+                      </Badge>
                     </div>
                     <Link to="/interview/session">
-                      <Button className="w-full flex items-center justify-center group">
+                      <Button className="w-full flex items-center justify-center group text-sm font-medium">
                         <Play className="w-4 h-4 mr-2 block group-hover:hidden" />
                         <CircleCheck className="w-4 h-4 mr-2 hidden group-hover:block text-green-500" />
                         Start Now
@@ -343,10 +360,10 @@ const InterviewTopics = () => {
               ))}
             </div>
           </div>
-
         </div>
       </div>
     </div>
+
   );
 };
 

@@ -14,53 +14,53 @@ export default function TermsOfService() {
               <Scale className="h-8 w-8 text-primary" />
             </div>
           </div>
-          <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+          <h1 className="text-3xl font-bold text-gray-900 mb-4">
             Terms of Service
           </h1>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-base text-gray-500 max-w-2xl mx-auto">
             Please read these terms carefully before using our AI Mock Interview System.
           </p>
         </div>
 
         {/* Important Notice */}
-        <Alert className="mb-8 border-primary/20">
+        <Alert className="mb-8 border border-gray-200 rounded-xl shadow-sm">
           <AlertTriangle className="h-4 w-4" />
-          <AlertDescription>
-            <strong>Effective Date:</strong> December 2024. By accessing or using our service, 
+          <AlertDescription className="text-sm text-gray-500">
+            <strong>Effective Date:</strong> December 2024. By accessing or using our service,
             you agree to be bound by these Terms of Service.
           </AlertDescription>
         </Alert>
 
         {/* Terms Content */}
         <div className="space-y-8">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <FileCheck className="h-5 w-5 text-primary" />
+          <Card className="p-6 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md">
+            <CardHeader className="px-0 pt-0">
+              <CardTitle className="flex items-center text-xl font-semibold text-gray-900">
+                <FileCheck className="h-5 w-5 mr-2 text-primary" />
                 Acceptance of Terms
               </CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">
-                By creating an account or using our AI Mock Interview System, you acknowledge 
-                that you have read, understood, and agree to be bound by these Terms of Service 
+            <CardContent className="px-0">
+              <p className="text-sm text-gray-500 leading-relaxed">
+                By creating an account or using our AI Mock Interview System, you acknowledge
+                that you have read, understood, and agree to be bound by these Terms of Service
                 and our Privacy Policy. If you do not agree to these terms, please do not use our service.
               </p>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Users className="h-5 w-5 text-primary" />
+          <Card className="p-6 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md">
+            <CardHeader className="px-0 pt-0">
+              <CardTitle className="flex items-center text-xl font-semibold text-gray-900">
+                <Users className="h-5 w-5 mr-2 text-primary" />
                 User Eligibility
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-muted-foreground">
+            <CardContent className="space-y-4 px-0">
+              <p className="text-sm text-gray-500 leading-relaxed">
                 To use our service, you must:
               </p>
-              <ul className="space-y-2 text-muted-foreground ml-4">
+              <ul className="space-y-2 text-sm text-gray-500 ml-4 leading-relaxed">
                 <li>• Be at least 16 years of age</li>
                 <li>• Provide accurate and complete registration information</li>
                 <li>• Maintain the security of your account credentials</li>
@@ -69,50 +69,53 @@ export default function TermsOfService() {
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Service Description</CardTitle>
+          <Card className="p-6 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md">
+            <CardHeader className="px-0 pt-0">
+              <CardTitle className="text-xl font-semibold text-gray-900">
+                Service Description
+              </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-muted-foreground">
+            <CardContent className="space-y-4 px-0">
+              <p className="text-sm text-gray-500 leading-relaxed">
                 Our AI Mock Interview System provides:
               </p>
               <div className="grid md:grid-cols-2 gap-4">
-                <div className="p-4 bg-muted/50 rounded-lg">
-                  <h4 className="font-semibold mb-2">AI-Powered Interviews</h4>
-                  <p className="text-sm text-muted-foreground">
-                    Simulated interview experiences with AI-generated questions and feedback.
-                  </p>
-                </div>
-                <div className="p-4 bg-muted/50 rounded-lg">
-                  <h4 className="font-semibold mb-2">Performance Analytics</h4>
-                  <p className="text-sm text-muted-foreground">
-                    Detailed analysis of your interview performance and improvement suggestions.
-                  </p>
-                </div>
-                <div className="p-4 bg-muted/50 rounded-lg">
-                  <h4 className="font-semibold mb-2">Progress Tracking</h4>
-                  <p className="text-sm text-muted-foreground">
-                    Monitor your improvement over time with comprehensive statistics.
-                  </p>
-                </div>
-                <div className="p-4 bg-muted/50 rounded-lg">
-                  <h4 className="font-semibold mb-2">Educational Resources</h4>
-                  <p className="text-sm text-muted-foreground">
-                    Access to blogs, tips, and best practices for interview success.
-                  </p>
-                </div>
+                {[
+                  {
+                    title: "AI-Powered Interviews",
+                    desc: "Simulated interview experiences with AI-generated questions and feedback.",
+                  },
+                  {
+                    title: "Performance Analytics",
+                    desc: "Detailed analysis of your interview performance and improvement suggestions.",
+                  },
+                  {
+                    title: "Progress Tracking",
+                    desc: "Monitor your improvement over time with comprehensive statistics.",
+                  },
+                  {
+                    title: "Educational Resources",
+                    desc: "Access to blogs, tips, and best practices for interview success.",
+                  },
+                ].map((item, index) => (
+                  <div key={index} className="p-4 bg-gray-50 rounded-lg">
+                    <h4 className="font-semibold text-gray-900 mb-2">{item.title}</h4>
+                    <p className="text-sm text-gray-500">{item.desc}</p>
+                  </div>
+                ))}
               </div>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>User Responsibilities</CardTitle>
+          <Card className="p-6 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md">
+            <CardHeader className="px-0 pt-0">
+              <CardTitle className="text-xl font-semibold text-gray-900">
+                User Responsibilities
+              </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-muted-foreground">You agree to:</p>
-              <ul className="space-y-2 text-muted-foreground ml-4">
+            <CardContent className="space-y-4 px-0">
+              <p className="text-sm text-gray-500 leading-relaxed">You agree to:</p>
+              <ul className="space-y-2 text-sm text-gray-500 ml-4 leading-relaxed">
                 <li>• Use the service only for lawful purposes</li>
                 <li>• Not attempt to reverse engineer or exploit our AI systems</li>
                 <li>• Respect intellectual property rights</li>
@@ -123,68 +126,78 @@ export default function TermsOfService() {
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Intellectual Property</CardTitle>
+          <Card className="p-6 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md">
+            <CardHeader className="px-0 pt-0">
+              <CardTitle className="text-xl font-semibold text-gray-900">
+                Intellectual Property
+              </CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">
-                All content, software, and materials provided through our service are owned by 
-                us or our licensors and are protected by copyright, trademark, and other 
-                intellectual property laws. You may not copy, modify, distribute, or create 
+            <CardContent className="px-0">
+              <p className="text-sm text-gray-500 leading-relaxed">
+                All content, software, and materials provided through our service are owned by
+                us or our licensors and are protected by copyright, trademark, and other
+                intellectual property laws. You may not copy, modify, distribute, or create
                 derivative works without explicit permission.
               </p>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Limitation of Liability</CardTitle>
+          <Card className="p-6 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md">
+            <CardHeader className="px-0 pt-0">
+              <CardTitle className="text-xl font-semibold text-gray-900">
+                Limitation of Liability
+              </CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">
-                Our service is provided "as is" without warranties of any kind. We are not 
-                liable for any damages arising from your use of the service, including but 
+            <CardContent className="px-0">
+              <p className="text-sm text-gray-500 leading-relaxed">
+                Our service is provided "as is" without warranties of any kind. We are not
+                liable for any damages arising from your use of the service, including but
                 not limited to direct, indirect, incidental, or consequential damages.
               </p>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Termination</CardTitle>
+          <Card className="p-6 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md">
+            <CardHeader className="px-0 pt-0">
+              <CardTitle className="text-xl font-semibold text-gray-900">
+                Termination
+              </CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">
-                We reserve the right to terminate or suspend your account at any time for 
-                violation of these terms. You may also terminate your account at any time 
+            <CardContent className="px-0">
+              <p className="text-sm text-gray-500 leading-relaxed">
+                We reserve the right to terminate or suspend your account at any time for
+                violation of these terms. You may also terminate your account at any time
                 through your account settings or by contacting us.
               </p>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Changes to Terms</CardTitle>
+          <Card className="p-6 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md">
+            <CardHeader className="px-0 pt-0">
+              <CardTitle className="text-xl font-semibold text-gray-900">
+                Changes to Terms
+              </CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">
-                We may modify these Terms of Service at any time. We will notify you of 
-                significant changes via email or through our service. Continued use of 
+            <CardContent className="px-0">
+              <p className="text-sm text-gray-500 leading-relaxed">
+                We may modify these Terms of Service at any time. We will notify you of
+                significant changes via email or through our service. Continued use of
                 the service after changes constitutes acceptance of the new terms.
               </p>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Contact Information</CardTitle>
+          <Card className="p-6 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md">
+            <CardHeader className="px-0 pt-0">
+              <CardTitle className="text-xl font-semibold text-gray-900">
+                Contact Information
+              </CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground mb-4">
+            <CardContent className="px-0">
+              <p className="text-sm text-gray-500 mb-4 leading-relaxed">
                 For questions about these Terms of Service, please contact us:
               </p>
-              <div className="space-y-2 text-sm">
+              <div className="space-y-2 text-sm text-gray-500">
                 <p><strong>Email:</strong> legal@aimockinterview.com</p>
                 <p><strong>Address:</strong> 123 AI Street, Tech City, TC 12345</p>
                 <p><strong>Phone:</strong> +1 (555) 123-4567</p>
@@ -194,10 +207,10 @@ export default function TermsOfService() {
         </div>
 
         <Separator className="my-8" />
-        
-        <div className="text-center text-sm text-muted-foreground">
+
+        <div className="text-center text-sm text-gray-500">
           <p>
-            These terms constitute the entire agreement between you and AI Mock Interview System 
+            These terms constitute the entire agreement between you and AI Mock Interview System
             regarding your use of our service.
           </p>
         </div>

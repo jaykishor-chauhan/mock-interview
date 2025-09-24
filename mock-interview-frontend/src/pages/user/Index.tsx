@@ -1,11 +1,11 @@
-import Hero from "@/components/MainTamplate";
-import Features from "@/components/Features";
-import Footer from "@/components/Footer";
+import MainTamplate from "@/pages/user/Basic/MainTamplate";
+import Features from "@/pages/user/Basic/Features";
+import Footer from "@/pages/user/Basic/Footer";
 
 const Index = () => {
   return (
     <div className="min-h-screen">
-      <Hero />
+      <MainTamplate />
       <Features />
       <Footer />
     </div>

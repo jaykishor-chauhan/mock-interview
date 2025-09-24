@@ -42,7 +42,7 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
   };
 
   return (
-    <SidebarProvider>
+    <SidebarProvider defaultOpen={false}>
       <div className="min-h-screen flex w-full bg-background">
         <AdminSidebar />
 
@@ -50,7 +50,7 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
           {/* Header */}
           <header className="sticky top-0 z-40 h-16 border-b border-border bg-card/95 backdrop-blur flex items-center justify-between px-6">
             <div className="flex items-center gap-4">
-              <SidebarTrigger className="lg:hidden" />
+              <SidebarTrigger />
             </div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>

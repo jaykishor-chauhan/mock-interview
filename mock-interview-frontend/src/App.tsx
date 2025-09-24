@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 // User Portal Imports
 import Layout from "./layouts/UserLayout";
@@ -31,9 +31,9 @@ import VerificationSent from "./pages/user/VerificationSent";
 
 
 // Admin Portal Imports
+import AdminLayout from "./layouts/AdminLayout";
 import AdminLogin from "./pages/admin/Login";
 import AddQuestionForm from "./pages/admin/AddQuestionForm";
-import AdminLayout from "./layouts/AdminLayout";
 import Dashboard from "./pages/admin/Dashboard";
 import Users from "./pages/admin/Users";
 import Courses from "./pages/admin/Courses";
@@ -63,7 +63,7 @@ const App = () => (
 
           {/* Layout routes for users */}
           <Route path="/" element={<Layout />}>
-            <Route index element={<Index />} />
+            <Route index element={<Index />} /> //this defult index page on Layout on '/'
             <Route path="profile" element={<Profile />} />
             <Route path="interviews" element={<InterviewTopics />} />
             <Route path="blogs" element={<Blogs />} />
@@ -79,7 +79,7 @@ const App = () => (
 
           {/* Layout routes for admin  */}
           <Route path="/add-question" element={<AddQuestionForm />} />
-          <Route path="/admin" element={<AdminLayout />}>
+          <Route path="/" element={<AdminLayout />}>
             <Route path="dashboard" element={<Dashboard />} />
             <Route path="users" element={<Users />} />
             <Route path="courses" element={<Courses />} />

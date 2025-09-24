@@ -1,6 +1,6 @@
-import { Shield, Lock, Eye, FileText } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+import { Shield, FileText, Eye, Lock } from "lucide-react"
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
+import { Separator } from "@/components/ui/separator"
 
 export default function PrivacyPolicy() {
   return (
@@ -13,18 +13,19 @@ export default function PrivacyPolicy() {
               <Shield className="h-8 w-8 text-primary" />
             </div>
           </div>
-          <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
+          <h1 className="text-3xl font-bold text-gray-900 mb-4">
             Privacy Policy
           </h1>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            We are committed to protecting your privacy and ensuring the security of your personal information.
+          <p className="text-base text-gray-500 max-w-2xl mx-auto">
+            We are committed to protecting your privacy and ensuring the security
+            of your personal information.
           </p>
         </div>
 
         {/* Last Updated */}
-        <Card className="mb-8 border-primary/20">
+        <Card className="mb-8 border border-gray-200 rounded-xl shadow-sm">
           <CardContent className="pt-6">
-            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <div className="flex items-center gap-2 text-sm text-gray-500">
               <FileText className="h-4 w-4" />
               <span>Last updated: December 2024</span>
             </div>
@@ -33,42 +34,48 @@ export default function PrivacyPolicy() {
 
         {/* Privacy Policy Content */}
         <div className="space-y-8">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Eye className="h-5 w-5 text-primary" />
+          <Card className="p-6 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md">
+            <CardHeader className="px-0 pt-0">
+              <CardTitle className="flex items-center text-xl font-semibold text-gray-900">
+                <Eye className="h-5 w-5 mr-2 text-primary" />
                 Information We Collect
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-4 px-0">
               <div>
-                <h4 className="font-semibold mb-2">Personal Information</h4>
-                <p className="text-muted-foreground">
-                  We collect information you provide directly to us, such as when you create an account, 
-                  participate in interviews, or contact us for support. This may include your name, 
-                  email address, profile information, and interview responses.
+                <h4 className="font-semibold text-gray-900 mb-2">
+                  Personal Information
+                </h4>
+                <p className="text-sm text-gray-500 leading-relaxed">
+                  We collect information you provide directly to us, such as when
+                  you create an account, participate in interviews, or contact us
+                  for support. This may include your name, email address, profile
+                  information, and interview responses.
                 </p>
               </div>
               <div>
-                <h4 className="font-semibold mb-2">Usage Information</h4>
-                <p className="text-muted-foreground">
-                  We automatically collect information about your use of our service, including 
-                  interview performance data, feature usage, and interaction patterns to improve 
-                  our AI algorithms and user experience.
+                <h4 className="font-semibold text-gray-900 mb-2">
+                  Usage Information
+                </h4>
+                <p className="text-sm text-gray-500 leading-relaxed">
+                  We automatically collect information about your use of our
+                  service, including interview performance data, feature usage,
+                  and interaction patterns to improve our AI algorithms and user
+                  experience.
                 </p>
               </div>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Lock className="h-5 w-5 text-primary" />
+          <Card className="p-6 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md">
+            <CardHeader className="px-0 pt-0">
+              <CardTitle className="flex items-center text-xl font-semibold text-gray-900">
+                <Lock className="h-5 w-5 mr-2 text-primary" />
                 How We Use Your Information
               </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <ul className="space-y-2 text-muted-foreground">
+            <CardContent className="space-y-4 px-0">
+              <ul className="space-y-2 text-sm text-gray-500 leading-relaxed">
                 <li>• Provide and improve our mock interview services</li>
                 <li>• Generate personalized AI feedback and recommendations</li>
                 <li>• Communicate with you about your account and our services</li>
@@ -78,70 +85,89 @@ export default function PrivacyPolicy() {
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Data Security</CardTitle>
+          <Card className="p-6 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md">
+            <CardHeader className="px-0 pt-0">
+              <CardTitle className="text-xl font-semibold text-gray-900">
+                Data Security
+              </CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground">
-                We implement appropriate technical and organizational measures to protect your 
-                personal information against unauthorized access, alteration, disclosure, or 
-                destruction. Your interview data is encrypted and stored securely.
+            <CardContent className="px-0">
+              <p className="text-sm text-gray-500 leading-relaxed">
+                We implement appropriate technical and organizational measures to
+                protect your personal information against unauthorized access,
+                alteration, disclosure, or destruction. Your interview data is
+                encrypted and stored securely.
               </p>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Your Rights</CardTitle>
+          <Card className="p-6 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md">
+            <CardHeader className="px-0 pt-0">
+              <CardTitle className="text-xl font-semibold text-gray-900">
+                Your Rights
+              </CardTitle>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <p className="text-muted-foreground">
-                You have the right to access, update, or delete your personal information. 
-                You can also opt out of certain communications and request data portability.
+            <CardContent className="space-y-4 px-0">
+              <p className="text-sm text-gray-500 leading-relaxed">
+                You have the right to access, update, or delete your personal
+                information. You can also opt out of certain communications and
+                request data portability.
               </p>
               <div className="grid md:grid-cols-2 gap-4 mt-4">
-                <div className="p-4 bg-muted/50 rounded-lg">
-                  <h4 className="font-semibold mb-2">Access & Update</h4>
-                  <p className="text-sm text-muted-foreground">
-                    View and modify your personal information through your account settings.
+                <div className="p-4 bg-gray-50 rounded-lg">
+                  <h4 className="font-semibold text-gray-900 mb-2">
+                    Access & Update
+                  </h4>
+                  <p className="text-sm text-gray-500">
+                    View and modify your personal information through your
+                    account settings.
                   </p>
                 </div>
-                <div className="p-4 bg-muted/50 rounded-lg">
-                  <h4 className="font-semibold mb-2">Data Deletion</h4>
-                  <p className="text-sm text-muted-foreground">
-                    Request deletion of your account and associated data at any time.
+                <div className="p-4 bg-gray-50 rounded-lg">
+                  <h4 className="font-semibold text-gray-900 mb-2">
+                    Data Deletion
+                  </h4>
+                  <p className="text-sm text-gray-500">
+                    Request deletion of your account and associated data at any
+                    time.
                   </p>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Contact Us</CardTitle>
+          <Card className="p-6 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md">
+            <CardHeader className="px-0 pt-0">
+              <CardTitle className="text-xl font-semibold text-gray-900">
+                Contact Us
+              </CardTitle>
             </CardHeader>
-            <CardContent>
-              <p className="text-muted-foreground mb-4">
-                If you have any questions about this Privacy Policy or our privacy practices, 
-                please contact us:
+            <CardContent className="px-0">
+              <p className="text-sm text-gray-500 mb-4 leading-relaxed">
+                If you have any questions about this Privacy Policy or our
+                privacy practices, please contact us:
               </p>
-              <div className="space-y-2 text-sm">
-                <p><strong>Email:</strong> privacy@aimockinterview.com</p>
-                <p><strong>Address:</strong> 123 AI Street, Tech City, TC 12345</p>
+              <div className="space-y-2 text-sm text-gray-500">
+                <p>
+                  <strong>Email:</strong> privacy@aimockinterview.com
+                </p>
+                <p>
+                  <strong>Address:</strong> 123 AI Street, Tech City, TC 12345
+                </p>
               </div>
             </CardContent>
           </Card>
         </div>
 
         <Separator className="my-8" />
-        
-        <div className="text-center text-sm text-muted-foreground">
+
+        <div className="text-center text-sm text-gray-500">
           <p>
-            By using our service, you acknowledge that you have read and understood this Privacy Policy.
+            By using our service, you acknowledge that you have read and
+            understood this Privacy Policy.
           </p>
         </div>
       </div>
     </div>
-  );
+  )
 }

@@ -4,11 +4,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { 
-  Mail, 
-  Phone, 
-  MapPin, 
-  Clock, 
+import {
+  Mail,
+  Phone,
+  MapPin,
+  Clock,
   Send,
   MessageCircle,
   Brain,
@@ -87,13 +87,13 @@ const Contact = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gray-50">
       <div className="py-12">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           {/* Header */}
           <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold mb-4">Get in Touch</h1>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            <h1 className="text-3xl font-bold text-gray-900 mb-4">Get in Touch</h1>
+            <p className="text-base text-gray-500 max-w-2xl mx-auto">
               Have questions about our AI interview platform? We're here to help you succeed in your career journey.
             </p>
           </div>
@@ -101,13 +101,13 @@ const Contact = () => {
           <div className="grid lg:grid-cols-2 gap-12">
             {/* Contact Form */}
             <div>
-              <Card className="bg-gradient-card border-0">
+              <Card className="p-6 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md">
                 <CardHeader>
-                  <CardTitle className="flex items-center">
+                  <CardTitle className="flex items-center text-xl font-semibold text-gray-900">
                     <MessageCircle className="w-5 h-5 mr-2 text-primary" />
                     Send us a Message
                   </CardTitle>
-                  <CardDescription>
+                  <CardDescription className="text-sm text-gray-500">
                     Fill out the form below and we'll get back to you within 24 hours
                   </CardDescription>
                 </CardHeader>
@@ -190,28 +190,31 @@ const Contact = () => {
             <div className="space-y-8">
               {/* Contact Details */}
               <div>
-                <h2 className="text-2xl font-semibold mb-6">Contact Information</h2>
+                <h2 className="text-xl font-semibold text-gray-900 mb-6">Contact Information</h2>
                 <div className="grid gap-4">
                   {contactInfo.map((info, index) => (
-                    <Card key={index} className="p-4 hover:shadow-md transition-shadow">
+                    <Card
+                      key={index}
+                      className="p-6 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md"
+                    >
                       <div className="flex items-start space-x-4">
                         <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center">
                           <info.icon className="w-5 h-5 text-primary" />
                         </div>
                         <div className="flex-1">
-                          <h3 className="font-semibold">{info.title}</h3>
-                          <p className="text-sm text-muted-foreground mb-1">{info.description}</p>
+                          <h3 className="font-semibold text-gray-900">{info.title}</h3>
+                          <p className="text-xs text-gray-400 mb-1">{info.description}</p>
                           {info.action ? (
-                            <a 
+                            <a
                               href={info.action}
-                              className="text-primary hover:underline font-medium"
-                              target={info.action.startsWith('http') ? '_blank' : undefined}
-                              rel={info.action.startsWith('http') ? 'noopener noreferrer' : undefined}
+                              className="text-primary hover:underline font-medium text-sm"
+                              target={info.action.startsWith("http") ? "_blank" : undefined}
+                              rel={info.action.startsWith("http") ? "noopener noreferrer" : undefined}
                             >
                               {info.contact}
                             </a>
                           ) : (
-                            <span className="font-medium">{info.contact}</span>
+                            <span className="font-medium text-sm">{info.contact}</span>
                           )}
                         </div>
                       </div>
@@ -222,27 +225,30 @@ const Contact = () => {
 
               {/* FAQ Section */}
               <div>
-                <h2 className="text-2xl font-semibold mb-6">Frequently Asked Questions</h2>
+                <h2 className="text-xl font-semibold text-gray-900 mb-6">Frequently Asked Questions</h2>
                 <div className="space-y-4">
                   {faqItems.map((faq, index) => (
-                    <Card key={index} className="p-4">
-                      <h3 className="font-semibold mb-2">{faq.question}</h3>
-                      <p className="text-sm text-muted-foreground leading-relaxed">{faq.answer}</p>
+                    <Card
+                      key={index}
+                      className="p-6 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md"
+                    >
+                      <h3 className="font-semibold text-gray-900 mb-2">{faq.question}</h3>
+                      <p className="text-sm text-gray-500 leading-relaxed">{faq.answer}</p>
                     </Card>
                   ))}
                 </div>
               </div>
 
               {/* Quick Help */}
-              <Card className="bg-blue-50 border-blue-200">
+              <Card className="p-6 bg-blue-50 border border-blue-200 rounded-xl shadow-sm hover:shadow-md">
                 <CardHeader>
-                  <CardTitle className="flex items-center text-blue-800">
+                  <CardTitle className="flex items-center text-xl font-semibold text-blue-800">
                     <Brain className="w-5 h-5 mr-2" />
                     Need Immediate Help?
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-blue-700 text-sm mb-4">
+                  <p className="text-sm text-blue-700 mb-4">
                     Check out our AI-powered help center for instant answers to common questions.
                   </p>
                   <Button variant="outline" className="border-blue-300 text-blue-800 hover:bg-blue-100">
@@ -252,25 +258,28 @@ const Contact = () => {
               </Card>
 
               {/* Team Section */}
-              <Card className="bg-gradient-primary text-primary-foreground">
+              <Card className="p-6 bg-gradient-primary text-primary-foreground rounded-xl shadow-sm hover:shadow-md">
                 <CardHeader>
-                  <CardTitle className="flex items-center">
+                  <CardTitle className="flex items-center text-xl font-semibold">
                     <Users className="w-5 h-5 mr-2" />
                     Our Team
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-primary-foreground/90 text-sm mb-4">
-                    Our experienced team of career coaches, software engineers, and AI specialists 
+                  <p className="text-sm text-primary-foreground/90 mb-4">
+                    Our experienced team of career coaches, software engineers, and AI specialists
                     are dedicated to helping you succeed in your interview journey.
                   </p>
                   <div className="flex items-center space-x-4">
                     <div className="flex -space-x-2">
                       {[1, 2, 3, 4].map((i) => (
-                        <div key={i} className="w-8 h-8 bg-white/20 rounded-full border-2 border-white"></div>
+                        <div
+                          key={i}
+                          className="w-8 h-8 bg-white/20 rounded-full border-2 border-white"
+                        ></div>
                       ))}
                     </div>
-                    <span className="text-sm text-primary-foreground/80">20+ Expert Team Members</span>
+                    <span className="text-xs text-primary-foreground/80">20+ Expert Team Members</span>
                   </div>
                 </CardContent>
               </Card>
@@ -279,6 +288,7 @@ const Contact = () => {
         </div>
       </div>
     </div>
+
   );
 };
 

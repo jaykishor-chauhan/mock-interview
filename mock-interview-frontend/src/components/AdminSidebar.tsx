@@ -23,30 +23,31 @@ import {
 const menuItems = [
   {
     title: "Dashboard",
-    url: "/admin/dashboard",
+    url: "/dashboard",
     icon: LayoutDashboard,
   },
   {
     title: "Users",
-    url: "/admin/users",
+    url: "/users",
     icon: Users,
   },
   {
     title: "Courses",
-    url: "/admin/courses",
+    url: "/courses",
     icon: BookOpen,
   },
   {
     title: "Questions",
-    url: "/admin/questions",
+    url: "/questions",
     icon: MessageSquare,
   },
   {
     title: "Reports",
-    url: "/admin/reports",
+    url: "/reports",
     icon: FileText,
   },
 ];
+
 
 export function AdminSidebar() {
   const { state } = useSidebar();
@@ -60,27 +61,21 @@ export function AdminSidebar() {
 
   const getNavClassName = (isActiveRoute: boolean) => {
     const baseClasses = "flex items-center gap-3 w-full rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-300";
-
-    const activeClasses = "bg-primary/20 text-primary shadow-md hover:bg-primary/30";
-    const inactiveClasses = "text-gray-600 hover:bg-primary/10 hover:text-primary";
-
+    const activeClasses = "bg-blue-100 text-blue-700 shadow-md hover:bg-blue-200"; 
+    const inactiveClasses = "text-gray-600 hover:bg-blue-50 hover:text-blue-700";
     return `${baseClasses} ${isActiveRoute ? activeClasses : inactiveClasses}`;
   };
 
 
-
   return (
-    <Sidebar
-      className={`${isCollapsed ? "w-16" : "w-64"
-        }`}
-      collapsible="icon"
-    >
-      {/* Branding */}
+    <Sidebar collapsible="icon" >
       <SidebarContent className="bg-gray-50">
-        <div className="p-6">
+        <div className={`${isCollapsed ? "px-2 py-4" : "p-6"}`}>
           <div className="flex items-center gap-4">
-            <div className="w-12 h-12 rounded-xl bg-blue-600 flex items-center justify-center shadow-md">
-              <Brain className={`${isCollapsed ? "w-6 h-6" : "w-8 h-8"} text-white`} />
+            <div
+              className={`${isCollapsed ? "w-9 h-9" : "w-12 h-12"
+                } w-12 h-12 rounded-xl bg-blue-600 flex items-center justify-center shadow-md`}>
+              <Brain className={`${isCollapsed ? "w-5 h-5" : "w-8 h-8"} text-white`} />
             </div>
             {!isCollapsed && (
               <div>
@@ -93,8 +88,6 @@ export function AdminSidebar() {
           </div>
         </div>
 
-
-        {/* Navigation */}
         <SidebarGroup>
           <SidebarGroupLabel
             className={`text-xs uppercase py-4 ${isCollapsed ? "hidden" : "text-gray-500"}`}

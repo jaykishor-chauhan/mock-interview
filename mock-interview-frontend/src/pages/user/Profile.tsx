@@ -7,7 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Mail, Calendar, Trophy, Target, TrendingUp, BarChart3, Clock } from "lucide-react";
-import {  useState } from "react";
+import { useState } from "react";
 
 
 
@@ -50,7 +50,8 @@ const Profile = () => {
     <div className="min-h-screen bg-background">
       <div className="py-12">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <Card className="mb-8 bg-gradient-card">
+          {/* Profile Header */}
+          <Card className="mb-8 bg-gradient-card border-0">
             <CardHeader>
               <div className="flex flex-col md:flex-row items-start md:items-center gap-6">
                 <div className="relative">
@@ -61,11 +62,13 @@ const Profile = () => {
                     </AvatarFallback>
                   </Avatar>
                 </div>
-                
+
                 <div className="flex-1">
                   <div className="flex flex-col md:flex-row md:items-center md:justify-between">
                     <div>
-                      <h1 className="text-2xl font-bold mb-2">{profileDetails.name.toUpperCase()}</h1>
+                      <h1 className="text-2xl font-bold text-gray-900 mb-2">
+                        {profileDetails.name.toUpperCase()}
+                      </h1>
                       <div className="flex items-center text-muted-foreground mb-2">
                         <Mail className="w-4 h-4 mr-2" />
                         {profileDetails.email}
@@ -83,31 +86,31 @@ const Profile = () => {
 
           {/* Stats Cards */}
           <div className="grid md:grid-cols-3 gap-6 mb-8">
-            <Card>
+            <Card className="border border-gray-200 shadow-sm rounded-xl">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Total Interviews</CardTitle>
+                <CardTitle className="text-sm font-medium text-gray-900">Total Interviews</CardTitle>
                 <Clock className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{userProfile.totalInterviews}</div>
+                <div className="text-2xl font-bold text-gray-900">{userProfile.totalInterviews}</div>
                 <p className="text-xs text-muted-foreground">+3 from last month</p>
               </CardContent>
             </Card>
-            
-            <Card>
+
+            <Card className="border border-gray-200 shadow-sm rounded-xl">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Average Score</CardTitle>
+                <CardTitle className="text-sm font-medium text-gray-900">Average Score</CardTitle>
                 <BarChart3 className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{userProfile.averageScore}%</div>
+                <div className="text-2xl font-bold text-gray-900">{userProfile.averageScore}%</div>
                 <Progress value={userProfile.averageScore} className="mt-2" />
               </CardContent>
             </Card>
-            
-            <Card>
+
+            <Card className="border border-gray-200 shadow-sm rounded-xl">
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Best Category</CardTitle>
+                <CardTitle className="text-sm font-medium text-gray-900">Best Category</CardTitle>
                 <Trophy className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
@@ -117,7 +120,7 @@ const Profile = () => {
             </Card>
           </div>
 
-          {/* Main Content */}
+          {/* Main Content Tabs */}
           <Tabs defaultValue="overview" className="space-y-6">
             <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="overview">Overview</TabsTrigger>
@@ -125,25 +128,33 @@ const Profile = () => {
               <TabsTrigger value="settings">Settings</TabsTrigger>
             </TabsList>
 
+            {/* Overview */}
             <TabsContent value="overview" className="space-y-6">
-              <Card>
+              <Card className="border border-gray-200 shadow-sm rounded-xl">
                 <CardHeader>
-                  <CardTitle>Recent Interviews</CardTitle>
-                  <CardDescription>Your latest interview performance</CardDescription>
+                  <CardTitle className="text-xl font-semibold text-gray-900">Recent Interviews</CardTitle>
+                  <CardDescription className="text-sm text-muted-foreground">
+                    Your latest interview performance
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
                     {recentInterviews.map((interview) => (
-                      <div key={interview.id} className="flex items-center justify-between p-4 border rounded-lg">
+                      <div
+                        key={interview.id}
+                        className="flex items-center justify-between p-4 border rounded-lg"
+                      >
                         <div className="flex items-center space-x-4">
                           <Badge variant="outline">{interview.type}</Badge>
                           <div>
-                            <p className="font-medium">Score: {interview.score}%</p>
+                            <p className="font-medium text-gray-900">Score: {interview.score}%</p>
                             <p className="text-sm text-muted-foreground">{interview.date}</p>
                           </div>
                         </div>
                         <div className="text-right max-w-xs">
-                          <p className="text-sm text-muted-foreground italic">"{interview.feedback}"</p>
+                          <p className="text-sm text-muted-foreground italic">
+                            "{interview.feedback}"
+                          </p>
                         </div>
                       </div>
                     ))}
@@ -152,27 +163,38 @@ const Profile = () => {
               </Card>
             </TabsContent>
 
+            {/* Achievements */}
             <TabsContent value="achievements" className="space-y-6">
-              <Card>
+              <Card className="border border-gray-200 shadow-sm rounded-xl">
                 <CardHeader>
-                  <CardTitle>Achievements</CardTitle>
-                  <CardDescription>Track your progress and unlock new badges</CardDescription>
+                  <CardTitle className="text-xl font-semibold text-gray-900">Achievements</CardTitle>
+                  <CardDescription className="text-sm text-muted-foreground">
+                    Track your progress and unlock new badges
+                  </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="grid md:grid-cols-2 gap-4">
                     {achievements.map((achievement, index) => (
-                      <div 
-                        key={index} 
-                        className={`p-4 border rounded-lg ${achievement.earned ? 'bg-success/10 border-success/20' : 'bg-muted/30'}`}
+                      <div
+                        key={index}
+                        className={`p-4 border rounded-lg ${achievement.earned
+                            ? "bg-success/10 border-success/20"
+                            : "bg-muted/30 border-gray-200"
+                          }`}
                       >
                         <div className="flex items-center space-x-3">
-                          <achievement.icon className={`w-8 h-8 ${achievement.earned ? 'text-success' : 'text-muted-foreground'}`} />
+                          <achievement.icon
+                            className={`w-8 h-8 ${achievement.earned ? "text-success" : "text-muted-foreground"
+                              }`}
+                          />
                           <div>
-                            <h3 className="font-semibold">{achievement.title}</h3>
+                            <h3 className="font-semibold text-gray-900">{achievement.title}</h3>
                             <p className="text-sm text-muted-foreground">{achievement.description}</p>
                           </div>
                           {achievement.earned && (
-                            <Badge className="ml-auto bg-success text-success-foreground">Earned</Badge>
+                            <Badge className="ml-auto bg-success text-success-foreground">
+                              Earned
+                            </Badge>
                           )}
                         </div>
                       </div>
@@ -182,11 +204,14 @@ const Profile = () => {
               </Card>
             </TabsContent>
 
+            {/* Settings */}
             <TabsContent value="settings" className="space-y-6">
-              <Card>
+              <Card className="border border-gray-200 shadow-sm rounded-xl">
                 <CardHeader>
-                  <CardTitle>Profile Settings</CardTitle>
-                  <CardDescription>Update your personal information</CardDescription>
+                  <CardTitle className="text-xl font-semibold text-gray-900">Profile Settings</CardTitle>
+                  <CardDescription className="text-sm text-muted-foreground">
+                    Update your personal information
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-6">
                   <div className="space-y-4">
@@ -195,27 +220,29 @@ const Profile = () => {
                       <Input
                         id="name"
                         value={profileDetails.name}
-                        onChange={(e) => setUserProfile(prev => ({ ...prev, name: e.target.value }))}
+                        onChange={(e) => setUserProfile((prev) => ({ ...prev, name: e.target.value }))}
                         disabled={!isEditing}
                       />
                     </div>
-                    
+
                     <div className="space-y-2">
                       <Label htmlFor="email">Email Address</Label>
                       <Input
                         id="email"
                         type="email"
                         value={profileDetails.email}
-                        onChange={(e) => setUserProfile(prev => ({ ...prev, email: e.target.value }))}
+                        onChange={(e) => setUserProfile((prev) => ({ ...prev, email: e.target.value }))}
                         disabled={!isEditing}
                       />
                     </div>
                   </div>
-                  
+
                   {isEditing && (
                     <div className="flex space-x-4">
                       <Button onClick={() => setIsEditing(false)}>Save Changes</Button>
-                      <Button variant="outline" onClick={() => setIsEditing(false)}>Cancel</Button>
+                      <Button variant="outline" onClick={() => setIsEditing(false)}>
+                        Cancel
+                      </Button>
                     </div>
                   )}
                 </CardContent>
@@ -225,6 +252,7 @@ const Profile = () => {
         </div>
       </div>
     </div>
+
   );
 };
 

@@ -42,15 +42,17 @@ const socialLinks = [
 const Footer = () => {
   return (
     <footer className="bg-primary text-primary-foreground">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
           {/* Brand Section */}
           <div className="space-y-6">
             <Link to="/" className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center transition-all hover:bg-white/30">
                 <Brain className="w-6 h-6 text-white" />
               </div>
-              <span className="text-2xl font-bold tracking-tight">InterviewAI</span>
+              <span className="text-2xl font-bold tracking-tight text-white">
+                InterviewAI
+              </span>
             </Link>
             <p className="text-sm leading-relaxed text-primary-foreground/80">
               Master your interview skills with AI-powered practice and personalized feedback.
@@ -65,7 +67,7 @@ const Footer = () => {
                   rel="noopener noreferrer"
                   className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 hover:scale-110 transition duration-300"
                 >
-                  <social.icon className="w-5 h-5" />
+                  <social.icon className="w-5 h-5 text-white" />
                 </a>
               ))}
             </div>
@@ -73,7 +75,7 @@ const Footer = () => {
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
+            <h3 className="text-lg font-semibold mb-4 text-white">Quick Links</h3>
             <ul className="space-y-2 text-sm">
               {quickLinks.map((link) => (
                 <li key={link.href}>
@@ -90,7 +92,7 @@ const Footer = () => {
 
           {/* Services */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Services</h3>
+            <h3 className="text-lg font-semibold mb-4 text-white">Services</h3>
             <ul className="space-y-2 text-sm">
               {services.map((service) => (
                 <li key={service.label}>
@@ -111,7 +113,7 @@ const Footer = () => {
 
           {/* Contact Info */}
           <div>
-            <h3 className="text-lg font-semibold mb-4">Contact Info</h3>
+            <h3 className="text-lg font-semibold mb-4 text-white">Contact Info</h3>
             <ul className="space-y-3 text-sm">
               {contactInfo.map((info) => (
                 <li key={info.text}>

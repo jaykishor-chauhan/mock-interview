@@ -42,8 +42,8 @@ const Dashboard = () => {
                 <div className="flex items-center gap-2 mt-2">
                   <h3 className="text-2xl font-bold text-gray-900">{stat.value}</h3>
                   <span className={`text-xs px-2 py-1 rounded-full font-medium ${stat.trend === 'up'
-                      ? 'bg-green-100 text-green-600'
-                      : 'bg-red-100 text-red-600'
+                    ? 'bg-green-100 text-green-600'
+                    : 'bg-red-100 text-red-600'
                     }`}>
                     {stat.change}
                   </span>
@@ -71,7 +71,7 @@ const Dashboard = () => {
             {recentActivity.map((activity) => (
               <div key={activity.id} className="flex items-center gap-4 p-3 rounded-lg hover:bg-gray-50 transition-all cursor-pointer">
                 <div className={`w-3 h-3 rounded-full ${activity.status === 'success' ? 'bg-green-500' :
-                    activity.status === 'warning' ? 'bg-amber-500' : 'bg-blue-500'
+                  activity.status === 'warning' ? 'bg-amber-500' : 'bg-blue-500'
                   }`} />
                 <div className="flex-1">
                   <p className="text-sm font-medium text-gray-900">{activity.user}</p>
