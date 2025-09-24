@@ -17,7 +17,6 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarFooter,
   useSidebar,
 } from "@/components/ui/sidebar";
 
@@ -60,11 +59,14 @@ export function AdminSidebar() {
     currentPath === path || currentPath.startsWith(path + "/");
 
   const getNavClassName = (isActiveRoute: boolean) => {
-    return `flex items-center gap-3 w-full rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-300 ${isActiveRoute
-      ? "bg-primary/20 hover:text-primary text-primary shadow-md hover:bg-primary/20"
-      : "text-gray-600 hover:bg-primary/10"
-      }`;
+    const baseClasses = "flex items-center gap-3 w-full rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-300";
+
+    const activeClasses = "bg-primary/20 text-primary shadow-md hover:bg-primary/30";
+    const inactiveClasses = "text-gray-600 hover:bg-primary/10 hover:text-primary";
+
+    return `${baseClasses} ${isActiveRoute ? activeClasses : inactiveClasses}`;
   };
+
 
 
   return (
@@ -77,11 +79,9 @@ export function AdminSidebar() {
       <SidebarContent className="bg-gray-50">
         <div className="p-6">
           <div className="flex items-center gap-4">
-            {/* Logo/Icon */}
             <div className="w-12 h-12 rounded-xl bg-blue-600 flex items-center justify-center shadow-md">
               <Brain className={`${isCollapsed ? "w-6 h-6" : "w-8 h-8"} text-white`} />
             </div>
-            {/* Title & Subtitle */}
             {!isCollapsed && (
               <div>
                 <h2 className="text-lg font-bold tracking-tight text-blue-700">
@@ -97,12 +97,12 @@ export function AdminSidebar() {
         {/* Navigation */}
         <SidebarGroup>
           <SidebarGroupLabel
-            className={`text-xs uppercase px-6 py-4 ${isCollapsed ? "hidden" : "text-gray-500"}`}
+            className={`text-xs uppercase py-4 ${isCollapsed ? "hidden" : "text-gray-500"}`}
           >
             Navigation
           </SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu className="px-4 space-y-1">
+            <SidebarMenu className="space-y-1">
               {menuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild className="p-0">
@@ -110,7 +110,7 @@ export function AdminSidebar() {
                       to={item.url}
                       className={getNavClassName(isActive(item.url))}
                     >
-                      <item.icon className="h-5 w-5 transition-transform duration-200 group-hover:scale-110" />
+                      <item.icon className="h-5 w-5 transition-transform duration-200" />
                       {!isCollapsed && (
                         <span className="tracking-wide">{item.title}</span>
                       )}

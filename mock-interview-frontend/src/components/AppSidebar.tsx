@@ -12,13 +12,37 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 
-const navigationItems = [
-  { title: "Home", url: "/", icon: Home },
-  { title: "Interviews", url: "/interviews", icon: MessageSquare },
-  { title: "Profile", url: "/profile", icon: User },
-  { title: "Blogs", url: "/blogs", icon: FileText },
-  { title: "Contact", url: "/contact", icon: Phone },
-  { title: "Request Quote", url: "/quote", icon: Quote },
+const menuItems = [
+  {
+    title: "Home",
+    url: "/",
+    icon: Home
+  },
+  {
+    title: "Interviews",
+    url: "/interviews",
+    icon: MessageSquare
+  },
+  {
+    title: "Profile",
+    url: "/profile",
+    icon: User
+  },
+  {
+    title: "Blogs",
+    url: "/blogs",
+    icon: FileText
+  },
+  {
+    title: "Contact",
+    url: "/contact",
+    icon: Phone
+  },
+  {
+    title: "Request Quote",
+    url: "/quote",
+    icon: Quote
+  },
 ];
 
 export function AppSidebar() {
@@ -26,44 +50,66 @@ export function AppSidebar() {
   const { state } = useSidebar();
   const location = useLocation();
   const currentPath = location.pathname;
+
   const isCollapsed = state === "collapsed";
 
-  const getNavCls = ({ isActive }: { isActive: boolean }) =>
-    isActive ? "bg-primary/10 text-primary font-medium" : "hover:bg-muted/50";
+  const isActive = (path: string) =>
+    currentPath === path || currentPath.startsWith(path + "/");
+
+  const getNavClassName = (isActiveRoute: boolean) => {
+    const baseClasses = "flex items-center gap-3 w-full rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-300";
+
+    const activeClasses = "bg-primary/20 text-primary shadow-md hover:bg-primary/30";
+    const inactiveClasses = "text-gray-600 hover:bg-primary/10 hover:text-primary";
+
+    return `${baseClasses} ${isActiveRoute ? activeClasses : inactiveClasses}`;
+  };
+
 
   if (!token) return null; // Return nothing if no token
 
   return (
     <Sidebar collapsible="icon">
       <SidebarContent>
-        <div className="p-6">
-          <div className="flex flex-col items-center justify-center">
+        {/* Branding */}
+        <div className={`${isCollapsed ? "px-2 py-4" : "p-6"}`}>
+          <div className="flex items-center gap-4">
             <div
-              className={`${
-                isCollapsed ? "w-9 h-9" : "w-14 h-14"
-              } rounded-full bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 flex items-center justify-center shadow-md transition-all duration-300`}
-            >
-              <Brain className={`${isCollapsed ? "w-5 h-5" : "w-7 h-7"} text-white`} />
+              className={`${isCollapsed ? "w-9 h-9" : "w-12 h-12"
+                } w-12 h-12 rounded-xl bg-blue-600 flex items-center justify-center shadow-md`}>
+              <Brain className={`${isCollapsed ? "w-5 h-5" : "w-8 h-8"} text-white`} />
             </div>
-
             {!isCollapsed && (
-              <span className="mt-3 text-lg font-semibold bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 bg-clip-text text-transparent tracking-wide">
-                AI Powered MI
-              </span>
+              <div>
+                <h2 className="text-lg font-bold tracking-tight text-blue-700">
+                  Mock Interview
+                </h2>
+                <p className="text-sm text-blue-600 mt-1">User Portal</p>
+              </div>
             )}
           </div>
         </div>
 
+        {/* Navigation */}
         <SidebarGroup>
-          <SidebarGroupLabel>Navigation</SidebarGroupLabel>
+          <SidebarGroupLabel
+            className={`text-xs uppercase py-4 ${isCollapsed ? "hidden" : "text-gray-500"}`}
+          >
+            Navigation
+          </SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu>
-              {navigationItems.map((item) => (
+            <SidebarMenu className=" space-y-1">
+              {menuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <NavLink to={item.url} end className={getNavCls}>
-                      <item.icon className="h-4 w-4" />
-                      {!isCollapsed && <span>{item.title}</span>}
+                  <SidebarMenuButton asChild className="p-0">
+                    <NavLink
+                      to={item.url}
+                      className={getNavClassName(isActive(item.url))}
+                    >
+                      <item.icon className="h-5 w-5 transition-transform duration-200" />
+                      {!isCollapsed && (
+                        <span className="tracking-wide">{item.title}</span>
+                      )}
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>

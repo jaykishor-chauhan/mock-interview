@@ -14,7 +14,7 @@ export default function Layout() {
 
           {/* Main content */}
           <main className="flex-1">
-            <Outlet /> {/* <-- Nested routes render here */}
+            <Outlet /> 
           </main>
         </div>
       </div>
