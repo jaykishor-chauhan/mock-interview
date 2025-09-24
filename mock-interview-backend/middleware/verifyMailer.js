@@ -2,7 +2,7 @@ const sgMail = require("@sendgrid/mail");
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const sendVerificationEmail = async (userId, userEmail, userName, verificationToken) => {
-    const verificationLink = `http://localhost:8080/verification?token=${verificationToken}&id=${userId}`;
+    const verificationLink = `https://aipoweredmockinterview.netlify.app/verification?token=${verificationToken}&id=${userId}`;
 
     const msg = {
         to: userEmail,

@@ -4,7 +4,7 @@ sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 const sendPasswordResetEmail = async (userId, userEmail, userName, resetToken) => {
 
-    const resetLink = `http://localhost:8080/new-password?token=${resetToken}&id=${userId}`;
+    const resetLink = `https://aipoweredmockinterview.netlify.app/new-password?token=${resetToken}&id=${userId}`;
 
     const msg = {
         to: userEmail,
