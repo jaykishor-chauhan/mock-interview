@@ -41,7 +41,7 @@ const Users = () => {
       setLoading(true);
 
       try {
-        const response = await fetch(`http://localhost:5000/api/mock-interview/users`, {
+        const response = await fetch(`http://localhost:5001/api/mock-interview/users`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
