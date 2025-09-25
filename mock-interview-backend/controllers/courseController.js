@@ -29,7 +29,7 @@ exports.getQuestions = async (req, res) => {
 
 
     // 3. Build query for questions
-    const query = { subType: _category._id };
+    const query = { Category: _category._id };
     if (difficulty) query.difficulty = difficulty;
 
 
