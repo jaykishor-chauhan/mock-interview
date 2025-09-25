@@ -278,7 +278,7 @@ const Questions = () => {
       </div>
 
       {/* Filters & Search */}
-      <Card className="p-6 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-all">
+      <Card className="p-6 bg-white border border-gray-200 rounded-xl transition-all">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div className="flex flex-col gap-4 md:flex-row md:items-center">
             <div className="relative">
@@ -325,19 +325,25 @@ const Questions = () => {
       </Card>
 
       {/* Questions Table */}
-      <Card className="bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-all">
+      <Card className="bg-white border border-gray-200 rounded-xl transition-all">
         <Table>
           <TableHeader>
             <TableRow className="border-b border-gray-200">
               <TableHead className="text-gray-900 font-semibold">Question</TableHead>
               <TableHead className="text-gray-900 font-semibold">Course</TableHead>
               <TableHead className="text-gray-900 font-semibold">Difficulty</TableHead>
-              <TableHead className="text-gray-900 font-semibold">Type</TableHead>
               <TableHead className="text-gray-900 font-semibold">Tags</TableHead>
               <TableHead className="text-gray-900 font-semibold">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
+            {filteredQuestions.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={5} className="text-center py-4">
+                  No records found.
+                </TableCell>
+              </TableRow>
+            )}
             {filteredQuestions.map((question) => (
               <TableRow key={question.id} className="border-b border-gray-200 hover:bg-gray-100">
                 <TableCell className="max-w-md">
@@ -355,7 +361,6 @@ const Questions = () => {
                   </div>
                 </TableCell>
                 <TableCell>{getDifficultyBadge(question.difficulty)}</TableCell>
-                <TableCell>{getTypeBadge(question.type)}</TableCell>
                 <TableCell>
                   <div className="flex flex-wrap gap-1">
                     {question.tags.slice(0, 3).map((tag, index) => (

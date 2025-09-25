@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const { registerUser, verifyEmail, loginUser } = require("../controllers/userController");
 const { resetPassword, updatePassword } = require("../controllers/resetController");
-const { getQuestions } = require("../controllers/questionController");
+const { getQuestions } = require("../controllers/courseController");
 
 const { addQuestion } = require("../controllers/addQuestionController");
 

@@ -52,6 +52,7 @@ exports.registerUser = async (req, res) => {
 
 exports.verifyEmail = async (req, res) => {
   const { userId, token } = req.body;
+  
 
   if (!userId || !token) {
     return res.status(400).json({ message: "Invalid link..." });
@@ -70,6 +71,7 @@ exports.verifyEmail = async (req, res) => {
     }
 
     const isTokenMatch = (token === verifyRecord.token);
+       
     if (!isTokenMatch) {
       return res.status(400).json({ message: "Invalid or expired password reset link." });
     }

@@ -39,9 +39,6 @@ const Courses = () => {
       id: 1,
       title: "JavaScript Fundamentals",
       category: "Frontend",
-      difficulty: "Beginner",
-      duration: "4 weeks",
-      studentsEnrolled: 245,
       totalQuestions: 45,
       status: "active",
       createdDate: "2024-01-15",
@@ -51,9 +48,6 @@ const Courses = () => {
       id: 2,
       title: "React Development",
       category: "Frontend",
-      difficulty: "Intermediate",
-      duration: "6 weeks",
-      studentsEnrolled: 189,
       totalQuestions: 62,
       status: "active",
       createdDate: "2024-02-01",
@@ -63,9 +57,6 @@ const Courses = () => {
       id: 3,
       title: "Node.js Backend",
       category: "Backend",
-      difficulty: "Intermediate",
-      duration: "5 weeks",
-      studentsEnrolled: 156,
       totalQuestions: 38,
       status: "active",
       createdDate: "2024-01-20",
@@ -75,9 +66,6 @@ const Courses = () => {
       id: 4,
       title: "Python Data Science",
       category: "Data Science",
-      difficulty: "Advanced",
-      duration: "8 weeks",
-      studentsEnrolled: 98,
       totalQuestions: 72,
       status: "draft",
       createdDate: "2024-03-01",
@@ -87,9 +75,6 @@ const Courses = () => {
       id: 5,
       title: "System Design",
       category: "Architecture",
-      difficulty: "Advanced",
-      duration: "6 weeks",
-      studentsEnrolled: 134,
       totalQuestions: 28,
       status: "active",
       createdDate: "2024-02-15",
@@ -196,7 +181,7 @@ const Courses = () => {
       </div>
 
       {/* Filters & Search */}
-      <Card className="p-6 bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-all">
+      <Card className="p-6 bg-white border border-gray-200 rounded-xl transition-all">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div className="flex flex-col gap-4 md:flex-row md:items-center">
             <div className="relative">
@@ -231,20 +216,25 @@ const Courses = () => {
       </Card>
 
       {/* Courses Table */}
-      <Card className="bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition-all">
+      <Card className="bg-white border border-gray-200 rounded-xl transition-all">
         <Table>
           <TableHeader>
             <TableRow className="border-b border-gray-200">
               <TableHead className="text-gray-900 font-semibold">Course</TableHead>
               <TableHead className="text-gray-900 font-semibold">Category</TableHead>
-              <TableHead className="text-gray-900 font-semibold">Difficulty</TableHead>
-              <TableHead className="text-gray-900 font-semibold">Students</TableHead>
               <TableHead className="text-gray-900 font-semibold">Questions</TableHead>
               <TableHead className="text-gray-900 font-semibold">Status</TableHead>
               <TableHead className="text-gray-900 font-semibold">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
+            {filteredCourses.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={5} className="text-center py-4">
+                  No records found.
+                </TableCell>
+              </TableRow>
+            )}
             {filteredCourses.map((course) => (
               <TableRow key={course.id} className="border-b border-gray-200 hover:bg-gray-100">
                 <TableCell>
@@ -252,8 +242,7 @@ const Courses = () => {
                     <div className="font-medium text-gray-900">{course.title}</div>
                     <div className="text-sm text-gray-500">{course.description}</div>
                     <div className="text-xs text-gray-400 flex items-center gap-1 mt-1">
-                      <Clock className="h-3 w-3" />
-                      {course.duration} • Created {new Date(course.createdDate).toLocaleDateString()}
+                      Created {new Date(course.createdDate).toLocaleDateString()}
                     </div>
                   </div>
                 </TableCell>
@@ -261,13 +250,6 @@ const Courses = () => {
                   <Badge variant="outline" className="text-gray-900 border border-gray-200">
                     {course.category}
                   </Badge>
-                </TableCell>
-                <TableCell>{getDifficultyBadge(course.difficulty)}</TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-1 text-gray-900">
-                    <Users className="h-3 w-3" />
-                    {course.studentsEnrolled}
-                  </div>
                 </TableCell>
                 <TableCell>
                   <div className="text-gray-900">{course.totalQuestions}</div>

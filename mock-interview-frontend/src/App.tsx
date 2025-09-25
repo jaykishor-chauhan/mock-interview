@@ -36,7 +36,7 @@ import AdminLogin from "./pages/admin/Login";
 import AddQuestionForm from "./pages/admin/AddQuestionForm";
 import Dashboard from "./pages/admin/Dashboard";
 import Users from "./pages/admin/Users";
-import Courses from "./pages/admin/Courses";
+import Courses from "./pages/admin/Category";
 import Questions from "./pages/admin/Questions";
 import Reports from "./pages/admin/Reports";
 

@@ -1,10 +1,10 @@
 const mongoose = require('mongoose');
-const subType = require('./subType');
+const Category = require('./Category');
 
 const question = new mongoose.Schema({
-  subType: {
+  category: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'SubType',
+    ref: 'Category',
     required: true
   },
   difficulty: {

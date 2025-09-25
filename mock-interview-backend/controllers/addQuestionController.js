@@ -1,5 +1,5 @@
-const InterviewType = require('../models/interviewType');
-const SubType = require('../models/subType');
+const Course = require('../models/Course');
+const Category = require('../models/Category');
 const Question = require('../models/Question'); 
 
 exports.addQuestion = async (req, res) => {
@@ -12,26 +12,26 @@ exports.addQuestion = async (req, res) => {
     }
 
     // 1. Check if the category exists
-    let category = await InterviewType.findOne({ name: interviewType });
+    let _course = await Course.findOne({ name: interviewType });
 
     // 2. If category does NOT exist, create it
-    if (!category) {
-      category = new InterviewType({ name: interviewType });
-      await category.save();
+    if (!_course) {
+      _course = new Course({ name: interviewType });
+      await _course.save();
     }
 
     // 3. Check if the SubType exists
-    let subTypeExit = await SubType.findOne({ name: subType, interviewType: category._id });
+    let _categoryExit = await Category.findOne({ name: subType, interviewType: _course._id });
 
     // 4. If SubType does NOT exist, create it
-    if (!subTypeExit) {
-      subTypeExit = new SubType({ name: subType, interviewType: category._id });
-      await subTypeExit.save();
+    if (!_categoryExit) {
+      _categoryExit = new Category({ name: subType, interviewType: _course._id });
+      await _categoryExit.save();
     }
 
     // 5. Create the question
     const newQuestion = new Question({
-      subType: subTypeExit._id,
+      category: _categoryExit._id,
       difficulty,
       question,
       expectedDuration

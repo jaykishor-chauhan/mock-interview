@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -20,7 +20,6 @@ import {
 } from "@/components/ui/select";
 import {
   Search,
-  Plus,
   Filter,
   MoreVertical,
   UserCheck,
@@ -28,10 +27,45 @@ import {
   Mail,
   Calendar
 } from "lucide-react";
+import { toast } from "@/hooks/use-toast";
 
 const Users = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
+  const [loading, setLoading] = useState(false);
+
+
+  useEffect(() => {
+    const fetchDetails = async (e: React.FormEvent) => {
+      e.preventDefault();
+      setLoading(true);
+
+      try {
+        const response = await fetch(`http://localhost:5000/api/mock-interview/users`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("authToken")}`
+          }
+        });
+        const details = await response.json();
+        if (!response.ok) {
+          toast({
+            variant: "destructive",
+            description: details.message || "Failed to fetch user details.",
+          })
+        }
+        console.log(details);
+      } catch (error) {
+        toast({
+          variant: "destructive",
+          description: "An error occurred while fetching user details.",
+        });
+      } finally {
+        setLoading(false);
+      }
+    }
+  });
 
   // Mock user data - replace with actual API calls
   const users = [
@@ -156,6 +190,7 @@ const Users = () => {
         <Table>
           <TableHeader>
             <TableRow className="border-b border-gray-200">
+              <TableHead className="text-gray-900 font-semibold">S. No.</TableHead>
               <TableHead className="text-gray-900 font-semibold">User</TableHead>
               <TableHead className="text-gray-900 font-semibold">Status</TableHead>
               <TableHead className="text-gray-900 font-semibold">Join Date</TableHead>
@@ -165,15 +200,20 @@ const Users = () => {
             </TableRow>
           </TableHeader>
           <TableBody>
+            {filteredUsers.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={6} className="text-center py-4">
+                  No records found.
+                </TableCell>
+              </TableRow>
+            )}
             {filteredUsers.map((user) => (
               <TableRow key={user.id} className="border-b border-gray-200 hover:bg-gray-100">
                 <TableCell>
+                  <div className="text-gray-500">{user.id}</div>
+                </TableCell>
+                <TableCell>
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
-                      <span className="text-sm font-medium text-gray-900">
-                        {user.name.split(' ').map(n => n[0]).join('')}
-                      </span>
-                    </div>
                     <div>
                       <div className="font-medium text-gray-900">{user.name}</div>
                       <div className="text-sm text-gray-500 flex items-center gap-1">
@@ -204,7 +244,7 @@ const Users = () => {
                     <Button
                       size="sm"
                       variant={user.status === 'active' ? 'outline' : 'default'}
-                      className="h-8"
+                      className="h-8 w-32 p-0"
                     >
                       {user.status === 'active' ? (
                         <><UserX className="h-3 w-3 mr-1 text-red-600" /> Deactivate</>

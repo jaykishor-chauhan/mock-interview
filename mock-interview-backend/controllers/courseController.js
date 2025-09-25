@@ -1,5 +1,5 @@
-const InterviewType = require('../models/interviewType');
-const SubType = require('../models/subType');
+const Course = require('../models/Course');
+const Category = require('../models/Category');
 const Question = require('../models/Question');
 
 exports.getQuestions = async (req, res) => {
@@ -11,35 +11,35 @@ exports.getQuestions = async (req, res) => {
       return res.status(400).json({ message: "All fields are required.." });
     }
 
-    // 1. Find category
-    const interviewCategory = await InterviewType.findOne({ name: interviewType });
-    if (!interviewCategory) {
-      return res.status(404).json({ message: "Interview category not found" });
+    // 1. Find course
+    const _course = await Course.findOne({ name: interviewType });
+    if (!_course) {
+      return res.status(404).json({ message: "Interview course not found" });
     }
 
-    // 2. Find subcategory under this category
-    const subCategory = await SubType.findOne({
+    // 2. Find subcategory under this course
+    const _category = await Category.findOne({
       name: subType,
-      interviewType: interviewCategory._id
+      course: _course._id
     });
 
-    if (!subCategory) {
-      return res.status(404).json({ message: "SubType not found" });
+    if (!_category) {
+      return res.status(404).json({ message: "Sub category not found" });
     }
 
 
     // 3. Build query for questions
-    const query = { subType: subCategory._id };
+    const query = { subType: _category._id };
     if (difficulty) query.difficulty = difficulty;
 
 
     // 4. Find questions and populate subType details
     const questions = await Question.find(query)
       .populate({
-        path: 'subType',               
-        select: 'name interviewType',   
+        path: 'Category',               
+        select: 'name Course',   
         populate: {                     
-          path: 'interviewType',
+          path: 'Course',
           select: 'name'               
         }
       });
