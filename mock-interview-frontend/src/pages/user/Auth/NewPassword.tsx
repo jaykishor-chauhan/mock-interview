@@ -41,7 +41,7 @@ const NewPassword = () => {
         setLoading(true);
 
         try {
-            const response = await fetch("https://mock-interview-backend-nyby.onrender.com/api/mock-interview/update-password", {
+            const response = await fetch("https://mockinterview-ymzx.onrender.com/api/update-password", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ userId, token, newPassword: password }),

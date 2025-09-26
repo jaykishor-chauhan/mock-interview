@@ -53,7 +53,7 @@ const InterviewTopics = () => {
     }
 
     try {
-      const response = await fetch("https://mock-interview-backend-nyby.onrender.com/api/mock-interview/get-questions", {
+      const response = await fetch("https://mockinterview-ymzx.onrender.com/api/get-questions", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

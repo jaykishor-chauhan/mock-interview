@@ -45,7 +45,7 @@ const Register = () => {
         email: formData.email,
         password: formData.password,
       };
-      const response = await fetch("https://aipoweredmockinterview.netlify.app/api/mock-interview/user/register", {
+      const response = await fetch("https://mockinterview-ymzx.onrender.com/api/user/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

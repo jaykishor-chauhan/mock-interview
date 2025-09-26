@@ -14,7 +14,7 @@ const EmailVerification = () => {
       const userId = params.get("id");
 
       try {
-        const response = await fetch("https://aipoweredmockinterview.netlify.app/api/mock-interview/verification", {
+        const response = await fetch("https://mockinterview-ymzx.onrender.com/api/verification", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
