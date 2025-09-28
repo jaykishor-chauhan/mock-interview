@@ -25,18 +25,22 @@ import NewPassword from "./pages/user/Auth/NewPassword";
 import EmailVerification from "./pages/user/Auth/EmailVerification";
 import CheckPermissions from "./pages/user/Interview/CheckPermissions";
 import VerificationSent from "./pages/user/VerificationSent";
+import AuthLoader from "./pages/AuthLoader";
 
 
 
 
 
 // Admin Portal Imports
-import AdminLayout from "./layouts/AdminLayout";
+import AdminRegister from "./pages/admin/Register";
 import AdminLogin from "./pages/admin/Login";
+import AdminLayout from "./layouts/AdminLayout";
+import AdminProfile from "./pages/admin/AdminProfile";
+import AdminSettings from "./pages/admin/AdminSecurity";
 import AddQuestionForm from "./pages/admin/AddQuestionForm";
 import Dashboard from "./pages/admin/Dashboard";
-import Users from "./pages/admin/Users";
-import Courses from "./pages/admin/Category";
+import Users from "./pages/admin/UsersDetails";
+import Courses from "./pages/admin/Course";
 import Questions from "./pages/admin/Questions";
 import Reports from "./pages/admin/Reports";
 
@@ -73,18 +77,22 @@ const App = () => (
             <Route path="terms" element={<TermsOfService />} />
             <Route path="cookies" element={<CookiePolicy />} />
           </Route>
-
-          {/* Redirect root to login */}
+          
+          {/* Admin routes */}
+          <Route path="/auth/loader" element={<AuthLoader />} />
+          <Route path="/admin/register" element={<AdminRegister />} />
           <Route path="/admin/login" element={ < AdminLogin />} />
 
           {/* Layout routes for admin  */}
           <Route path="/add-question" element={<AddQuestionForm />} />
           <Route path="/" element={<AdminLayout />}>
             <Route path="dashboard" element={<Dashboard />} />
-            <Route path="users" element={<Users />} />
+            <Route path="get-registered" element={<Users />} />
             <Route path="courses" element={<Courses />} />
             <Route path="questions" element={<Questions />} />
             <Route path="reports" element={<Reports />} />
+            <Route path="admin-profile" element={<AdminProfile />} />
+            <Route path="admin-settings" element={<AdminSettings />} />
           </Route>
 
           {/* fallback when page not found.. */}

@@ -28,100 +28,62 @@ import {
   Calendar
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router-dom";
 
-const Users = () => {
+const LoginInfo = () => {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
   const [loading, setLoading] = useState(false);
+  const [active, setActive] = useState("");
+  const [details, setDetails] = useState([]);
 
 
   useEffect(() => {
-    const fetchDetails = async (e: React.FormEvent) => {
-      e.preventDefault();
-      setLoading(true);
+    const params = new URLSearchParams(window.location.search);
+    const state = params.get("state");
+    setActive(state);
+    fetchDetails(state);
+  }, [location.search]);
 
-      try {
-        const response = await fetch(`http://localhost:5001/api/mock-interview/users`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${localStorage.getItem("authToken")}`
-          }
-        });
-        const details = await response.json();
-        if (!response.ok) {
-          toast({
-            variant: "destructive",
-            description: details.message || "Failed to fetch user details.",
-          })
+  const fetchDetails = async (state) => {
+    setLoading(true);
+    const _state = state === "admins" ? "admin" : "user";
+    setActive(_state);
+
+    try {
+      const response = await fetch(`https://mockinterview-ymzx.onrender.com/api/${_state}/getall${_state}s`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem("authToken")}`
         }
-        console.log(details);
-      } catch (error) {
+      });
+      const details = await response.json();
+      if (!response.ok) {
         toast({
           variant: "destructive",
-          description: "An error occurred while fetching user details.",
-        });
-      } finally {
-        setLoading(false);
+          description: details.message || "Failed to fetch user details.",
+        })
       }
+      setDetails(details);
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        description: "An error occurred while fetching user details.",
+      });
+    } finally {
+      setLoading(false);
     }
-  });
+  }
 
-  // Mock user data - replace with actual API calls
-  const users = [
-    {
-      id: 1,
-      name: "John Smith",
-      email: "john.smith@email.com",
-      status: "active",
-      joinDate: "2024-01-15",
-      lastLogin: "2024-03-20",
-      interviewsCompleted: 12,
-      coursesEnrolled: 3
-    },
-    {
-      id: 2,
-      name: "Sarah Johnson",
-      email: "sarah.johnson@email.com",
-      status: "active",
-      joinDate: "2024-02-03",
-      lastLogin: "2024-03-22",
-      interviewsCompleted: 8,
-      coursesEnrolled: 2
-    },
-    {
-      id: 3,
-      name: "Mike Chen",
-      email: "mike.chen@email.com",
-      status: "inactive",
-      joinDate: "2024-01-28",
-      lastLogin: "2024-03-10",
-      interviewsCompleted: 5,
-      coursesEnrolled: 1
-    },
-    {
-      id: 4,
-      name: "Emma Wilson",
-      email: "emma.wilson@email.com",
-      status: "active",
-      joinDate: "2024-03-01",
-      lastLogin: "2024-03-23",
-      interviewsCompleted: 15,
-      coursesEnrolled: 4
-    },
-    {
-      id: 5,
-      name: "David Brown",
-      email: "david.brown@email.com",
-      status: "pending",
-      joinDate: "2024-03-22",
-      lastLogin: "Never",
-      interviewsCompleted: 0,
-      coursesEnrolled: 0
-    }
-  ];
 
-  const getStatusBadge = (status: string) => {
+  const getStatusBadge = (verified: boolean, emailVerified: boolean) => {
+    let status = "pending"; // default
+
+    if (verified && emailVerified) status = "active";
+    else if (!verified && !emailVerified) status = "inactive";
+
     switch (status) {
       case 'active':
         return <Badge className="bg-success-muted text-success border-success">Active</Badge>;
@@ -134,10 +96,10 @@ const Users = () => {
     }
   };
 
-  const filteredUsers = users.filter(user => {
+  const filteredUsers = details.filter(user => {
     const matchesSearch = user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       user.email.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesFilter = filterStatus === "all" || user.status === filterStatus;
+    const matchesFilter = filterStatus === "all" || user.verified === filterStatus;
     return matchesSearch && matchesFilter;
   });
 
@@ -145,9 +107,32 @@ const Users = () => {
     <div className="space-y-6 bg-gray-50 min-h-screen p-6">
       {/* Header */}
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        {/* Left side */}
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">User Management</h1>
-          <p className="text-gray-500">Manage and monitor user accounts</p>
+          <h1 className="text-3xl font-bold text-gray-900">{`${active.charAt(0).toUpperCase() + active.slice(1)}`} Management</h1>
+          <p className="text-gray-500">Manage and monitor {`${active}s`} accounts</p>
+        </div>
+
+        {/* Right side toggle */}
+        <div className="flex items-center rounded-lg border border-gray-300 overflow-hidden">
+          <button
+            className={`px-4 py-2 text-sm font-medium ${active === "user"
+              ? "bg-blue-600 text-white"
+              : "bg-white text-gray-700 hover:bg-gray-100"
+              }`}
+            onClick={() => navigate("/get-registered?state=users")}
+          >
+            Users
+          </button>
+          <button
+            className={`px-4 py-2 text-sm font-medium ${active === "admin"
+              ? "bg-blue-600 text-white"
+              : "bg-white text-gray-700 hover:bg-gray-100"
+              }`}
+            onClick={() => navigate("/get-registered?state=admins")}
+          >
+            Admins
+          </button>
         </div>
       </div>
 
@@ -180,7 +165,7 @@ const Users = () => {
           </div>
 
           <div className="text-sm text-gray-500">
-            Showing {filteredUsers.length} of {users.length} users
+            Showing {filteredUsers.length} of {details.length} users
           </div>
         </div>
       </Card>
@@ -207,31 +192,30 @@ const Users = () => {
                 </TableCell>
               </TableRow>
             )}
-            {filteredUsers.map((user) => (
-              <TableRow key={user.id} className="border-b border-gray-200 hover:bg-gray-100">
+            {filteredUsers.map((user, index) => (
+              <TableRow key={index} className="border-b border-gray-200 hover:bg-gray-100">
                 <TableCell>
-                  <div className="text-gray-500">{user.id}</div>
+                  <div className="text-gray-500">{index + 1}</div>
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-3">
                     <div>
                       <div className="font-medium text-gray-900">{user.name}</div>
                       <div className="text-sm text-gray-500 flex items-center gap-1">
-                        <Mail className="h-3 w-3 text-gray-400" />
                         {user.email}
                       </div>
                     </div>
                   </div>
                 </TableCell>
-                <TableCell>{getStatusBadge(user.status)}</TableCell>
+                <TableCell>{getStatusBadge(user.verified, user.emailVerified)}</TableCell>
                 <TableCell>
                   <div className="flex items-center gap-1 text-gray-500">
                     <Calendar className="h-3 w-3 text-gray-400" />
-                    {new Date(user.joinDate).toLocaleDateString()}
+                    {new Date(user.createdAt).toLocaleDateString()}
                   </div>
                 </TableCell>
                 <TableCell className="text-gray-500">
-                  {user.lastLogin === "Never" ? "Never" : new Date(user.lastLogin).toLocaleDateString()}
+                  {user.lastLogin === "Never" ? "Never" : new Date(user.updatedAt).toLocaleDateString()}
                 </TableCell>
                 <TableCell>
                   <div className="text-sm">
@@ -243,15 +227,20 @@ const Users = () => {
                   <div className="flex items-center gap-2">
                     <Button
                       size="sm"
-                      variant={user.status === 'active' ? 'outline' : 'default'}
+                      variant="outline"
                       className="h-8 w-32 p-0"
                     >
-                      {user.status === 'active' ? (
-                        <><UserX className="h-3 w-3 mr-1 text-red-600" /> Deactivate</>
+                      {user.verified ? (
+                        <>
+                          <UserX className="h-3 w-3 mr-1 text-red-600" /> Deactivate
+                        </>
                       ) : (
-                        <><UserCheck className="h-3 w-3 mr-1 text-green-600" /> Activate</>
+                        <>
+                          <UserCheck className="h-3 w-3 mr-1 text-green-600" /> Activate
+                        </>
                       )}
                     </Button>
+
                     <Button size="sm" variant="outline" className="h-8 w-8 p-0 border border-gray-200 text-gray-900">
                       <MoreVertical className="h-3 w-3 text-gray-400" />
                     </Button>
@@ -267,4 +256,4 @@ const Users = () => {
   );
 };
 
-export default Users;
+export default LoginInfo;

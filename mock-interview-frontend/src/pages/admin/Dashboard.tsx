@@ -1,26 +1,20 @@
 import { Card } from "@/components/ui/card";
-import { Users, BookOpen, MessageCircle, TrendingUp, Plus, FileText, UserPlus, BarChart2 } from "lucide-react";
+import { Users, BookOpen, Plus, FileText } from "lucide-react";
 
 const Dashboard = () => {
   const stats = [
     { title: "Total Users", value: "2,543", change: "+12.5%", trend: "up", icon: Users, description: "Active users this month" },
-    { title: "Total Courses", value: "89", change: "+3", trend: "up", icon: BookOpen, description: "Available courses" },
-    { title: "Interview Sessions", value: "1,247", change: "+18.2%", trend: "up", icon: MessageCircle, description: "Completed this month" },
-    { title: "Success Rate", value: "87.3%", change: "+2.1%", trend: "up", icon: TrendingUp, description: "Interview completion rate" }
+    { title: "Total Courses", value: "89", change: "+3", trend: "up", icon: BookOpen, description: "Available courses" }
   ];
 
   const recentActivity = [
     { id: 1, user: "John Smith", action: "Completed JavaScript Interview", time: "2 hours ago", status: "success" },
     { id: 2, user: "Sarah Johnson", action: "Started React Course", time: "4 hours ago", status: "info" },
-    { id: 3, user: "Mike Chen", action: "Failed Python Interview", time: "6 hours ago", status: "warning" },
-    { id: 4, user: "Emma Wilson", action: "Registered new account", time: "8 hours ago", status: "info" }
   ];
 
   const quickActions = [
     { title: "Add New Course", desc: "Create a new interview course", icon: Plus },
     { title: "Add Questions", desc: "Add interview questions", icon: FileText },
-    { title: "Export Reports", desc: "Generate activity reports", icon: BarChart2 },
-    { title: "User Management", desc: "Manage user accounts", icon: UserPlus }
   ];
 
   return (

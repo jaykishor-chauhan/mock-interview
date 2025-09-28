@@ -3,7 +3,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AdminSidebar } from "@/components/AdminSidebar";
 import { Toaster } from "@/components/ui/toaster";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { LifeBuoy, LogOut, Settings, User } from "lucide-react";
+import { CheckCircle, LifeBuoy, LogOut, Settings, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
@@ -12,14 +12,18 @@ interface AdminLayoutProps {
 }
 
 const AdminLayout = ({ children }: AdminLayoutProps) => {
-  const token = localStorage.getItem("adminToken");
   const navigate = useNavigate();
-  const user = { name: "Admin User", email: "admin@example.com" };
-  // TODO: Replace with actual auth check
-  const isAuthenticated = true; // localStorage.getItem('adminToken');
+  const adminToken = localStorage.getItem("adminToken");
+  const adminId = localStorage.getItem("adminId");
+  const adminName = localStorage.getItem("adminName");
+  const adminEmail = localStorage.getItem("adminEmail");
+  const adminPhotoURL = localStorage.getItem("adminPhotoURL");
+  const createdAt = localStorage.getItem("created_at");
 
-  if (!isAuthenticated) {
-    return <Navigate to="/login" replace />;
+  const adminInfo = {token: adminToken, id: adminId, name: adminName, email: adminEmail, photoURL: adminPhotoURL, created_at:createdAt};
+
+  if (!adminToken) {
+    return <Navigate to="/admin/login" replace />;
   }
 
   const getInitials = (fullName: string) => {
@@ -59,9 +63,9 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
                   className="relative h-10 w-10 rounded-full p-0 mx-3"
                 >
                   <Avatar className="h-9 w-9">
-                    <AvatarImage src="" alt={user.name} />
+                    {adminInfo.photoURL && <AvatarImage src={adminInfo.photoURL} alt={adminInfo.name} />}
                     <AvatarFallback className="bg-primary text-primary-foreground text-sm font-semibold">
-                      {getInitials(user.name)}
+                      {getInitials(adminInfo.name)}
                     </AvatarFallback>
                   </Avatar>
                 </Button>
@@ -73,33 +77,31 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
               >
                 <DropdownMenuLabel className="font-normal">
                   <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none">{getNameInOne(user.name)}</p>
+                    <p className="flex text-sm font-medium leading-none">
+                      {getNameInOne(adminInfo.name)}
+                      <CheckCircle className="h-3 w-3 ml-1 text-green-500" />
+                    </p>
                     <p className="text-xs leading-none text-muted-foreground">
-                      {user.email}
+                      {adminInfo.email}
                     </p>
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
-                  <DropdownMenuItem onSelect={() => navigate("/profile")}>
+                  <DropdownMenuItem onSelect={() => navigate("/admin-profile")}>
                     <User className="mr-2 h-4 w-4" />
                     <span>Profile</span>
                   </DropdownMenuItem>
-                  <DropdownMenuItem onSelect={() => navigate("/settings")}>
+                  <DropdownMenuItem onSelect={() => navigate("/admin-settings")}>
                     <Settings className="mr-2 h-4 w-4" />
                     <span>Settings</span>
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onSelect={() => navigate("/support")}>
-                  <LifeBuoy className="mr-2 h-4 w-4" />
-                  <span>Support</span>
-                </DropdownMenuItem>
-                <DropdownMenuSeparator />
                 <DropdownMenuItem
                   onClick={() => {
                     localStorage.clear();
-                    navigate("/login");
+                    navigate("/admin/login");
                   }}
                   className="text-destructive focus:text-destructive focus:bg-destructive/10"
                 >

@@ -1,7 +1,7 @@
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -25,9 +25,13 @@ export default function Layout() {
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [filteredPages, setFilteredPages] = useState([]);
-  const token = localStorage.getItem("authToken");
+  const userToken = localStorage.getItem("authToken");
   const userString = localStorage.getItem("user");
   const user = JSON.parse(userString);
+
+   if (!user) {
+      return <Navigate to="/login" replace />;
+    }
 
   const handleSearchChange = (e) => {
     const value = e.target.value;
@@ -76,7 +80,7 @@ export default function Layout() {
                   } md:flex`}
               >
                 <div className="flex items-center gap-4">
-                  {token ? (<SidebarTrigger />) : (null)}
+                  {userToken ? (<SidebarTrigger />) : (null)}
 
                   <div className="relative hidden md:flex">
                     <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -117,7 +121,7 @@ export default function Layout() {
                     <Search className="h-4 w-4" />
                   </Button>
 
-                  {token ? (
+                  {userToken ? (
                     <>
                       <Button variant="ghost" size="icon" className="relative">
                         <Bell className="h-4 w-4" />

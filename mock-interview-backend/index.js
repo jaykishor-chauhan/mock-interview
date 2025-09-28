@@ -1,17 +1,43 @@
-const express = require("express");
 const dotenv = require("dotenv");
+dotenv.config();
+const express = require("express");
 const cors = require("cors");
 const connectDB = require("./config/db");
+const session = require("express-session");
+const passport = require("passport");
+const MongoStore = require("connect-mongo");
 
-dotenv.config();
 connectDB();
 
 const app = express();
-
-app.use(cors());
+app.use(cors({ credentials: true, origin: "https://aipoweredmockinterview.netlify.app" })); // frontend allowed
 app.use(express.json());
 
-app.use("/api", require("./routes/apiRoutes"));
+// ---------------------- SESSION + PASSPORT ----------------------
+require("./googleAuth2")(); // loads GoogleStrategy
 
+app.use(
+  session({
+    secret: process.env.JWT_SECRET,
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGO_URI,
+      collectionName: "sessions",
+    }),
+  })
+);
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+// ---------------------- ROUTES ----------------------
+app.use("/api", require("./routes/apiRoutes")); // your normal APIs
+app.use("/auth", require("./routes/authRoutes")); // Google login routes
+
+app.use("/api/admin", require("./routes/adminRoutes"));
+
+
+// ---------------------- SERVER ----------------------
 const PORT = process.env.PORT || 5001;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

@@ -1,25 +1,23 @@
 const mongoose = require('mongoose');
-const Category = require('./Category');
 
-const question = new mongoose.Schema({
-  category: {
+const questionSchema = new mongoose.Schema({
+  course: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Category',
-    required: true
-  },
-  difficulty: {
-    type: String,
-    enum: ['Easy', 'Medium', 'Hard'], // restrict difficulty levels
+    ref: 'Course',
     required: true
   },
   question: {
     type: String,
     required: true
   },
-  expectedDuration: {
+  difficulty: {
     type: String,
-    required: false
+    required: true
+  },
+  tags: {
+    type: String, 
+    required: true,
   }
-});
+}, { timestamps: true });
 
-module.exports = mongoose.model('question', question);
+module.exports = mongoose.model('Question', questionSchema);
