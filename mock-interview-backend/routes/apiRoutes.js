@@ -4,7 +4,7 @@ const { registerUser, verifyEmail, loginUser, getAllUsers } = require("../contro
 const { registerAdmin, loginAdmin, verifyAdminEmail, getAllAdmins } = require("../controllers/adminController");
 const { resetPassword, updatePassword } = require("../controllers/resetController");
 const { getCourse, addCourse } = require("../controllers/courseController");
-const { addQuestion, getQuestion } = require("../controllers/questionController");
+const { addQuestion, getQuestion, filterQuestions } = require("../controllers/questionController");
 
 
 // --- User and Admin Authentication Routes ---
@@ -26,7 +26,7 @@ router.post("/reset-password", resetPassword);
 router.post("/update-password", updatePassword);
 
 // --- Interview Routes ---
-// router.post("/get-questions", getQuestions);
+router.post("/filter-questions", filterQuestions);
 
 
 

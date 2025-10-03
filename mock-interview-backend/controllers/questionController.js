@@ -50,3 +50,38 @@ exports.getQuestion = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+
+
+
+exports.filterQuestions = async (req, res) => {
+  try {
+    const { name, category, difficulty } = req.body;
+    console.log()
+
+    if (!name || !category || !difficulty) {
+      return res.status(400).json({ message: `All fields are required..` });
+    }
+
+    const _course = await Course.findOne({ name, category });
+    if (!_course) {
+      return res.status(404).json({ message: 'Course not found for the selected criteria..' });
+    }
+
+    const questions = await Question.find({
+      course: course._id,
+      difficulty: { $in: difficulty },
+    });
+
+    if (!questions.length) {
+      return res.status(404).json({ message: 'No questions found for the selected criteria' });
+    }
+
+    res.status(200).json({
+      message: 'Questions filtered successfully',
+      questions,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};

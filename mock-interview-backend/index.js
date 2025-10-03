@@ -14,6 +14,7 @@ app.use(cors({ credentials: true, origin: "https://aipoweredmockinterview.netlif
 app.use(express.json());
 
 // ---------------------- SESSION + PASSPORT ----------------------
+
 require("./googleAuth2")(); // loads GoogleStrategy
 
 app.use(
