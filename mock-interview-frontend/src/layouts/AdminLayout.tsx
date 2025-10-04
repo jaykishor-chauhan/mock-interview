@@ -41,7 +41,9 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
     const parts = fullName.trim().split(/\s+/);
     const capitalize = (s: string) => s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
     const firstName = capitalize(parts[0]);
-    const lastName = capitalize(parts[parts.length - 1] || parts[0]);
+    let lastName = "";
+    if (parts.length === 1) return firstName;
+    lastName = capitalize(parts[parts.length - 1]);
     return `${firstName} ${lastName}`;
   };
 
@@ -88,13 +90,9 @@ const AdminLayout = ({ children }: AdminLayoutProps) => {
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
-                  <DropdownMenuItem onSelect={() => navigate("/admin-profile")}>
+                  <DropdownMenuItem onSelect={() => navigate(`/admin/profile?id=${adminId}`)}>
                     <User className="mr-2 h-4 w-4" />
                     <span>Profile</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onSelect={() => navigate("/admin-settings")}>
-                    <Settings className="mr-2 h-4 w-4" />
-                    <span>Settings</span>
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />

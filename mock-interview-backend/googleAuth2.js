@@ -4,12 +4,14 @@ const bcrypt = require("bcryptjs");
 const Admin = require("./models/Admin");
 
 function setupGoogleAuth() {
+
+  const callbackUrl = process.env.GOOGLE_CALLBACK_URL || "http://localhost:5001/auth/google/callback";
   passport.use(
     new GoogleStrategy(
       {
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: `https://mockinterview-ymzx.onrender.com/auth/google/callback`,
+        callbackURL: callbackUrl,
         passReqToCallback: true,
       },
       async (request, accessToken, refreshToken, profile, done) => {

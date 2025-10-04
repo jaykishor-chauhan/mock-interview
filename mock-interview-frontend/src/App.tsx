@@ -91,8 +91,7 @@ const App = () => (
             <Route path="courses" element={<Courses />} />
             <Route path="questions" element={<Questions />} />
             <Route path="reports" element={<Reports />} />
-            <Route path="admin-profile" element={<AdminProfile />} />
-            <Route path="admin-settings" element={<AdminSettings />} />
+            <Route path="admin/profile" element={<AdminProfile />} />
           </Route>
 
           {/* fallback when page not found.. */}

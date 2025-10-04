@@ -10,7 +10,7 @@ const MongoStore = require("connect-mongo");
 connectDB();
 
 const app = express();
-app.use(cors({ credentials: true, origin: "https://aipoweredmockinterview.netlify.app" })); // frontend allowed
+app.use(cors({ credentials: true, origin: process.env.FRONTEND_URL })); // frontend allowed
 app.use(express.json());
 
 // ---------------------- SESSION + PASSPORT ----------------------

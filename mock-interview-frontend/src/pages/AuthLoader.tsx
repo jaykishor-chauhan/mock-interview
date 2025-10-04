@@ -17,7 +17,7 @@ const AuthLoader: React.FC = () => {
         });
         const data = await res.json();
 
-        console.log("User details: ", data);
+        console.log("Admin details: ", data);
         localStorage.setItem("adminToken", token);
         localStorage.setItem("adminId", data.id);
         localStorage.setItem("adminName", data.name);

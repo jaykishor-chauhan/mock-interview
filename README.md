@@ -70,7 +70,7 @@ cd ../mock-interview-frontend
 npm run dev
 ```
 
-The frontend will typically run on `http://localhost:5173` and the backend on `http://localhost:5000` (or as configured).
+The frontend will typically run on `http://localhost:8080` and the backend on `http://localhost:5001` (or as configured).
 
 ## Features
 - User authentication (register, login, password reset)

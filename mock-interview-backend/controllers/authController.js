@@ -11,7 +11,7 @@ exports.googleCallback = (req, res, next) => {
         if (!user) {
             const errorMessage = encodeURIComponent(info.message);
             return res.redirect(
-                `https://aipoweredmockinterview.netlify.app/admin/login?error=${errorMessage}`
+                `${process.env.FRONTEND_URL}/admin/login?error=${errorMessage}`
             );
         }
         req.logIn(user, (err) => {
@@ -21,7 +21,7 @@ exports.googleCallback = (req, res, next) => {
                 process.env.JWT_SECRET,
                 { expiresIn: "1h" }
             );
-            return res.redirect(`https://aipoweredmockinterview.netlify.app/auth/loader?token=${token}`);
+            return res.redirect(`${process.env.FRONTEND_URL}/auth/loader?token=${token}`);
         });
     })(req, res, next);
 };
@@ -37,7 +37,7 @@ z
             res.clearCookie('connect.sid', { path: '/' });
 
             // Redirect to login page or home
-            res.redirect('https://aipoweredmockinterview.netlify.app/admin/login');
+            res.redirect(`${process.env.FRONTEND_URL}/admin/login`);
         });
     });
 };
