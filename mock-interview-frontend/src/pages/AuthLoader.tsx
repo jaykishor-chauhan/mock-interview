@@ -26,14 +26,14 @@ const AuthLoader: React.FC = () => {
         localStorage.setItem("created_at", data.created_at);
 
         if (!data.id) {
-          navigate('admin/login');
+          navigate('/admin/login');
           return;
         }
         navigate('/dashboard');
 
       } catch (err) {
         console.error("Authentication check failed:", err);
-        navigate('/login');
+        navigate('/admin/login');
       } finally {
         setLoading(false);
       }

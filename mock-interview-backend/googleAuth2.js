@@ -5,7 +5,7 @@ const Admin = require("./models/Admin");
 
 function setupGoogleAuth() {
 
-  const callbackUrl = process.env.GOOGLE_CALLBACK_URL || "http://localhost:5001/auth/google/callback";
+  const callbackUrl = process.env.GOOGLE_CALLBACK_URL || "https://mockinterview-ymzx.onrender.com/auth/google/callback";
   passport.use(
     new GoogleStrategy(
       {
