@@ -3,7 +3,6 @@ const Tokens = require("../models/Token");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { sendVerificationEmail } = require("../middleware/verifyMailer");
-const { authenticate } = require("passport");
 
 exports.registerAdmin = async (req, res) => {
   try {
@@ -61,7 +60,7 @@ exports.verifyAdminEmail = async (req, res) => {
 
   try {
     const admin = await Admin.findOne({ _id: userId })
-    if (admin.status === true) {
+    if (admin.verified === true && admin.emailVerified === true) {
       return res.status(200).json({ message: "You email has already been verified." })
     }
 
@@ -149,7 +148,7 @@ exports.getAllAdmins = async (req, res) => {
 
 
 
-
+// Login with google..
 exports.getCurrentAdmin = (req, res) => {
 
   if (req.isAuthenticated()) {
