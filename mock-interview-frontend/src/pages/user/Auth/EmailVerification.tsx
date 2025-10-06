@@ -21,7 +21,7 @@ const EmailVerification = () => {
       console.log("Verifying email with:", { userId, verificationToken, role, api_route });
 
       try {
-        const response = await fetch(`https://mockinterview-ymzx.onrender.com/api/${api_route}`, {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/${api_route}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

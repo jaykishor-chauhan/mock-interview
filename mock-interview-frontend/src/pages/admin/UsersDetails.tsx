@@ -52,7 +52,7 @@ const LoginInfo = () => {
     setActive(_state);
 
     try {
-      const response = await fetch(`https://mockinterview-ymzx.onrender.com/api/${_state}/getall${_state}s`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/${_state}/getall${_state}s`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

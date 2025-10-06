@@ -41,7 +41,7 @@ const NewPassword = () => {
         setLoading(true);
 
         try {
-            const response = await fetch("https://mockinterview-ymzx.onrender.com/api/update-password", {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/update-password`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ userId, token, newPassword: password }),

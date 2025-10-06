@@ -45,7 +45,7 @@ const Register = () => {
         email: formData.email,
         password: formData.password,
       };
-      const response = await fetch("https://mockinterview-ymzx.onrender.com/api/user/register", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/user/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -87,23 +87,15 @@ const Register = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <div className="flex items-center justify-center px-4 py-12">
-        <div className="w-full max-w-md">
-          <CardHeader className="text-center">
-            <div className="w-12 h-12 bg-gradient-primary rounded-lg flex items-center justify-center mx-auto mb-4">
-              <Brain className="w-6 h-6 text-white" />
-            </div>
-            <CardTitle className="text-2xl">Create Account</CardTitle>
-            <CardDescription>
-              Join thousands of students mastering their interview skills
-            </CardDescription>
-          </CardHeader>
-
-          <CardContent>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="w-full max-w-md p-6 space-y-6">
+        <div className="p-8 bg-gray-50 space-y-6">
+          <div className="text-center">
+            <h1 className="text-2xl font-semibold text-gray-900 mt-3">Create your account</h1>
+            <p className="text-sm text-gray-600 max-w-[40ch] mx-auto mt-1">Sign up to access curated interview courses and practice questions.</p>
+          </div>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
-                <Label htmlFor="name">Full Name</Label>
                 <Input
                   id="name"
                   type="text"
@@ -117,7 +109,6 @@ const Register = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="email">Email Address</Label>
                 <Input
                   id="email"
                   type="email"
@@ -131,7 +122,6 @@ const Register = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="password">Password</Label>
                 <div className="relative">
                   <Input
                     id="password"
@@ -154,7 +144,6 @@ const Register = () => {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="confirmPassword">Confirm Password</Label>
                 <div className="relative">
                   <Input
                     id="confirmPassword"
@@ -180,6 +169,29 @@ const Register = () => {
                 {loading ? ("Creating Account...") : ("Create Account")}
               </Button>
             </form>
+            {/* Divider */}
+          <div className="flex items-center gap-2 text-gray-400 my-4">
+            <hr className="flex-1 border-gray-300" />
+            <span className="text-sm">or</span>
+            <hr className="flex-1 border-gray-300" />
+          </div>
+
+          {/* Login with Google */}
+          <div className="space-y-3">
+            <button
+              // onClick={() => {
+              //   window.location.href = `${import.meta.env.VITE_API_URL}/auth/google`;
+              // }}
+              className="w-full flex items-center justify-center gap-2 p-3 border border-gray-300 rounded-lg bg-white text-gray-900 hover:bg-gray-100 transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500"
+            >
+              <img
+                src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/2048px-Google_%22G%22_logo.svg.png"
+                alt="Google"
+                className="h-5 w-5"
+              />
+              Sign up with Google
+            </button>
+          </div>
             <div className="text-center text-sm text-muted-foreground m-4">
               Already have an account?{" "}
               <Button
@@ -190,7 +202,6 @@ const Register = () => {
                 Sign in
               </Button>
             </div>
-          </CardContent>
         </div>
       </div>
     </div>

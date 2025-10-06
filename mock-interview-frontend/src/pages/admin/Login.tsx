@@ -28,7 +28,7 @@ const Login = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch("https://mockinterview-ymzx.onrender.com/api/admin/login", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -135,7 +135,7 @@ const Login = () => {
           <div className="space-y-3">
             <button
               onClick={() => {
-                window.location.href = "https://mockinterview-ymzx.onrender.com/auth/google";
+                window.location.href = `${import.meta.env.VITE_API_URL}/auth/google`;
               }}
               className="w-full flex items-center justify-center gap-2 p-3 border border-gray-300 rounded-lg bg-white text-gray-900 hover:bg-gray-100 transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500"
             >

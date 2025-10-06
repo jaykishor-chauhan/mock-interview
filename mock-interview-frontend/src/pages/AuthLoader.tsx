@@ -12,7 +12,7 @@ const AuthLoader: React.FC = () => {
     const checkAuth = async () => {
       setLoading(true);
       try {
-        const res = await fetch("https://mockinterview-ymzx.onrender.com/api/admin/google-login", {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/google-login`, {
           credentials: "include"
         });
         const data = await res.json();

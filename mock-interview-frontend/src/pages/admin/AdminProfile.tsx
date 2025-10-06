@@ -35,7 +35,7 @@ const AdminProfile = () => {
   const handleProfile = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`https://mockinterview-ymzx.onrender.com/api/admin/get-profile?id=${id}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/get-profile?id=${id}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",

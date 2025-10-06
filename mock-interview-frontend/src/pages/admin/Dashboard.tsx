@@ -23,7 +23,7 @@ const Dashboard = () => {
   const fetchDashboard = async () => {
     try {
       setLoading(true);
-      const res = await fetch("https://mockinterview-ymzx.onrender.com/api/admin/dashboard", {
+      const res = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/dashboard`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',

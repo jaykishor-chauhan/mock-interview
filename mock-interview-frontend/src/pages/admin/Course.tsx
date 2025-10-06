@@ -61,7 +61,7 @@ const Courses = () => {
     const getAllCourses = async () => {
       try {
         setLoading(true);
-        const response = await fetch("https://mockinterview-ymzx.onrender.com/api/admin/get-courses", {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/get-courses`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
@@ -99,7 +99,7 @@ const Courses = () => {
     try {
       setAddLoading(true);
 
-      const response = await fetch("https://mockinterview-ymzx.onrender.com/api/admin/add-course", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/add-course`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

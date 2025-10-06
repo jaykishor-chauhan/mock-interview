@@ -73,7 +73,7 @@ const InterviewTopics = () => {
     console.log(formData, selectedCategory.id);
 
     try {
-      const response = await fetch("http://localhost:5001/api/filter-questions", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/filter-questions`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

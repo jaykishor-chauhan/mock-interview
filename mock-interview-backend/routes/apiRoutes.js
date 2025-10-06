@@ -9,10 +9,6 @@ const { filterQuestions } = require("../controllers/questionController");
 router.post("/user/register", registerUser);
 router.post("/verification", verifyEmail);
 router.post("/user/login", loginUser);
-// router.post("/admin/register", registerAdmin);
-// router.post("/admin/login", loginAdmin);
-// router.post("/admin/verification", verifyAdminEmail);
-
 
 // --- Get Users and Admins Info Routes ---
 router.get("/user/getallusers", getAllUsers);

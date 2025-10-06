@@ -68,7 +68,7 @@ const Questions = () => {
 
     try {
       const response = await fetch(
-        "https://mockinterview-ymzx.onrender.com/api/admin/add-question",
+        `${import.meta.env.VITE_API_URL}/api/admin/add-question`,
         {
           method: "POST",
           headers: {
@@ -106,7 +106,7 @@ const Questions = () => {
   const fetchQuestions = async () => {
     try {
       setLoading(true);
-      const response = await fetch("https://mockinterview-ymzx.onrender.com/api/admin/get-question", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/get-question`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
