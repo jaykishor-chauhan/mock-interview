@@ -91,8 +91,6 @@ exports.verifyEmail = async (req, res) => {
 };
 
 
-
-
 exports.loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -129,7 +127,6 @@ exports.loginUser = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
 
 
 exports.getAllUsers = async (req, res) => {
