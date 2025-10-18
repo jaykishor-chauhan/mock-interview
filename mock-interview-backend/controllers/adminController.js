@@ -1,4 +1,5 @@
 const Admin = require("../models/Admin");
+const User = require("../models/User");
 const Tokens = require("../models/Token");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
@@ -92,8 +93,6 @@ exports.verifyAdminEmail = async (req, res) => {
 };
 
 
-
-
 exports.loginAdmin = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -136,7 +135,6 @@ exports.loginAdmin = async (req, res) => {
 };
 
 
-
 exports.getAllAdmins = async (req, res) => {
   try {
     const admins = await Admin.find().select("-password");
@@ -145,7 +143,6 @@ exports.getAllAdmins = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
 
 
 // Login with google..
@@ -177,7 +174,7 @@ exports.getAdminDetails = async (req, res) => {
     }
 
     const admin = await Admin.findById(id).select("-password");
-    
+
     if (!admin) {
       return res.status(404).json({ message: "Admin not found" });
     }
@@ -185,5 +182,45 @@ exports.getAdminDetails = async (req, res) => {
     res.status(200).json(admin);
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+};
+
+
+exports.accountActivationDeactivation = async (req, res) => {
+  try {
+    const { active, id } = req.body;
+
+    if (!id || active === undefined) {
+      return res.status(400).json({ message: "ID and state are required" });
+    }
+
+    let entity;
+    let role;
+
+    if (active === "admin") {
+      entity = await Admin.findById(id);
+      role = "Admin";
+    } else {
+      entity = await User.findById(id);
+      role = "User";
+    }
+
+    if (!entity) {
+      return res.status(404).json({ message: `${role} not found` });
+    }
+
+    const newStatus = !(entity.verified && entity.emailVerified);
+    entity.verified = newStatus;
+    entity.emailVerified = newStatus;
+
+    await entity.save();
+
+    const statusText = newStatus ? "activated" : "deactivated";
+    return res.status(200).json({
+      message: `${role} account successfully ${statusText}`,
+    });
+
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
   }
 };

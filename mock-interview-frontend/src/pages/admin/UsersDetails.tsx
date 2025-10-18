@@ -12,6 +12,16 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -35,6 +45,8 @@ const LoginInfo = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
   const [loading, setLoading] = useState(false);
+  const [actionUser, setActionUser] = useState(null);
+  const [isAlertOpen, setIsAlertOpen] = useState(false);
   const [active, setActive] = useState("");
   const [details, setDetails] = useState([]);
 
@@ -76,6 +88,46 @@ const LoginInfo = () => {
       setLoading(false);
     }
   }
+
+  const handleUpdateStatus = async () => {
+    if (!actionUser) return;
+    setLoading(true);
+    const { _id } = actionUser;
+
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/account-activation-deactivation`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${localStorage.getItem("authToken")}`
+        },
+        body: JSON.stringify({ id: _id, active })
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        toast({
+          variant: "destructive",
+          description: result.message || `Failed to update ${active} status.`,
+        });
+      }
+
+       toast({
+          description: result.message,
+        });
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        description: `An error occurred while updating ${active} status.`,
+      });
+    } finally {
+      setLoading(false);
+      setIsAlertOpen(false);
+      setActionUser(null);
+      fetchDetails(active);
+    }
+  };
 
 
   const getStatusBadge = (verified: boolean, emailVerified: boolean) => {
@@ -172,6 +224,22 @@ const LoginInfo = () => {
 
       {/* Users Table */}
       <Card className="bg-white border border-gray-200 rounded-xl transition-all">
+        <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action will {actionUser?.verified && actionUser?.emailVerified ? 'deactivate' : 'activate'} the user account.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel onClick={() => setActionUser(null)}>Cancel</AlertDialogCancel>
+              <AlertDialogAction onClick={handleUpdateStatus} disabled={loading}>
+                {loading ? 'Processing...' : 'Confirm'}
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
         <Table>
           <TableHeader>
             <TableRow className="border-b border-gray-200">
@@ -229,21 +297,28 @@ const LoginInfo = () => {
                       size="sm"
                       variant="outline"
                       className="h-8 w-32 p-0"
+                      onClick={() => {
+                        setActionUser(user);
+                        setIsAlertOpen(true);
+                      }}
+                      disabled={(!user.verified && user.emailVerified) || loading}
                     >
-                      {user.verified ? (
+                      {user.verified && user.emailVerified ? (
                         <>
                           <UserX className="h-3 w-3 mr-1 text-red-600" /> Deactivate
                         </>
-                      ) : (
+                      ) : !user.verified && !user.emailVerified ? (
                         <>
                           <UserCheck className="h-3 w-3 mr-1 text-green-600" /> Activate
                         </>
+                      ) : (
+                        "Email Not Verified"
                       )}
                     </Button>
 
-                    <Button size="sm" variant="outline" className="h-8 w-8 p-0 border border-gray-200 text-gray-900">
+                    {/* <Button size="sm" variant="outline" className="h-8 w-8 p-0 border border-gray-200 text-gray-900">
                       <MoreVertical className="h-3 w-3 text-gray-400" />
-                    </Button>
+                    </Button> */}
                   </div>
                 </TableCell>
               </TableRow>

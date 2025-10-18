@@ -12,6 +12,8 @@ router.post("/admin/register", registerAdmin);
 router.post("/admin/login", loginAdmin);
 router.post("/admin/verification", verifyAdminEmail);
 
+router.patch("/account-activation-deactivation", adminController.accountActivationDeactivation);
+
 router.get("/google-login", adminController.getCurrentAdmin);
 router.get("/get-profile", adminController.getAdminDetails);
 router.get('/dashboard', getDashboard);
