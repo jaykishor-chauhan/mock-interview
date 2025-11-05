@@ -32,8 +32,7 @@ exports.logout = (req, res, next) => {
 
         req.session.destroy((err) => {
             if (err) return next(err);
-
-z
+            
             res.clearCookie('connect.sid', { path: '/' });
 
             // Redirect to login page or home
