@@ -92,9 +92,6 @@ exports.verifyAdminEmail = async (req, res) => {
 
 };
 
-
-// this is a sample comment
-
 exports.loginAdmin = async (req, res) => {
   try {
     const { email, password } = req.body;
