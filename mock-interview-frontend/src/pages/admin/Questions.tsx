@@ -49,6 +49,9 @@ const Questions = () => {
   const [loading, setLoading] = useState(false);
   const [allQuestions, setAllQuestions] = useState<any[]>([]);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [questionToDelete, setQuestionToDelete] = useState<any>(null);
+  const [deleting, setDeleting] = useState(false);
 
   const [formData, setFormData] = useState({
     course: "",
@@ -132,6 +135,47 @@ const Questions = () => {
   useEffect(() => {
     fetchQuestions();
   }, []);
+
+  // Open delete confirmation dialog for a question
+  const openDeleteDialog = (question: any) => {
+    setQuestionToDelete(question);
+    setIsDeleteDialogOpen(true);
+  };
+
+  // Delete a question by id
+  const handleDelete = async (questionId: string) => {
+    try {
+      setDeleting(true);
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/delete-question/${questionId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
+        },
+      });
+
+      let data: any = {};
+      try {
+        data = await response.json();
+      } catch (err) {
+        // Some endpoints may return empty body on DELETE
+      }
+
+      if (!response.ok) {
+        toast({ description: data.message || "Failed to delete question", variant: "destructive" });
+        return;
+      }
+
+      toast({ description: "Question deleted successfully" });
+      setAllQuestions((prev) => prev.filter((q) => q._id !== questionId));
+      setIsDeleteDialogOpen(false);
+      setQuestionToDelete(null);
+    } catch (error) {
+      toast({ description: "An error occurred while deleting the question", variant: "destructive" });
+    } finally {
+      setDeleting(false);
+    }
+  };
 
   const getDifficultyBadge = (difficulty: string) => {
     switch (difficulty) {
@@ -374,13 +418,13 @@ const Questions = () => {
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2">
-                    <Button size="sm" variant="outline" className="h-8 text-gray-900 border border-gray-200">
+                    {/* <Button size="sm" variant="outline" className="h-8 text-gray-900 border border-gray-200">
                       <Eye className="h-3 w-3 mr-1" /> View
-                    </Button>
-                    <Button size="sm" variant="outline" className="h-8 text-gray-900 border border-gray-200">
+                    </Button> */}
+                    {/* <Button size="sm" variant="outline" className="h-8 text-gray-900 border border-gray-200">
                       <Edit3 className="h-3 w-3" />
-                    </Button>
-                    <Button size="sm" variant="outline" className="h-8 text-red-600 border border-red-600 hover:bg-red-100">
+                    </Button> */}
+                    <Button size="sm" variant="outline" className="h-8 text-red-600 border border-red-600 hover:bg-red-100" onClick={() => openDeleteDialog(q)}>
                       <Trash2 className="h-3 w-3" />
                     </Button>
                   </div>
@@ -390,6 +434,27 @@ const Questions = () => {
           </TableBody>
         </Table>
       </Card>
+
+      {/* Delete confirmation dialog for questions */}
+      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Confirm Delete</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete this question?
+              <div className="mt-2 text-sm text-gray-600">"{questionToDelete?.question?.slice(0, 150) || ''}{questionToDelete?.question && questionToDelete?.question.length > 150 ? '...' : ''}"</div>
+            </DialogDescription>
+          </DialogHeader>
+          <div className="mt-4 flex justify-end gap-2">
+            <Button variant="outline" onClick={() => { setIsDeleteDialogOpen(false); setQuestionToDelete(null); }}>
+              Cancel
+            </Button>
+            <Button className="bg-red-600 text-white" onClick={() => handleDelete(questionToDelete?._id || questionToDelete?.id)} disabled={deleting}>
+              {deleting ? 'Deleting...' : 'Delete'}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };

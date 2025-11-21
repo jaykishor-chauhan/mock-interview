@@ -42,16 +42,19 @@ const Courses = () => {
   const [addLoading, setAddLoading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [courseToDelete, setCourseToDelete] = useState<any>(null);
+  const [deleting, setDeleting] = useState(false);
 
   const [formData, setFormData] = useState({
     course: "",
     category: "",
-    difficulty: "",
+    // difficulty: "",
     status: "",
     description: "",
   });
 
-  const { course, category, difficulty, status, description } = formData;
+  const { course, category, status, description } = formData;
 
   const handleChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
@@ -111,14 +114,25 @@ const Courses = () => {
       });
 
       if (!response.ok) {
-        toast({ description: "Failed to add course", variant: "destructive" });
+        const data = await response.json();
+        toast({ description: `${data.message || "Failed to add course"}`, variant: "destructive" });
         return;
       }
+
+
+      const data = await response.json();
+
+      // console.log("Add course response data:", data);
+
+      if (data.success === false) {
+        toast({ description: data.message || "Failed to add course", variant: "destructive" });
+        return;
+      }
+
       toast({ description: "Course added successfully" });
       setFormData({
         course: "",
         category: "",
-        difficulty: "",
         status: "",
         description: "",
       });
@@ -127,6 +141,49 @@ const Courses = () => {
       toast({ description: "An error occurred", variant: "destructive" });
     } finally {
       setAddLoading(false);
+    }
+  };
+
+  // Open a confirmation dialog with course details
+  const openDeleteDialog = (course: any) => {
+    setCourseToDelete(course);
+    setIsDeleteDialogOpen(true);
+  };
+
+  // Perform the deletion (called when user confirms)
+  const handleDelete = async (courseId: string) => {
+    try {
+      setDeleting(true);
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/delete-course/${courseId}`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${localStorage.getItem("adminToken")}`,
+        },
+      });
+
+      let data: any = {};
+      try {
+        data = await response.json();
+      } catch (err) {
+        // ignore parse errors — some endpoints may return empty bodies
+      }
+
+      if (!response.ok) {
+        toast({ description: data.message || "Failed to delete course", variant: "destructive" });
+        return;
+      }
+
+      toast({ description: "Course deleted successfully" });
+      // Refresh the course list after deletion
+      setCourses((prevCourses) => prevCourses.filter((c: any) => c._id !== courseId));
+      // Close dialog and clear selection
+      setIsDeleteDialogOpen(false);
+      setCourseToDelete(null);
+    } catch (error) {
+      toast({ description: "An error occurred while deleting the course", variant: "destructive" });
+    } finally {
+      setDeleting(false);
     }
   };
 
@@ -356,6 +413,26 @@ const Courses = () => {
         </div>
       </Card>
 
+      {/* Delete confirmation dialog */}
+      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Confirm Delete</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete the course "{courseToDelete?.name || courseToDelete?.course || ''}"? This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <div className="mt-4 flex justify-end gap-2">
+            <Button variant="outline" onClick={() => { setIsDeleteDialogOpen(false); setCourseToDelete(null); }}>
+              Cancel
+            </Button>
+            <Button className="bg-red-600 text-white" onClick={() => handleDelete(courseToDelete?._id || courseToDelete?.id)} disabled={deleting}>
+              {deleting ? 'Deleting...' : 'Delete'}
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
       {/* Courses Table */}
       <Card className="bg-white border border-gray-200 rounded-xl transition-all">
         <Table>
@@ -397,14 +474,15 @@ const Courses = () => {
                 </TableCell>
                 <TableCell>{getStatusBadge(course.status)}</TableCell>
                 <TableCell>
-                  <div className="flex items-center gap-2">
-                    <Button size="sm" variant="outline" className="h-8 text-gray-900 border border-gray-200">
+                    <div className="flex items-center gap-2">
+                    {/* <Button size="sm" variant="outline" className="h-8 text-gray-900 border border-gray-200">
                       <Edit3 className="h-3 w-3 mr-1" />
                       Edit
-                    </Button>
+                    </Button> */}
                     <Button
                       size="sm"
-                      variant="outline"
+                        variant="outline"
+                        onClick={() => openDeleteDialog(course)}
                       className="h-8 text-red-600 border border-red-600 hover:bg-red-100"
                     >
                       <Trash2 className="h-3 w-3" />
