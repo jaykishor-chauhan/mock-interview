@@ -56,19 +56,20 @@ exports.getQuestion = async (req, res) => {
 exports.filterQuestions = async (req, res) => {
   try {
     const { name, category, difficulty } = req.body;
-    console.log()
+    console.log("Filtering questions with:", { name, category, difficulty });
 
     if (!name || !category || !difficulty) {
       return res.status(400).json({ message: `All fields are required..` });
     }
 
-    const _course = await Course.findOne({ name, category });
+    const _course = await Course.findOne({ name, category }); 
+    // console.log("Found course:", _course);
     if (!_course) {
       return res.status(404).json({ message: 'Course not found for the selected criteria..' });
     }
 
     const questions = await Question.find({
-      course: course._id,
+      course: _course._id,
       difficulty: { $in: difficulty },
     });
 

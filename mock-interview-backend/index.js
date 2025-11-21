@@ -33,9 +33,8 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // ---------------------- ROUTES ----------------------
-app.use("/api", require("./routes/user")); // your normal APIs
 app.use("/auth", require("./routes/googleAuth")); // Google login routes
-
+app.use("/api", require("./routes/user")); // your normal APIs
 app.use("/api/admin", require("./routes/adminRoutes")); // admin routes
 app.use("/api/authentication/", require("./routes/authReset")); // password reset routes
 
