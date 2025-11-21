@@ -26,6 +26,8 @@ import EmailVerification from "./pages/user/Auth/EmailVerification";
 import CheckPermissions from "./pages/user/Interview/CheckPermissions";
 import VerificationSent from "./pages/user/VerificationSent";
 import AuthLoader from "./pages/AuthLoader";
+import Java from "@/pages/user/Blogs/Java";
+import Operating from "@/pages/user/Blogs/OperatingSystem";
 
 
 
@@ -81,6 +83,11 @@ const App = () => (
           <Route path="/auth/loader" element={<AuthLoader />} />
           <Route path="/admin/register" element={<AdminRegister />} />
           <Route path="/admin/login" element={ < AdminLogin />} />
+
+          {/*Blog*/}
+          <Route path="/blogs/java" element={ < Java />} />
+          <Route path="/blogs/operating-systems" element={ < Operating />} />
+
 
           {/* Layout routes for admin  */}
           {/* <Route path="/add-question" element={<AddQuestionForm />} /> */}
