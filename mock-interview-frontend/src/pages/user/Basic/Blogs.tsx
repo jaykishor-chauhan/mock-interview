@@ -14,8 +14,11 @@ import {
   Filter
 } from "lucide-react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Java from "@/pages/user/Blogs/Java";
 
 const Blogs = () => {
+  const nav = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
 
@@ -24,34 +27,36 @@ const Blogs = () => {
   const featuredPosts = [
     {
       id: 1,
-      title: "10 Most Common Technical Interview Questions in 2024",
+      title: "Java Technical Interview Questions ",
       excerpt: "Master these essential technical questions that top companies are asking...",
       author: "Sarah Chen",
       date: "Jan 15, 2024",
       readTime: "8 min read",
       category: "Technical",
-      image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=400&h=200&fit=crop",
+      image: "https://www.vectorlogo.zone/logos/java/java-ar21.svg",
       featured: true,
-      views: "12.5K"
+      views: "12.5K",
+      page: "Java"
     },
     {
       id: 2,
-      title: "How to Answer 'Tell Me About Yourself' Perfectly",
-      excerpt: "The ultimate guide to crafting a compelling response to this crucial question...",
+      title: "Operating Systems Interview Questions",
+      excerpt: "The ultimate guide to OS questions asked in software engineering interviews...",
       author: "Mike Johnson",
       date: "Jan 12, 2024",
       readTime: "6 min read",
       category: "Behavioral",
-      image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=200&fit=crop",
+      image: "https://www.svgrepo.com/show/339512/server-operating-systems.svg",
       featured: true,
-      views: "8.3K"
+      views: "8.3K",
+      page: "operating-systems"
     }
   ];
 
   const blogPosts = [
     {
       id: 3,
-      title: "System Design Interview: Building a Chat Application",
+      title: "System Design Interview",
       excerpt: "Learn how to approach system design questions with a real-world example...",
       author: "David Kim",
       date: "Jan 10, 2024",
@@ -117,6 +122,10 @@ const Blogs = () => {
     }
   ];
 
+  const handleClick = (page) => {
+    nav(`/blogs/${page.toLowerCase()}`);
+  }
+
   const filteredPosts = blogPosts.filter(post => {
     const matchesSearch = post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
       post.excerpt.toLowerCase().includes(searchTerm.toLowerCase());
@@ -125,8 +134,8 @@ const Blogs = () => {
   });
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="py-12">
+    <div className="min-h-[60vh] bg-gray-50">
+      <div className="py-8">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
 
           {/* Header */}
@@ -174,7 +183,7 @@ const Blogs = () => {
                 <Star className="w-5 h-5 mr-2 text-amber-500" />
                 Featured Articles
               </h2>
-              <div className="grid lg:grid-cols-2 gap-6">
+              <div className="grid lg:grid-cols-3 gap-6">
                 {featuredPosts.map((post) => (
                   <Card key={post.id} className="group hover:shadow-md hover:-translate-y-1 transition-all border border-gray-200">
                     <div className="aspect-video overflow-hidden">
@@ -201,23 +210,7 @@ const Blogs = () => {
                     </CardHeader>
                     <CardContent>
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center space-x-3">
-                          <Avatar className="w-8 h-8">
-                            <AvatarFallback className="text-xs">
-                              {post.author.split(" ").map((n) => n[0]).join("")}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div className="text-xs text-gray-500">
-                            <p className="font-medium text-gray-900">{post.author}</p>
-                            <div className="flex items-center">
-                              <Calendar className="w-3 h-3 mr-1" />
-                              {post.date}
-                              <Clock className="w-3 h-3 ml-3 mr-1" />
-                              {post.readTime}
-                            </div>
-                          </div>
-                        </div>
-                        <Button size="sm" className="bg-green-500 text-white hover:shadow-md flex items-center">
+                        <Button size="sm" className="bg-green-500 text-white hover:shadow-md flex items-center" onClick={() => handleClick(post.page)}>
                           Read More
                           <ArrowRight className="w-4 h-4 ml-1" />
                         </Button>
