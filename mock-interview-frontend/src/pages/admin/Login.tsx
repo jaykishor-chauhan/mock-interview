@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Eye, EyeOff } from "lucide-react";
@@ -108,12 +108,12 @@ const Login = () => {
 
             {/* Forgot password link */}
             <div className="text-right">
-              <a
-                href="/forgot-password"
+              <Link
+                to="/forgot-password?role=admin"
                 className="text-sm text-indigo-600 hover:underline focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded"
               >
-                Forgot password?
-              </a>
+                Forgot password
+              </Link>
             </div>
 
             <Button

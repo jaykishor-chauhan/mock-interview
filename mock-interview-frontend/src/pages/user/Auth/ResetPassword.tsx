@@ -12,18 +12,20 @@ const ResetPassword = () => {
   const [email, setEmail] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
+  const params = new URLSearchParams(window.location.search);
+  const role = params.get("role") || "user";
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/reset-password`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/authentication/reset-password`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, role }),
       });
 
       const data = await response.json();
@@ -50,7 +52,7 @@ const ResetPassword = () => {
 
   return (
     <div className="min-h-screen bg-gray-100">
-      <div className="flex items-center justify-center px-4 py-12">
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
         <div className="w-full max-w-md">
           <CardHeader className="text-center">
             <div className="w-12 h-12 bg-gradient-primary rounded-lg flex items-center justify-center mx-auto mb-4">
@@ -75,6 +77,7 @@ const ResetPassword = () => {
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="Enter your email"
                     required
+                    disabled={loading}
                     className="h-11"
                   />
                 </div>

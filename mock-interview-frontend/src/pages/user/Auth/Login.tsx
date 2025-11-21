@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
-import { CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+// import { CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+// import { Label } from "@/components/ui/label";
 import { toast } from "@/hooks/use-toast";
 import { Brain, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
@@ -119,8 +119,11 @@ const Login = () => {
             </div>
 
             <div className="flex items-center justify-end">
-              <Link to="/forgot-password" className="text-sm text-primary hover:underline">
-                Forgot password?
+              <Link 
+                to="/forgot-password?role=user" 
+                className="text-sm text-primary hover:underline"
+              >
+                Forgot password
               </Link>
             </div>
 

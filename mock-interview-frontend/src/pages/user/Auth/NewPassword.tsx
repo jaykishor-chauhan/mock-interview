@@ -13,21 +13,22 @@ const NewPassword = () => {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [loading, setLoading] = useState(false);
     const [isSuccess, setIsSuccess] = useState(false);
+    const [role, setRole] = useState("");
 
     // Get token and id from the URL (e.g., /new-password?token=...&id=...)
     const [searchParams] = useSearchParams();
     const token = searchParams.get("token");
-    const userId = searchParams.get("id");
+    // const userId = searchParams.get("id");
 
     useEffect(() => {
-        if (!token || !userId) {
+        if (!token) {
             toast({
                 variant: "destructive",
                 description: "The password reset link is incomplete.",
             });
             navigate("/forget-password");
         }
-    }, [token, userId, navigate]);
+    }, [token, navigate]);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -40,14 +41,19 @@ const NewPassword = () => {
         }
         setLoading(true);
 
+
+
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/update-password`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/authentication/update-password`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ userId, token, newPassword: password }),
+                body: JSON.stringify({ token, newPassword: password }),
             });
 
             const data = await response.json();
+            setRole(data.user);
+
+            // console.log("Response data:", data);
 
             if (!response.ok) {
                 toast({
@@ -128,7 +134,9 @@ const NewPassword = () => {
                                     Your password has been changed successfully. You can now log in.
                                 </p>
                                 <Button asChild className="w-full">
-                                    <Link to="/login">Proceed to Login</Link>
+                                    <Link to={role === "user" ? "/login" : "/admin/login"}>
+                                        Proceed to Login
+                                    </Link>
                                 </Button>
                             </div>
                         )}

@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const { registerUser, verifyEmail, loginUser, getAllUsers } = require("../controllers/userController");
-const { resetPassword, updatePassword } = require("../controllers/resetController");
 const { filterQuestions } = require("../controllers/questionController");
 
 
@@ -15,8 +14,8 @@ router.get("/user/getallusers", getAllUsers);
 
 
 // --- Reset Password and New Password Routes ---
-router.post("/reset-password", resetPassword);
-router.post("/update-password", updatePassword);
+// router.post("/reset-password", resetPassword);
+// router.post("/update-password", updatePassword);
 
 // --- Interview Routes ---
 router.post("/filter-questions", filterQuestions);
