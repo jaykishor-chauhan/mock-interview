@@ -12,7 +12,8 @@ import {
   AlertCircle,
   Star,
   RotateCcw,
-  Download
+  Download,
+  ArrowLeft
 } from "lucide-react";
 import { Link } from "react-router-dom";
 
@@ -78,6 +79,20 @@ const InterviewResults = () => {
     if (score >= 70) return "bg-gradient-warning";
     return "bg-destructive";
   };
+
+  const handleGOBack = () => {
+    // Logic to navigate back to the previous page or dashboard
+    window.history.back();
+  }
+
+  window.addEventListener('popstate', () => {
+    window.location.href = "/interviews";
+  });
+
+  
+  ( async () => {
+    await document.exitFullscreen();
+  })();
 
   return (
     <div className="min-h-screen bg-gradient-bg">
@@ -290,14 +305,17 @@ const InterviewResults = () => {
 
         {/* Action Buttons */}
         <div className="flex flex-col sm:flex-row gap-4 justify-center mt-8">
-          <Button size="lg" className="w-full sm:w-auto bg-gradient-primary hover:opacity-90">
-            <RotateCcw className="w-4 h-4 mr-2" />
-            Practice Again
-          </Button>
+          <Link to="/interviews">
+            <Button size="lg" className="w-full sm:w-auto bg-gradient-primary hover:opacity-90">
+              <RotateCcw className="w-4 h-4 mr-2" />
+              Go Back
+            </Button>
+          </Link>
           <Button size="lg" variant="outline" className="w-full sm:w-auto">
             <Download className="w-4 h-4 mr-2" />
             Download Report
           </Button>
+          
         </div>
       </div>
     </div>
