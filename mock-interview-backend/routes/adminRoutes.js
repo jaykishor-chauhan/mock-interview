@@ -8,9 +8,9 @@ const { registerAdmin, loginAdmin, verifyAdminEmail, getAllAdmins } = require(".
 
 
 
-router.post("/admin/register", registerAdmin);
-router.post("/admin/login", loginAdmin);
-router.post("/admin/verification", verifyAdminEmail);
+router.post("/register", registerAdmin);
+router.post("/login", loginAdmin);
+router.post("/verification", verifyAdminEmail);
 
 router.patch("/account-activation-deactivation", adminController.accountActivationDeactivation);
 

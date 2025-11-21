@@ -43,7 +43,7 @@ const InterviewTopics = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("handleSubmit triggered");
+    // console.log("handleSubmit triggered");
 
     if (!Array.isArray(formData.difficulty) || formData.difficulty.length === 0) {
       toast({
@@ -77,7 +77,7 @@ const InterviewTopics = () => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          // "Authorization": `Bearer ${token}`,
+          "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify({
           name: formData.course,
