@@ -53,10 +53,33 @@ exports.getQuestion = async (req, res) => {
 
 
 
+exports.deleteQuestion = async (req, res) => {
+  try {
+    const { questionId } = req.params;
+    console.log("Deleting question with ID:", questionId);
+    
+    if (!questionId) {
+      return res.status(400).json({ message: "Question ID is required" });
+    }
+
+    const deletedQuestion = await Question.findByIdAndDelete(questionId);
+    if (!deletedQuestion) {
+      return res.status(404).json({ message: "Question not found" });
+    }
+
+    res.status(200).json({ message: "Question deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to delete question", error });
+  }
+};
+
+
+
+
 exports.filterQuestions = async (req, res) => {
   try {
     const { name, category, difficulty } = req.body;
-    console.log("Filtering questions with:", { name, category, difficulty });
+    // console.log("Filtering questions with:", { name, category, difficulty });
 
     if (!name || !category || !difficulty) {
       return res.status(400).json({ message: `All fields are required..` });
