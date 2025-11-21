@@ -25,18 +25,23 @@ import NewPassword from "./pages/user/Auth/NewPassword";
 import EmailVerification from "./pages/user/Auth/EmailVerification";
 import CheckPermissions from "./pages/user/Interview/CheckPermissions";
 import VerificationSent from "./pages/user/VerificationSent";
+import AuthLoader from "./pages/AuthLoader";
+import Java from "@/pages/user/Blogs/Java";
+import Operating from "@/pages/user/Blogs/OperatingSystem";
 
 
 
 
 
 // Admin Portal Imports
-import AdminLayout from "./layouts/AdminLayout";
+import AdminRegister from "./pages/admin/Register";
 import AdminLogin from "./pages/admin/Login";
-import AddQuestionForm from "./pages/admin/AddQuestionForm";
+import AdminLayout from "./layouts/AdminLayout";
+import AdminProfile from "./pages/admin/AdminProfile";
+// import AddQuestionForm from "./pages/admin/AddQuestionForm";
 import Dashboard from "./pages/admin/Dashboard";
-import Users from "./pages/admin/Users";
-import Courses from "./pages/admin/Courses";
+import Users from "./pages/admin/UsersDetails";
+import Courses from "./pages/admin/Course";
 import Questions from "./pages/admin/Questions";
 import Reports from "./pages/admin/Reports";
 
@@ -51,6 +56,7 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           {/* Users routes */}
+          <Route index element={<Index />} /> //this defult index page on '/'
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
@@ -63,7 +69,6 @@ const App = () => (
 
           {/* Layout routes for users */}
           <Route path="/" element={<Layout />}>
-            <Route index element={<Index />} /> //this defult index page on Layout on '/'
             <Route path="profile" element={<Profile />} />
             <Route path="interviews" element={<InterviewTopics />} />
             <Route path="blogs" element={<Blogs />} />
@@ -73,15 +78,23 @@ const App = () => (
             <Route path="terms" element={<TermsOfService />} />
             <Route path="cookies" element={<CookiePolicy />} />
           </Route>
-
-          {/* Redirect root to login */}
+          
+          {/* Admin routes */}
+          <Route path="/auth/loader" element={<AuthLoader />} />
+          <Route path="/admin/register" element={<AdminRegister />} />
           <Route path="/admin/login" element={ < AdminLogin />} />
 
+          {/*Blog*/}
+          <Route path="/blogs/java" element={ < Java />} />
+          <Route path="/blogs/operating-systems" element={ < Operating />} />
+
+
           {/* Layout routes for admin  */}
-          <Route path="/add-question" element={<AddQuestionForm />} />
+          {/* <Route path="/add-question" element={<AddQuestionForm />} /> */}
           <Route path="/" element={<AdminLayout />}>
+            <Route path="admin/profile" element={<AdminProfile />} />
             <Route path="dashboard" element={<Dashboard />} />
-            <Route path="users" element={<Users />} />
+            <Route path="get-registered" element={<Users />} />
             <Route path="courses" element={<Courses />} />
             <Route path="questions" element={<Questions />} />
             <Route path="reports" element={<Reports />} />

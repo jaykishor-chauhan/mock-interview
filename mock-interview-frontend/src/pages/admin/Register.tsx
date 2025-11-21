@@ -1,15 +1,18 @@
 import { useState, useEffect } from "react";
-import { Link, useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Eye, EyeOff } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 
-const Login = () => {
+const Signup = () => {
   const navigate = useNavigate();
+  const [fullname, setFullname] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [searchParams] = useSearchParams();
 
@@ -23,41 +26,40 @@ const Login = () => {
     }
   }, [searchParams]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
+    if (password !== confirmPassword) {
+      toast({
+        description: "Passwords do not match.",
+        variant: "destructive",
+      });
+      return;
+    }
 
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/login`, {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ name:fullname, email, password }),
       });
 
-      const data = await response.json();
-
+      const errorData = await response.json();
       if (!response.ok) {
         toast({
-          description: data.message || "An error occurred. Please try again.",
+          description: errorData.message || "An error occurred. Please try again.",
           variant: "destructive",
         });
         return;
-      }
+      } 
 
-      localStorage.setItem("adminToken", data.token);
-      localStorage.setItem("adminId", data.user.id);
-      localStorage.setItem("adminName", data.user.name);
-      localStorage.setItem("adminEmail", data.user.email);
-      localStorage.setItem("adminPhotoURL", data.user.photo);
-      localStorage.setItem("created_at", data.user.created_at);
-
-      navigate("/dashboard");
+      navigate("/verification-sent?role=admin", { state: { email } });
 
     } catch (error) {
       toast({
-        description: "Invalid email or password. Please try again.",
+        description: "An error occurred. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -72,10 +74,19 @@ const Login = () => {
           {/* Header */}
           <div className="text-center space-y-2">
             <h1 className="text-2xl font-bold text-gray-900">Admin Portal</h1>
-            <p className="text-gray-600 pb-5">Sign in to manage your account</p>
+            <p className="text-gray-600 pb-5">Create your admin account</p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-5">
+          <form onSubmit={handleSignup} className="space-y-5">
+            <Input
+              type="text"
+              placeholder="Full name"
+              value={fullname}
+              onChange={(e) => setFullname(e.target.value)}
+              className="bg-gray-100 border border-gray-300 text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              required
+              aria-label="Full name"
+            />
             <Input
               type="email"
               placeholder="Email address"
@@ -106,21 +117,32 @@ const Login = () => {
               </button>
             </div>
 
-            {/* Forgot password link */}
-            <div className="text-right">
-              <Link
-                to="/forgot-password?role=admin"
-                className="text-sm text-indigo-600 hover:underline focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded"
+            <div className="relative">
+              <Input
+                type={showConfirmPassword ? "text" : "password"}
+                placeholder="Confirm Password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                className="bg-gray-100 border border-gray-300 text-gray-900 pr-10 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                required
+                aria-label="Confirm Password"
+              />
+              <button
+                type="button"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-900 transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded"
+                aria-label={showConfirmPassword ? "Hide password" : "Show password"}
               >
-                Forgot password
-              </Link>
+                {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+              </button>
             </div>
 
             <Button
               type="submit"
               className="w-full border border-gray-300 rounded-lg bg-gray-600 text-white hover:bg-gray-700 transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              disabled={isLoading}
             >
-              {isLoading ? "Signing in..." : "Sign In"}
+              {isLoading ? "Signing Up..." : "Sign Up"}
             </Button>
           </form>
 
@@ -144,19 +166,19 @@ const Login = () => {
                 alt="Google"
                 className="h-5 w-5"
               />
-              Sign in with Google
+              Sign up with Google
             </button>
           </div>
 
           {/* Signup link */}
           <div className="text-center text-sm text-gray-600 pt-2">
-            Don’t have an account?{' '}
-            <button
-              onClick={() => navigate("/admin/register")}
+            Already have an account?{' '}
+            <a
+              href="/admin/login"
               className="text-indigo-600 hover:underline focus:outline-none focus:ring-2 focus:ring-indigo-500 rounded"
             >
-              Sign up
-            </button>
+              Sign in
+            </a>
           </div>
         </div>
       </div>
@@ -164,4 +186,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Signup;

@@ -6,21 +6,30 @@ import { useNavigate } from "react-router-dom";
 const EmailVerification = () => {
   const navigate = useNavigate();
   const [verificationStatus, setVerificationStatus] = useState(null);
+  const [loginRole, setLoginRole] = useState('user');
 
   useEffect(() => {
     const verifyEmail = async () => {
       const params = new URLSearchParams(window.location.search);
       const verificationToken = params.get("token");
       const userId = params.get("id");
+      const role = params.get("role");
+
+      const api_route = role === 'admin' ? 'admin/verification' : 'verification';
+      setLoginRole(role);
+
+      console.log("Verifying email with:", { userId, verificationToken, role, api_route });
 
       try {
-        const response = await fetch("https://mock-interview-backend-nyby.onrender.com/api/mock-interview/verification", {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/${api_route}`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ userId, token: verificationToken }),
+          body: JSON.stringify({ userId, token: verificationToken, role }),
         });
+
+        console.log(response);
 
         if (response.ok) {
           setVerificationStatus(true);
@@ -55,7 +64,7 @@ const EmailVerification = () => {
             <h2 className="text-xl font-semibold text-gray-900 mb-4">Email verified successfully!</h2>
             <p className="text-gray-600 mb-6">Your email has been verified. Continue to login.</p>
             <button
-              onClick={() => navigate('/login') }
+              onClick={() => navigate(loginRole === 'admin' ? '/admin/login' : '/login')}
               className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors inline-flex items-center"
             >
               Continue to Login

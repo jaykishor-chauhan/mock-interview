@@ -43,8 +43,9 @@ const InterviewTopics = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // console.log("handleSubmit triggered");
 
-    if (formData.difficulty.length === 0) {
+    if (!Array.isArray(formData.difficulty) || formData.difficulty.length === 0) {
       toast({
         variant: "destructive",
         description: "Please select at least one difficulty level."
@@ -52,22 +53,47 @@ const InterviewTopics = () => {
       return;
     }
 
+    if (!selectedCategory || !selectedCategory.id) {
+      toast({
+        variant: "destructive",
+        description: "Please select a category."
+      });
+      return;
+    }
+
+    const token = localStorage.getItem("authToken");
+    if (!token) {
+      toast({
+        variant: "destructive",
+        description: "You must be logged in to perform this action."
+      });
+      return;
+    }
+
+    console.log(formData, selectedCategory.id);
+
     try {
-      const response = await fetch("https://mock-interview-backend-nyby.onrender.com/api/mock-interview/get-questions", {
+      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/filter-questions`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${localStorage.getItem("authToken")}`,
+          "Authorization": `Bearer ${token}`,
         },
         body: JSON.stringify({
-          interviewType: selectedCategory.id,
-          subType: formData.course,
+          name: formData.course,
+          category: selectedCategory.id,
           difficulty: formData.difficulty,
         }),
       });
 
+      let data;
+      try {
+        data = await response.json();
+      } catch {
+        data = {};
+      }
+
       if (!response.ok) {
-        const data = await response.json();
         toast({
           variant: "destructive",
           description: data.message || "An unknown error occurred.",
@@ -75,8 +101,7 @@ const InterviewTopics = () => {
         return;
       }
 
-      const data = await response.json();
-      console.log("Questions received:", data.questions); // Debugging line
+      console.log("Questions received:", data.questions);
 
       navigate('/check-permissions', {
         state: {
@@ -91,15 +116,13 @@ const InterviewTopics = () => {
         variant: "destructive",
         description: "Server error. Could not connect to the server.",
       });
-      return;
     }
-
   };
 
 
   const categories = [
     {
-      id: "technical",
+      id: "Technical",
       title: "Technical Interviews",
       description: "Coding challenges, algorithms, data structures, and system design questions",
       icon: Code,
@@ -111,7 +134,7 @@ const InterviewTopics = () => {
       popular: true
     },
     {
-      id: "hr",
+      id: "HR",
       title: "HR Interviews",
       description: "Company culture fit, motivation, career goals, and general questions",
       icon: Building,
@@ -123,7 +146,7 @@ const InterviewTopics = () => {
       popular: false
     },
     {
-      id: "behavioral",
+      id: "Behavioral",
       title: "Behavioral Interviews",
       description: "Situational questions, teamwork, leadership, and soft skills assessment",
       icon: Users,
@@ -260,10 +283,10 @@ const InterviewTopics = () => {
                             <option value="" disabled>
                               Select a course
                             </option>
-                            <option value="java">Java</option>
-                            <option value="networking">Networking</option>
-                            <option value="os">OS</option>
-                            <option value="system-design">System Design</option>
+                            <option value="Java">Java</option>
+                            <option value="Natworking">Networking</option>
+                            <option value="OS">OS</option>
+                            {/* <option value="System-design">System Design</option> */}
                           </select>
                         </div>
                         <div>

@@ -4,8 +4,6 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { sendVerificationEmail } = require("../middleware/verifyMailer");
 
-
-
 exports.registerUser = async (req, res) => {
   try {
     const { name, email, password } = req.body;
@@ -25,6 +23,8 @@ exports.registerUser = async (req, res) => {
       name,
       email,
       password: hashedPassword,
+      source: 'email',
+      photo:null
     });
 
     //verificaton token sending
@@ -52,6 +52,7 @@ exports.registerUser = async (req, res) => {
 
 exports.verifyEmail = async (req, res) => {
   const { userId, token } = req.body;
+  
 
   if (!userId || !token) {
     return res.status(400).json({ message: "Invalid link..." });
@@ -59,7 +60,7 @@ exports.verifyEmail = async (req, res) => {
 
   try {
     const user = await User.findOne({ _id: userId })
-    if( user.status === true ) {
+    if( user.verified === true && user.emailVerified === true){
       return res.status(200).json({ message: "You email has already been verified." })
     }
 
@@ -70,12 +71,13 @@ exports.verifyEmail = async (req, res) => {
     }
 
     const isTokenMatch = (token === verifyRecord.token);
+       
     if (!isTokenMatch) {
       return res.status(400).json({ message: "Invalid or expired password reset link." });
     }
 
     jwt.verify(token, process.env.JWT_SECRET);
-    await User.findByIdAndUpdate(userId, { status: true })
+    await User.findByIdAndUpdate(userId, { verified: true, emailVerified: true })
     await Tokens.deleteOne({ id: userId });
     res.status(200).json({ message: "Email verified successfully." });
 
@@ -89,16 +91,16 @@ exports.verifyEmail = async (req, res) => {
 };
 
 
-
-
 exports.loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
+
     if (!email || !password) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
     const user = await User.findOne({ email });
+    console.log(user);
     if (!user) {
       return res.status(400).json({ message: "Invalid email or password" });
     }
@@ -125,4 +127,14 @@ exports.loginUser = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
+};
+
+
+exports.getAllUsers = async (req, res) => {
+    try {
+        const users = await User.find().select("-password");
+        res.status(200).json(users);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
 };

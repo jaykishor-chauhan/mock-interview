@@ -60,7 +60,7 @@ function AddQuestionForm() {
         setLoading(true);
 
         try {
-            const response = await fetch("https://mock-interview-backend-nyby.onrender.com/api/mock-interview/admin/add-question", {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/add-question`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({

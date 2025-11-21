@@ -1,7 +1,7 @@
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -14,8 +14,8 @@ import { Outlet } from "react-router-dom"; // <-- import Outlet
 const pages = [
   { name: "Home", path: "/" },
   { name: "Contact", path: "/contact" },
-  { name: "Blog", path: "/blog" },
-  { name: "Request Quote", path: "/request-quote" },
+  { name: "Blog", path: "/blogs" },
+  { name: "Request Quote", path: "/quote" },
   { name: "Profile", path: "/profile" },
   { name: "Settings", path: "/settings" },
 ];
@@ -24,24 +24,17 @@ export default function Layout() {
   const navigate = useNavigate();
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
-  const [filteredPages, setFilteredPages] = useState([]);
-  const token = localStorage.getItem("authToken");
+  const [isSearchActive, setIsSearchActive] = useState(false);
+  const userToken = localStorage.getItem("authToken");
   const userString = localStorage.getItem("user");
   const user = JSON.parse(userString);
 
-  const handleSearchChange = (e) => {
-    const value = e.target.value;
-    setSearchTerm(value);
-
-    if (value.trim() === "") {
-      setFilteredPages([]);
-    } else {
-      setFilteredPages(
-        pages.filter((page) =>
-          page.name.toLowerCase().includes(value.toLowerCase())
-        )
-      );
+   if (!user) {
+      return <Navigate to="/login" replace />;
     }
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
   };
 
   const getInitials = (fullName: "Jaykishor Chauhan") => {
@@ -76,26 +69,27 @@ export default function Layout() {
                   } md:flex`}
               >
                 <div className="flex items-center gap-4">
-                  {token ? (<SidebarTrigger />) : (null)}
+                  {userToken ? (<SidebarTrigger />) : (null)}
 
                   <div className="relative hidden md:flex">
                     <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
                     <Input
-                      placeholder="Search interviews, topics..."
+                      placeholder="Search pages..."
                       className="w-64 pl-9 bg-muted/50 border-0 focus:bg-background"
                       value={searchTerm}
                       onChange={handleSearchChange}
+                      onFocus={() => setIsSearchActive(true)}
+                      onBlur={() => setTimeout(() => setIsSearchActive(false), 150)}
                     />
-                    {filteredPages.length > 0 && (
+                    {isSearchActive && (
                       <div className="absolute mt-[48px] w-full bg-background border rounded-md shadow-lg z-100">
-                        {filteredPages.map((page) => (
+                        {(searchTerm.trim() === "" ? pages : pages.filter(page => page.name.toLowerCase().includes(searchTerm.toLowerCase()))).map((page) => (
                           <div
                             key={page.path}
                             className="px-4 py-2 cursor-pointer hover:bg-muted"
                             onClick={() => {
                               navigate(page.path);
                               setSearchTerm("");
-                              setFilteredPages([]);
                             }}
                           >
                             {page.name}
@@ -117,7 +111,7 @@ export default function Layout() {
                     <Search className="h-4 w-4" />
                   </Button>
 
-                  {token ? (
+                  {userToken ? (
                     <>
                       <Button variant="ghost" size="icon" className="relative">
                         <Bell className="h-4 w-4" />
@@ -176,7 +170,7 @@ export default function Layout() {
                           <DropdownMenuItem
                             onClick={() => {
                               localStorage.clear();
-                              navigate("/login");
+                              navigate("/");
                             }}
                             className="text-destructive focus:text-destructive focus:bg-destructive/10"
                           >
@@ -219,9 +213,9 @@ export default function Layout() {
                       autoFocus
                     />
 
-                    {filteredPages.length > 0 && (
+                    {(searchTerm.trim() === "" ? pages : pages.filter(page => page.name.toLowerCase().includes(searchTerm.toLowerCase()))).length > 0 && (
                       <div className="absolute mt-1 w-full bg-background border rounded-md shadow-lg z-50">
-                        {filteredPages.map((page) => (
+                        {(searchTerm.trim() === "" ? pages : pages.filter(page => page.name.toLowerCase().includes(searchTerm.toLowerCase()))).map((page) => (
                           <div
                             key={page.path}
                             className="px-4 py-2 cursor-pointer hover:bg-muted"
@@ -229,7 +223,6 @@ export default function Layout() {
                               navigate(page.path);
                               setIsMobileSearchOpen(false);
                               setSearchTerm("");
-                              setFilteredPages([]);
                             }}
                           >
                             {page.name}

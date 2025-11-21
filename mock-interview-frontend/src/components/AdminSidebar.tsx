@@ -28,7 +28,7 @@ const menuItems = [
   },
   {
     title: "Users",
-    url: "/users",
+    url: "/get-registered?state=users",
     icon: Users,
   },
   {

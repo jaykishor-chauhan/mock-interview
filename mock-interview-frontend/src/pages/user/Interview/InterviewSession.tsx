@@ -36,7 +36,7 @@ const InterviewSession = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { interviewQuestions } = location.state || {};
-  
+
   const [isFullscreen, setIsFullscreen] = useState(!!document.fullscreenElement);
   const [timeLeft, setTimeLeft] = useState(600); // 10 minutes
   const [currentQuestion, setCurrentQuestion] = useState(0);
@@ -72,12 +72,14 @@ const InterviewSession = () => {
   const synthRef = useRef<SpeechSynthesis | null>(null);
   const shouldContinueListening = useRef(false);
 
+  // console.log("Interview Questions:", interviewQuestions);
+
   const questions: Question[] = interviewQuestions.map((item, index) => ({
     id: item._id,
-    category: item.subType.interviewType.name,
+    // category: item.subType.interviewType.name,
     difficulty: item.difficulty,
     question: item.question,
-    expectedDuration: item.expectedDuration + " minutes"
+    // expectedDuration: durationByDifficulty[item.difficulty.toLowerCase()] + " minutes"
   }));
 
   const currentQ = questions[currentQuestion];
@@ -721,12 +723,12 @@ const InterviewSession = () => {
                     <Badge className={`${getDifficultyColor(currentQ.difficulty)} border`}>
                       {currentQ.difficulty}
                     </Badge>
-                    <Badge variant="outline" className="bg-blue-50">
+                    {/* <Badge variant="outline" className="bg-blue-50">
                       {currentQ.category}
-                    </Badge>
-                    <Badge variant="outline" className="bg-gray-50">
+                    </Badge> */}
+                    {/* <Badge variant="outline" className="bg-gray-50">
                       ⏱️ {currentQ.expectedDuration}
-                    </Badge>
+                    </Badge> */}
                   </div>
                 </div>
               </CardHeader>
