@@ -16,6 +16,24 @@ exports.googleCallback = (req, res, next) => {
         }
         req.logIn(user, (err) => {
             if (err) return next(err);
+
+            // Debug logs to help confirm session creation and cookies in production
+            try {
+                console.log('Google callback - user:', {
+                    id: user._id,
+                    email: user.email,
+                    name: user.name,
+                });
+                console.log('Google callback - req.sessionID:', req.sessionID);
+                console.log('Google callback - req.session (summary):', {
+                    cookie: req.session?.cookie,
+                    passport: req.session?.passport,
+                });
+                console.log('Google callback - request headers cookie:', req.headers.cookie);
+            } catch (logErr) {
+                console.error('Error logging session info:', logErr);
+            }
+
             const token = jwt.sign(
                 { id: user._id, email: user.email, name: user.name, verified: user.verified },
                 process.env.JWT_SECRET,
@@ -32,7 +50,7 @@ exports.logout = (req, res, next) => {
 
         req.session.destroy((err) => {
             if (err) return next(err);
-            
+
             res.clearCookie('connect.sid', { path: '/' });
 
             // Redirect to login page or home

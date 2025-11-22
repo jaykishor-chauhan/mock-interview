@@ -13,6 +13,7 @@ const AuthLoader: React.FC = () => {
       setLoading(true);
       try {
         const res = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/google-login`, {
+          method: "GET",
           credentials: "include"
         });
         const data = await res.json();
