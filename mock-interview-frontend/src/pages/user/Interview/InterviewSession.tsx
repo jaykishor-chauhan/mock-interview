@@ -29,13 +29,14 @@ interface Conversation {
   type: 'question' | 'answer';
   text: string;
   timestamp: Date;
-  questionId?: number;
+  // questionId?: number;
 }
 
 const InterviewSession = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { interviewQuestions } = location.state || {};
+  // console.log("interviewQuestions from last page :", interviewQuestions);
 
   const [isFullscreen, setIsFullscreen] = useState(!!document.fullscreenElement);
   const [timeLeft, setTimeLeft] = useState(600); // 10 minutes
@@ -55,7 +56,9 @@ const InterviewSession = () => {
   const [errorCount, setErrorCount] = useState(0);
   const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
   const [selectedVoice, setSelectedVoice] = useState<SpeechSynthesisVoice | null>(null);
-  const [storedResponses, setStoredResponses] = useState<{ questionId: number, question: string, answer: string, timestamp: Date }[]>([]);
+  const [storedResponses, setStoredResponses] = useState<{ question: string, answer: string, timestamp: Date }[]>([]);
+
+  // console.log("\n\nStored Responses of user : ", storedResponses);
   const [isAutoMode, setIsAutoMode] = useState(true);
   const [listeningTimeout, setListeningTimeout] = useState<NodeJS.Timeout | null>(null);
   const [noResponsePrompts, setNoResponsePrompts] = useState(0);
@@ -75,7 +78,7 @@ const InterviewSession = () => {
   // console.log("Interview Questions:", interviewQuestions);
 
   const questions: Question[] = interviewQuestions.map((item, index) => ({
-    id: item._id,
+    // id: item._id,
     // category: item.subType.interviewType.name,
     difficulty: item.difficulty,
     question: item.question,
@@ -103,7 +106,7 @@ const InterviewSession = () => {
       }, 3000);
 
       testRecognition.onstart = () => {
-        console.log('Speech recognition test successful');
+        // console.log('Speech recognition test successful');
         clearTimeout(testTimeout);
         setSpeechAvailable(true);
         setNetworkError(false);
@@ -364,7 +367,7 @@ const InterviewSession = () => {
         type: 'question',
         text: questionText,
         timestamp: new Date(),
-        questionId: questions[currentQuestion].id
+        // questionId: questions[currentQuestion].id
       };
       setConversation(prev => [...prev, newQuestion]);
 
@@ -511,7 +514,7 @@ const InterviewSession = () => {
     setConversation(prev => [...prev, newAnswer]);
 
     const responseData = {
-      questionId: questions[currentQuestion].id,
+      // questionId: questions[currentQuestion].id,
       question: questions[currentQuestion].question,
       answer: finalResponse,
       timestamp: new Date()
@@ -954,7 +957,7 @@ const InterviewSession = () => {
 
                           return (
                             <div
-                              key={q.id}
+                              // key={q.id}
                               className={`p-1 rounded-full border-2 transition-all duration-300 ${isCurrent
                                 ? 'bg-blue-100 border-blue-300 shadow-md'
                                 : isCompleted
