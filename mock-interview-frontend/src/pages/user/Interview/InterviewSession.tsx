@@ -701,7 +701,7 @@ const InterviewSession = () => {
                 <span className="font-mono text-lg font-semibold">{formatTime(timeLeft)}</span>
               </div>
               <button
-                onClick={() => navigate("/interview/results")}
+                onClick={() => navigate("/interview/results", { state: { storedResponses } }) }
                 className="flex items-center space-x-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg shadow-lg transition-colors duration-300"
               >
                 <CheckCircle className="w-5 h-5" />
