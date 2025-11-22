@@ -1,16 +1,15 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Search, Book, Code, ArrowRight } from "lucide-react";
+import { Search, Book, Code, ArrowRight, ChevronDown, ChevronUp, BookOpen, ExternalLink } from "lucide-react";
 
 type Topic = {
-  id: number;
-  title: string;
-  bullets: string[];
-  resources;
- GeeksForGeekss?: { label: string; href: string }[];
+    id: number;
+    title: string;
+    bullets: string[];
+    resources?: { label: string; href: string }[];
 };
 
 const topics: Topic[] = [
@@ -209,77 +208,181 @@ const OperatingSystem = () => {
 
     const toggle = (id: number) => setExpanded((s) => ({ ...s, [id]: !s[id] }));
 
+    const expandAll = () => {
+        const allExpanded: Record<number, boolean> = {};
+        filtered.forEach((t) => (allExpanded[t.id] = true));
+        setExpanded(allExpanded);
+    };
+
+    const collapseAll = () => setExpanded({});
+
     return (
-        <div className="min-h-screen bg-gray-50 py-10">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-                <div className="mb-8 text-center">
-                    <h1 className="text-3xl font-bold">Operating System Interview Prep Hub</h1>
-                    <p className="text-gray-600 mt-2">Concise topics, quick bullets to prepare for Operating system interviews.</p>
-                </div>
-
-                <div className="flex flex-col md:flex-row gap-6">
-                    <div className="flex-1">
-                        <div className="flex items-center gap-3 mb-6">
-                            <Search className="w-5 h-5 text-gray-400" />
-                            <Input placeholder="Search topics or keywords..." value={query} onChange={(e) => setQuery(e.target.value)} />
+        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-purple-50/20 to-blue-50/30">
+            {/* Hero Header */}
+            <div className="bg-gradient-to-r from-purple-600 via-violet-600 to-indigo-700 text-white py-12">
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
+                    <div className="flex items-center gap-3 mb-4">
+                        <div className="w-12 h-12 bg-white/20 backdrop-blur-md rounded-xl flex items-center justify-center">
+                            <BookOpen className="w-6 h-6" />
                         </div>
-
-                        <div className="grid gap-4">
-                            {filtered.map((t) => (
-                                <Card key={t.id} className="border border-gray-200">
-                                    <CardHeader>
-                                        <div className="flex items-center justify-between">
-                                            <div className="flex items-center gap-3">
-                                                <Badge className="bg-gray-100 text-gray-900 border border-gray-200">{t.id}</Badge>
-                                                <CardTitle className="text-lg font-semibold">{t.title}</CardTitle>
-                                            </div>
-                                            <div className="flex items-center gap-2">
-                                                <Button size="sm" variant={expanded[t.id] ? "default" : "outline"} onClick={() => toggle(t.id)}>
-                                                    {expanded[t.id] ? "Collapse" : "Expand"}
-                                                </Button>
-                                            </div>
-                                        </div>
-                                    </CardHeader>
-
-                                    {expanded[t.id] && (
-                                        <CardContent>
-                                            <ul className="list-disc ml-5 space-y-1 text-sm text-gray-700">
-                                                {t.bullets.map((b, i) => (
-                                                    <li key={i}>{b}</li>
-                                                ))}
-                                            </ul>
-
-                                            {t.resources && (
-                                                <div className="mt-4 flex flex-wrap gap-2">
-                                                    {t.resources.map((r, i) => (
-                                                        <a key={i} href={r.href} target="_blank" rel="noreferrer">
-                                                            <Button size="sm" className="flex items-center gap-2" variant="outline">
-                                                                <Book className="w-4 h-4" /> {r.label} <ArrowRight className="w-3 h-3" />
-                                                            </Button>
-                                                        </a>
-                                                    ))}
-                                                </div>
-                                            )}
-                                        </CardContent>
-                                    )}
-                                </Card>
-                            ))}
-
-                            {filtered.length === 0 && (
-                                <Card className="text-center border border-gray-200 py-8">
-                                    <CardContent>
-                                        <Code className="w-6 h-6 mx-auto text-gray-400 mb-3" />
-                                        <h3 className="font-semibold">No topics match your search</h3>
-                                        <p className="text-sm text-gray-500">Try broader terms or clear the search</p>
-                                        <div className="mt-4">
-                                            <Button onClick={() => setQuery("")} className="bg-green-500 text-white">Clear</Button>
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                            )}
+                        <div>
+                            <h1 className="text-4xl font-bold">Operating Systems Interview Questions</h1>
+                            <p className="text-purple-100 mt-2">Master the essential OS concepts for technical interviews</p>
                         </div>
                     </div>
 
+                    {/* Stats */}
+                    <div className="flex gap-6 mt-6">
+                        <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-lg">
+                            <Code className="w-4 h-4" />
+                            <span className="text-sm font-medium">{topics.length} Questions</span>
+                        </div>
+                        <div className="flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-lg">
+                            <BookOpen className="w-4 h-4" />
+                            <span className="text-sm font-medium">All Levels</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div className="py-10">
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
+                    {/* Search & Controls */}
+                    <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
+                        <div className="flex flex-col md:flex-row gap-4">
+                            {/* Search Bar */}
+                            <div className="flex-1 relative">
+                                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
+                                <Input
+                                    placeholder="Search topics or keywords (e.g., 'deadlock', 'memory')..."
+                                    value={query}
+                                    onChange={(e) => setQuery(e.target.value)}
+                                    className="pl-12 h-12 border-gray-300 focus:border-purple-400 focus:ring-purple-400"
+                                />
+                            </div>
+
+                            {/* Control Buttons */}
+                            <div className="flex gap-2">
+                                <Button
+                                    variant="outline"
+                                    onClick={expandAll}
+                                    className="border-gray-300 hover:bg-purple-50 hover:border-purple-300 hover:text-purple-700"
+                                >
+                                    <ChevronDown className="w-4 h-4 mr-2" />
+                                    Expand All
+                                </Button>
+                                <Button
+                                    variant="outline"
+                                    onClick={collapseAll}
+                                    className="border-gray-300 hover:bg-purple-50 hover:border-purple-300 hover:text-purple-700"
+                                >
+                                    <ChevronUp className="w-4 h-4 mr-2" />
+                                    Collapse All
+                                </Button>
+                            </div>
+                        </div>
+
+                        {/* Results Count */}
+                        <div className="mt-4 text-sm text-gray-600">
+                            Showing <span className="font-semibold text-purple-600">{filtered.length}</span> of <span className="font-semibold">{topics.length}</span> questions
+                        </div>
+                    </div>
+
+                    {/* Questions List */}
+                    <div className="space-y-4">
+                        {filtered.map((t) => (
+                            <Card
+                                key={t.id}
+                                className={`border-2 transition-all duration-200 ${expanded[t.id]
+                                    ? 'border-purple-300 bg-purple-50/30 shadow-md'
+                                    : 'border-gray-200 bg-white hover:border-purple-200 hover:shadow-sm'
+                                    }`}
+                            >
+                                <CardHeader
+                                    className="cursor-pointer hover:bg-purple-50/50 transition-colors rounded-t-lg"
+                                    onClick={() => toggle(t.id)}
+                                >
+                                    <div className="flex items-start justify-between gap-4">
+                                        <div className="flex items-center gap-4 flex-1">
+                                            {/* Question Number Badge */}
+                                            <Badge className="bg-gradient-to-br from-purple-500 to-indigo-700 text-white border-0 px-3 py-1.5 text-sm font-semibold shrink-0">
+                                                #{t.id}
+                                            </Badge>
+
+                                            {/* Question Title */}
+                                            <CardTitle className="text-lg font-bold text-gray-900 leading-tight flex-1">
+                                                {t.title}
+                                            </CardTitle>
+                                        </div>
+                                        {/* Expand/Collapse Icon */}
+                                        <div className={`transition-transform duration-200 ${expanded[t.id] ? 'rotate-180' : ''}`}>
+                                            <ChevronDown className="w-5 h-5 text-purple-600" />
+                                        </div>
+                                    </div>
+                                </CardHeader>
+
+                                {/* Expanded Content */}
+                                {expanded[t.id] && (
+                                    <CardContent className="pt-0 pb-6 px-6">
+                                        {/* Answer Content */}
+                                        <div className="space-y-4">
+                                            {t.bullets.map((b, i) => (
+                                                <div key={i} className="flex gap-3">
+                                                    <div className="w-2 h-2 rounded-full bg-purple-500 mt-2 shrink-0"></div>
+                                                    <p className="text-base text-gray-700 leading-relaxed">{b}</p>
+                                                </div>
+                                            ))}
+                                        </div>
+
+                                        {/* Resources Section */}
+                                        {t.resources && t.resources.length > 0 && (
+                                            <div className="mt-6 pt-6 border-t border-gray-200">
+                                                <div className="flex items-center gap-2 mb-3">
+                                                    <Book className="w-4 h-4 text-purple-600" />
+                                                    <span className="text-sm font-semibold text-gray-700">Learn More</span>
+                                                </div>
+                                                <div className="flex flex-wrap gap-3">
+                                                    {t.resources.map((r, i) => (
+                                                        <a
+                                                            key={i}
+                                                            href={r.href}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="inline-flex items-center gap-2 px-4 py-2 bg-white border-2 border-purple-200 text-purple-700 rounded-lg hover:bg-purple-50 hover:border-purple-300 transition-colors text-sm font-medium"
+                                                        >
+                                                            <ExternalLink className="w-4 h-4" />
+                                                            {r.label}
+                                                        </a>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+                                    </CardContent>
+                                )}
+                            </Card>
+                        ))}
+
+                        {/* No Results State */}
+                        {filtered.length === 0 && (
+                            <Card className="text-center border-2 border-dashed border-gray-300 bg-gray-50 py-12">
+                                <CardContent>
+                                    <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                        <Search className="w-8 h-8 text-purple-400" />
+                                    </div>
+                                    <h3 className="text-xl font-bold text-gray-900 mb-2">No questions found</h3>
+                                    <p className="text-gray-600 mb-6">
+                                        Try adjusting your search terms or browse all questions
+                                    </p>
+                                    <Button
+                                        onClick={() => setQuery("")}
+                                        className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white hover:from-purple-700 hover:to-indigo-700"
+                                    >
+                                        Clear Search
+                                    </Button>
+                                </CardContent>
+                            </Card>
+                        )}
+                    </div>
                 </div>
             </div>
         </div>
