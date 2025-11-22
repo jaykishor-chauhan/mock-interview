@@ -96,7 +96,7 @@ exports.loginAdmin = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    console.log("Login attempt:", { email, password });
+    // console.log("Login attempt:", { email, password });
 
     if (!email || !password) {
       return res.status(400).json({ message: "All fields are required" });
@@ -104,8 +104,12 @@ exports.loginAdmin = async (req, res) => {
 
     const admin = await Admin.findOne({ email });
 
+    // console.log("admin:", admin);
+
     if (!admin) {
       return res.status(400).json({ message: "Invalid email or password" });
+    } else if (!admin.verified || !admin.emailVerified) {
+      return res.status(400).json({ message: "Please verify your email before logging in or contact support." });
     }
 
     const isMatch = await bcrypt.compare(password, admin.password);
@@ -149,7 +153,7 @@ exports.getAllAdmins = async (req, res) => {
 // Login with google..
 exports.getCurrentAdmin = async (req, res) => {
   try {
-    console.log("Get current admin request:", req.isAuthenticated());
+    // console.log("Get current admin request:", req.isAuthenticated());
 
     // Check authentication
     if (!req.isAuthenticated() || !req.user) {
