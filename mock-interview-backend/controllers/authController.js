@@ -39,7 +39,20 @@ exports.googleCallback = (req, res, next) => {
                 process.env.JWT_SECRET,
                 { expiresIn: "1h" }
             );
-            return res.redirect(`${process.env.FRONTEND_URL}/auth/loader?token=${token}`);
+
+            // Ensure session is saved to the store before redirecting. This avoids
+            // a race where the redirect response is sent before the session is
+            // persisted, which can cause subsequent requests (from the frontend)
+            // to not find the authenticated session.
+            req.session.save((saveErr) => {
+                if (saveErr) {
+                    console.error('Error saving session before redirect:', saveErr);
+                    // Even if saving fails, redirect with token so the flow continues.
+                } else {
+                    console.log('Session saved before redirect, sessionID:', req.sessionID);
+                }
+                return res.redirect(`${process.env.FRONTEND_URL}/auth/loader?token=${token}`);
+            });
         });
     })(req, res, next);
 };
