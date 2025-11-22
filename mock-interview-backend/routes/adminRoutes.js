@@ -13,8 +13,11 @@ router.post("/verification", verifyAdminEmail);
 
 router.patch("/account-activation-deactivation", adminController.accountActivationDeactivation);
 
+
 router.get("/google-login", adminController.getCurrentAdmin);
 router.get("/get-profile", adminController.getAdminDetails);
+
+
 router.get('/dashboard', getDashboard);
 
 router.post("/add-course", addCourse);

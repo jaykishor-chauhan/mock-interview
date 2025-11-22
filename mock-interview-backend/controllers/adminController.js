@@ -149,6 +149,8 @@ exports.getAllAdmins = async (req, res) => {
 // Login with google..
 exports.getCurrentAdmin = (req, res) => {
 
+  console.log("Get current admin request:", req.isAuthenticated());
+
   if (req.isAuthenticated()) {
     return res.json({
       id: req.user._id,
