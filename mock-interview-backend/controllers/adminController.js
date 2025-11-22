@@ -147,25 +147,46 @@ exports.getAllAdmins = async (req, res) => {
 
 
 // Login with google..
-exports.getCurrentAdmin = (req, res) => {
+exports.getCurrentAdmin = async (req, res) => {
+  try {
+    console.log("Get current admin request:", req.isAuthenticated());
 
-  console.log("Get current admin request:", req.isAuthenticated());
+    // Check authentication
+    if (!req.isAuthenticated() || !req.user) {
+      return res
+        .status(401)
+        .json({ message: "Authentication request is unauthorized.." });
+    }
 
-  if (req.isAuthenticated()) {
+    const {
+      _id,
+      name,
+      email,
+      photo,
+      verified,
+      emailVerified,
+      createdAt,
+    } = req.user;
+
     return res.json({
-      id: req.user._id,
-      name: req.user.name,
-      email: req.user.email,
-      photo: req.user.photo,
-      verified: req.user.verified,
-      emailVerified: req.user.emailVerified,
-      createdAt: req.user.createdAt,
+      id: _id,
+      name,
+      email,
+      photo,
+      verified,
+      emailVerified,
+      createdAt,
+    });
+
+  } catch (error) {
+    console.error("Error in getCurrentAdmin:", error);
+    res.status(500).json({
+      message: "Internal server error while fetching current admin",
+      error: error.message,
     });
   }
-
-  res.status(401).json({ message: "Authentication request is unauthorized.." });
-
 };
+
 
 
 exports.getAdminDetails = async (req, res) => {

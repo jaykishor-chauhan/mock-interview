@@ -17,10 +17,6 @@ app.use(express.json());
 
 require("./googleAuth2")(); // loads GoogleStrategy
 
-// If the app is running behind a proxy (Render, Cloudflare, etc.) express
-// needs to trust the proxy so secure cookies (secure: true) are set correctly.
-app.set("trust proxy", 1);
-
 app.use(
   session({
     secret: process.env.JWT_SECRET,
@@ -30,15 +26,6 @@ app.use(
       mongoUrl: process.env.MONGO_URI,
       collectionName: "sessions",
     }),
-    // Cookie settings necessary for cross-site cookies (frontend on Netlify,
-    // backend on Render). Browsers require `SameSite=None` and `Secure` for
-    // third-party/cross-site cookies.
-    cookie: {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "none",
-      maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
-    },
   })
 );
 
