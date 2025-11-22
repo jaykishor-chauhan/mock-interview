@@ -152,4 +152,4 @@ const sendResetMail = async (userId, userEmail, userName, resetToken) => {
     }
 };
 
-module.exports = { sendResetMail };
+module.exports = { sendResetMail, transporter };
