@@ -96,7 +96,7 @@ exports.loginAdmin = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    console.log("Login attempt:", { email, password });
+    // console.log("Login attempt:", { email, password });
 
     if (!email || !password) {
       return res.status(400).json({ message: "All fields are required" });
@@ -104,8 +104,12 @@ exports.loginAdmin = async (req, res) => {
 
     const admin = await Admin.findOne({ email });
 
+    // console.log("admin:", admin);
+
     if (!admin) {
       return res.status(400).json({ message: "Invalid email or password" });
+    } else if (!admin.verified || !admin.emailVerified) {
+      return res.status(400).json({ message: "Please verify your email before logging in or contact support." });
     }
 
     const isMatch = await bcrypt.compare(password, admin.password);
@@ -147,23 +151,46 @@ exports.getAllAdmins = async (req, res) => {
 
 
 // Login with google..
-exports.getCurrentAdmin = (req, res) => {
+exports.getCurrentAdmin = async (req, res) => {
+  try {
+    // console.log("Get current admin request:", req.isAuthenticated());
 
-  if (req.isAuthenticated()) {
+    // Check authentication
+    if (!req.isAuthenticated() || !req.user) {
+      return res
+        .status(401)
+        .json({ message: "Authentication request is unauthorized.." });
+    }
+
+    const {
+      _id,
+      name,
+      email,
+      photo,
+      verified,
+      emailVerified,
+      createdAt,
+    } = req.user;
+
     return res.json({
-      id: req.user._id,
-      name: req.user.name,
-      email: req.user.email,
-      photo: req.user.photo,
-      verified: req.user.verified,
-      emailVerified: req.user.emailVerified,
-      createdAt: req.user.createdAt,
+      id: _id,
+      name,
+      email,
+      photo,
+      verified,
+      emailVerified,
+      createdAt,
+    });
+
+  } catch (error) {
+    console.error("Error in getCurrentAdmin:", error);
+    res.status(500).json({
+      message: "Internal server error while fetching current admin",
+      error: error.message,
     });
   }
-
-  res.status(401).json({ message: "Authentication request is unauthorized.." });
-
 };
+
 
 
 exports.getAdminDetails = async (req, res) => {

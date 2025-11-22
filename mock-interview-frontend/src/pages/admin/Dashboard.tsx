@@ -59,14 +59,15 @@ const Dashboard = () => {
       setRecentActivity(activities.slice(0, 8));
     } catch (err) {
       console.error(err);
+      throw err;
     } finally {
       setLoading(false);
     }
   }
 
   const quickActions = [
-    { title: "Add New Course", desc: "Create a new interview course", icon: Plus },
-    { title: "Add Questions", desc: "Add interview questions", icon: FileText },
+    { title: "Add New Course", url: "/courses", desc: "Create a new interview course", icon: Plus },
+    { title: "Add Questions", url: "/questions", desc: "Add interview questions", icon: FileText },
   ];
 
   return (
@@ -286,7 +287,11 @@ const Dashboard = () => {
 
           <div className="space-y-3">
             {quickActions.map((action, idx) => (
-              <button key={idx} className="w-full flex items-center gap-3 p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition-all">
+              <button 
+                key={idx} 
+                className="w-full flex items-center gap-3 p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition-all"
+                onClick={() => window.location.href = action.url}
+              >
                 <action.icon className="h-5 w-5 text-gray-700" />
                 <div className="text-left">
                   <h3 className="font-medium text-gray-900">{action.title}</h3>

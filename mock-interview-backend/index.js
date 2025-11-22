@@ -17,6 +17,10 @@ app.use(express.json());
 
 require("./googleAuth2")(); // loads GoogleStrategy
 
+// When running behind a proxy (Render, Cloudflare), enable trust proxy so
+// Express knows the original connection is secure and can set secure cookies.
+app.set('trust proxy', 1);
+
 app.use(
   session({
     secret: process.env.JWT_SECRET,
@@ -26,6 +30,12 @@ app.use(
       mongoUrl: process.env.MONGO_URI,
       collectionName: "sessions",
     }),
+    cookie: {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'none',
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 7 days
+    },
   })
 );
 
@@ -37,6 +47,7 @@ app.use("/auth", require("./routes/googleAuth")); // Google login routes
 app.use("/api", require("./routes/user")); // your normal APIs
 app.use("/api/admin", require("./routes/adminRoutes")); // admin routes
 app.use("/api/authentication/", require("./routes/authReset")); // password reset routes
+app.use("/health", require("./routes/health"));
 app.use("/api/agent", require("./routes/agentRoutes")); // agent routes
 
 

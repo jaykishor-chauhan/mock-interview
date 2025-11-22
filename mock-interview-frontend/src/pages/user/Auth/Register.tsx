@@ -94,90 +94,90 @@ const Register = () => {
             <h1 className="text-2xl font-semibold text-gray-900 mt-3">Create your account</h1>
             <p className="text-sm text-gray-600 max-w-[40ch] mx-auto mt-1">Sign up to access curated interview courses and practice questions.</p>
           </div>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="space-y-2">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="space-y-2">
+              <Input
+                id="name"
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                placeholder="Enter your full name"
+                required
+                className="h-11"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Input
+                id="email"
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                placeholder="Enter your email"
+                required
+                className="h-11"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <div className="relative">
                 <Input
-                  id="name"
-                  type="text"
-                  name="name"
-                  value={formData.name}
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  name="password"
+                  value={formData.password}
                   onChange={handleChange}
-                  placeholder="Enter your full name"
+                  placeholder="Create a password"
                   required
-                  className="h-11"
+                  className="h-11 pr-12"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
               </div>
+            </div>
 
-              <div className="space-y-2">
+            <div className="space-y-2">
+              <div className="relative">
                 <Input
-                  id="email"
-                  type="email"
-                  name="email"
-                  value={formData.email}
+                  id="confirmPassword"
+                  type={showConfirmPassword ? "text" : "password"}
+                  name="confirmPassword"
+                  value={formData.confirmPassword}
                   onChange={handleChange}
-                  placeholder="Enter your email"
+                  placeholder="Confirm your password"
                   required
-                  className="h-11"
+                  className="h-11 pr-12"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                >
+                  {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                </button>
               </div>
+            </div>
 
-              <div className="space-y-2">
-                <div className="relative">
-                  <Input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    name="password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    placeholder="Create a password"
-                    required
-                    className="h-11 pr-12"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                  >
-                    {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <div className="relative">
-                  <Input
-                    id="confirmPassword"
-                    type={showConfirmPassword ? "text" : "password"}
-                    name="confirmPassword"
-                    value={formData.confirmPassword}
-                    onChange={handleChange}
-                    placeholder="Confirm your password"
-                    required
-                    className="h-11 pr-12"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
-                  >
-                    {showConfirmPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                  </button>
-                </div>
-              </div>
-
-              <Button type="submit" className="w-full h-11 bg-gradient-primary hover:opacity-90" disabled={loading}>
-                {loading ? ("Creating Account...") : ("Create Account")}
-              </Button>
-            </form>
-            {/* Divider */}
-          <div className="flex items-center gap-2 text-gray-400 my-4">
+            <Button type="submit" className="w-full h-11 bg-gradient-primary hover:opacity-90" disabled={loading}>
+              {loading ? ("Creating Account...") : ("Create Account")}
+            </Button>
+          </form>
+          {/* Divider */}
+          {/* <div className="flex items-center gap-2 text-gray-400 my-4">
             <hr className="flex-1 border-gray-300" />
             <span className="text-sm">or</span>
             <hr className="flex-1 border-gray-300" />
-          </div>
+          </div> */}
 
           {/* Login with Google */}
-          <div className="space-y-3">
+          {/* <div className="space-y-3">
             <button
               // onClick={() => {
               //   window.location.href = `${import.meta.env.VITE_API_URL}/auth/google`;
@@ -191,17 +191,17 @@ const Register = () => {
               />
               Sign up with Google
             </button>
+          </div> */}
+          <div className="text-center text-sm text-muted-foreground m-4">
+            Already have an account?{" "}
+            <Button
+              variant="link"
+              onClick={() => navigate("/login")}
+              className="p-0 font-medium underline:no-underline"
+            >
+              Sign in
+            </Button>
           </div>
-            <div className="text-center text-sm text-muted-foreground m-4">
-              Already have an account?{" "}
-              <Button
-                variant="link"
-                onClick={() => navigate("/login")}
-                className="p-0 font-medium underline:no-underline"
-              >
-                Sign in
-              </Button>
-            </div>
         </div>
       </div>
     </div>

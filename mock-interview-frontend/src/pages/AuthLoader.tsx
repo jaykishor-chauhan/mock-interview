@@ -12,13 +12,19 @@ const AuthLoader: React.FC = () => {
     const checkAuth = async () => {
       setLoading(true);
       try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/google-login`, {
-          credentials: "include"
+        // Prefer JWT-based verification for cross-site flows: send the
+        // token returned in the redirect to the backend and get admin info.
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/admin/google-token-login`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: token ? `Bearer ${token}` : '',
+          },
         });
         const data = await res.json();
 
         console.log("Admin details: ", data);
-        localStorage.setItem("adminToken", token);
+        localStorage.setItem("adminToken", token || '');
         localStorage.setItem("adminId", data.id);
         localStorage.setItem("adminName", data.name);
         localStorage.setItem("adminEmail", data.email);

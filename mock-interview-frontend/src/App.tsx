@@ -26,11 +26,10 @@ import EmailVerification from "./pages/user/Auth/EmailVerification";
 import CheckPermissions from "./pages/user/Interview/CheckPermissions";
 import VerificationSent from "./pages/user/VerificationSent";
 import AuthLoader from "./pages/AuthLoader";
+
+// Blog Imports
 import Java from "@/pages/user/Blogs/Java";
 import Operating from "@/pages/user/Blogs/OperatingSystem";
-
-
-
 
 
 // Admin Portal Imports
@@ -67,11 +66,16 @@ const App = () => (
           <Route path="interview/results" element={<InterviewResults />} />
           <Route path="/check-permissions" element={<CheckPermissions />} />
 
+           {/*Blog*/}
+          <Route path="blogs" element={<Blogs />} />
+          <Route path="/blogs/java" element={ < Java />} />
+          <Route path="/blogs/operating-systems" element={ < Operating />} />
+
           {/* Layout routes for users */}
           <Route path="/" element={<Layout />}>
             <Route path="profile" element={<Profile />} />
             <Route path="interviews" element={<InterviewTopics />} />
-            <Route path="blogs" element={<Blogs />} />
+            {/* <Route path="blogs" element={<Blogs />} /> */}
             <Route path="contact" element={<Contact />} />
             <Route path="quote" element={<RequestQuote />} />
             <Route path="privacy" element={<PrivacyPolicy />} />
@@ -83,10 +87,6 @@ const App = () => (
           <Route path="/auth/loader" element={<AuthLoader />} />
           <Route path="/admin/register" element={<AdminRegister />} />
           <Route path="/admin/login" element={ < AdminLogin />} />
-
-          {/*Blog*/}
-          <Route path="/blogs/java" element={ < Java />} />
-          <Route path="/blogs/operating-systems" element={ < Operating />} />
 
 
           {/* Layout routes for admin  */}

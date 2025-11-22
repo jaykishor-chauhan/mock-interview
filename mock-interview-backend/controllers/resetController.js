@@ -45,13 +45,16 @@ exports.resetPassword = async (req, res) => {
       await new Tokens({ id: user._id, token: resetToken }).save();
     }
 
-    // console.log("reset details:", { resetToken, userId: user._id , email: user.email});
+    // Log minimal info for debugging (do not log tokens in production)
+    console.log("[resetController] Sending reset email to:", user.email);
     await sendResetMail(user._id, user.email, user.name, resetToken);
     res.status(200).json({
       message: "A password reset link has been sent. It will expire in 15 minutes."
     });
 
   } catch (error) {
+    console.error("[resetController] Error in resetPassword:", error && error.message ? error.message : error);
+    if (error && error.stack) console.error(error.stack);
     res.status(500).json({ message: "An error occurred on the server." });
   }
 };
@@ -103,6 +106,8 @@ exports.updatePassword = async (req, res) => {
     if (error.name === 'TokenExpiredError') {
       return res.status(400).json({ message: "Password reset link has expired." });
     }
+    console.error("[resetController] Error in updatePassword:", error && error.message ? error.message : error);
+    if (error && error.stack) console.error(error.stack);
     res.status(500).json({ message: "An error occurred on the server." });
   }
 };

@@ -142,14 +142,14 @@ const Login = () => {
           </form>
 
           {/* Divider */}
-          <div className="flex items-center gap-2 text-gray-400 my-4">
+          {/* <div className="flex items-center gap-2 text-gray-400 my-4">
             <hr className="flex-1 border-gray-300" />
             <span className="text-sm">or</span>
             <hr className="flex-1 border-gray-300" />
-          </div>
+          </div> */}
 
           {/* Login with Google */}
-          <div className="space-y-3">
+          {/* <div className="space-y-3">
             <button
               // onClick={() => {
               //   window.location.href = `${import.meta.env.VITE_API_URL}/auth/google`;
@@ -163,7 +163,7 @@ const Login = () => {
               />
               Sign in with Google
             </button>
-          </div>
+          </div> */}
 
           <div className="text-center text-sm text-muted-foreground">
             Don't have an account?{" "}
