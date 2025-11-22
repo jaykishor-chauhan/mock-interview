@@ -1,6 +1,8 @@
 const passport = require("passport");
 const jwt = require("jsonwebtoken");
 
+const Admin = require("../models/Admin");
+
 exports.googleLogin = passport.authenticate("google", {
     scope: ["email", "profile"],
 });
@@ -70,4 +72,41 @@ exports.logout = (req, res, next) => {
             res.redirect(`${process.env.FRONTEND_URL}/admin/login`);
         });
     });
+};
+
+// Verify a JWT (sent from the frontend after OAuth redirect) and return admin info.
+exports.verifyTokenLogin = async (req, res) => {
+    try {
+        // Token may be sent in Authorization header or as query param `token`
+        const authHeader = req.headers.authorization;
+        let token = null;
+        if (authHeader && authHeader.startsWith('Bearer ')) {
+            token = authHeader.split(' ')[1];
+        } else if (req.query && req.query.token) {
+            token = req.query.token;
+        }
+
+        if (!token) return res.status(400).json({ message: 'Token is required' });
+
+        let payload;
+        try {
+            payload = jwt.verify(token, process.env.JWT_SECRET);
+        } catch (err) {
+            return res.status(401).json({ message: 'Invalid or expired token' });
+        }
+
+        const admin = await Admin.findById(payload.id).select('-password');
+        if (!admin) return res.status(404).json({ message: 'Admin not found' });
+
+        return res.status(200).json({
+            id: admin._id,
+            name: admin.name,
+            email: admin.email,
+            photo: admin.photo,
+            created_at: admin.createdAt,
+        });
+    } catch (error) {
+        console.error('Error in verifyTokenLogin:', error);
+        return res.status(500).json({ message: 'Server error' });
+    }
 };

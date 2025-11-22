@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const adminController = require("../controllers/adminController");
+const authController = require("../controllers/authController");
 const { getDashboard } = require("../controllers/dashboardController");
 const { getCourse, addCourse, deleteCourse } = require("../controllers/courseController");
 const { addQuestion, getQuestion, deleteQuestion } = require("../controllers/questionController");
@@ -15,6 +16,7 @@ router.patch("/account-activation-deactivation", adminController.accountActivati
 
 
 router.get("/google-login", adminController.getCurrentAdmin);
+router.get("/google-token-login", authController.verifyTokenLogin);
 router.get("/get-profile", adminController.getAdminDetails);
 
 
