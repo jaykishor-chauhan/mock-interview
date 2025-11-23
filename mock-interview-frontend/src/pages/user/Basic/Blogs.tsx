@@ -434,7 +434,7 @@ const Blogs = () => {
                     <CardContent className="px-5 pb-4 pt-0">
                       <div className="flex items-center justify-between pt-3 border-t border-gray-100">
                         {/* Author Info */}
-                        <div className="flex items-center gap-2.5">
+                        {/*<div className="flex items-center gap-2.5">
                           <Avatar className="w-9 h-9 border-2 border-purple-100">
                             <AvatarFallback className="bg-gradient-to-br from-purple-500 to-indigo-500 text-white text-xs font-semibold">
                               {post.author.split(" ").map((n) => n[0]).join("")}
@@ -444,7 +444,7 @@ const Blogs = () => {
                             <p className="text-xs font-semibold text-gray-900">{post.author}</p>
                             <p className="text-xs text-gray-500">{post.date} • {post.readTime}</p>
                           </div>
-                        </div>
+                        </div>*/}
 
                         {/* Read More Button */}
                         <Button
@@ -527,7 +527,7 @@ const Blogs = () => {
                     </CardHeader>
                     <CardContent className="px-5 pb-5 pt-0">
                       <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-                        <div className="flex items-center gap-2">
+                        {/*<div className="flex items-center gap-2">
                           <Avatar className="w-8 h-8 border-2 border-purple-100">
                             <AvatarFallback className="text-xs bg-gradient-to-br from-purple-500 to-indigo-500 text-white font-semibold">
                               {post.author.split(" ").map((n) => n[0]).join("")}
@@ -537,7 +537,7 @@ const Blogs = () => {
                             <p className="text-xs font-semibold text-gray-900">{post.author}</p>
                             <p className="text-xs text-gray-500">{post.date}</p>
                           </div>
-                        </div>
+                        </div>*/}
                         <Button size="sm" variant="ghost" className="text-purple-600 hover:bg-purple-50 font-medium">
                           Read
                           <ArrowRight className="w-3 h-3 ml-1" />
