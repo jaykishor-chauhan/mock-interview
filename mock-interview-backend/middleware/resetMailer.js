@@ -47,46 +47,9 @@
 // module.exports = {
 //     sendResetMail,
 // };
-
-
-
-const nodemailer = require("nodemailer");
-
-const fromAddress = process.env.MAIL_FROM || process.env.FROM_EMAIL;
-
-const requiredEnvVars = ["SMTP_HOST", "SMTP_PORT", "SMTP_USER", "SMTP_PASS", "FRONTEND_URL"];
-
-const getMissingEnvVars = () =>
-    requiredEnvVars.filter((key) => !process.env[key] || String(process.env[key]).trim() === "");
-
-const assertMailerConfigured = () => {
-    const missingEnvVars = getMissingEnvVars();
-    if (!fromAddress || String(fromAddress).trim() === "") {
-        missingEnvVars.push("MAIL_FROM (or FROM_EMAIL)");
-    }
-
-    if (missingEnvVars.length > 0) {
-        const message = `[resetMailer] Email service misconfigured. Missing: ${missingEnvVars.join(", ")}`;
-        console.error(message);
-        const error = new Error("Email service is not configured");
-        error.code = "MAILER_NOT_CONFIGURED";
-        error.details = missingEnvVars;
-        throw error;
-    }
-};
-
-const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,
-    port: Number(process.env.SMTP_PORT),
-    secure: process.env.SMTP_SECURE === "true", // true = 465, false = 587
-    auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
-    },
-});
+const { sendEmail } = require("./emailClient");
 
 const sendResetMail = async (userId, userEmail, userName, resetToken) => {
-    assertMailerConfigured();
     // console.log("ENV CHECK:", {
     //     host: process.env.SMTP_HOST,
     //     port: process.env.SMTP_PORT,
@@ -99,11 +62,8 @@ const sendResetMail = async (userId, userEmail, userName, resetToken) => {
 
     const resetLink = `${process.env.FRONTEND_URL}/new-password?token=${resetToken}`;
 
-    const mailOptions = {
-        from: fromAddress,
-        to: userEmail,
-        subject: `Password Reset Request - ${userId}`,
-        html: `
+    const subject = `Password Reset Request - ${userId}`;
+    const html = `
             <div style="font-family: Arial, sans-serif; line-height: 1.7; color: #333;">
                 <p>Hi ${userName},</p>
 
@@ -132,21 +92,29 @@ const sendResetMail = async (userId, userEmail, userName, resetToken) => {
                     The Mock Interview Team
                 </p>
             </div>
-        `,
-
-    };
+        `;
 
     try {
-        const info = await transporter.sendMail(mailOptions);
-        // console.log("Reset Email Sent:", info.messageId);
-    } catch (error) {
-        console.error("[resetMailer] Nodemailer sendMail failed:", {
-            message: error?.message,
-            code: error?.code,
-            command: error?.command,
-            responseCode: error?.responseCode,
-            response: error?.response,
+        await sendEmail({
+            to: { email: userEmail, name: userName },
+            subject,
+            html,
         });
+    } catch (error) {
+        if (error?.code === "BREVO_API_ERROR") {
+            console.error("[resetMailer] Brevo API send failed:", {
+                status: error?.status,
+                responseBody: error?.responseBody,
+            });
+        } else {
+            console.error("[resetMailer] Email send failed:", {
+                message: error?.message,
+                code: error?.code,
+                command: error?.command,
+                responseCode: error?.responseCode,
+                response: error?.response,
+            });
+        }
         throw new Error("Failed to send password reset email.");
     }
 };
