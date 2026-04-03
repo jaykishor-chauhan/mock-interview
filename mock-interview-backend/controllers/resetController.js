@@ -55,6 +55,9 @@ exports.resetPassword = async (req, res) => {
   } catch (error) {
     console.error("[resetController] Error in resetPassword:", error && error.message ? error.message : error);
     if (error && error.stack) console.error(error.stack);
+    if (error && error.code === "MAILER_NOT_CONFIGURED") {
+      return res.status(500).json({ message: "Email service is not configured on the server." });
+    }
     res.status(500).json({ message: "An error occurred on the server." });
   }
 };
