@@ -13,6 +13,7 @@ const InterviewTopics = () => {
   const [formData, setFormData] = useState({
     course: "",
     difficulty: [],
+    ai: false
   });
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
@@ -20,16 +21,24 @@ const InterviewTopics = () => {
     setFormData((prev) => {
       if (type === 'checkbox') {
         // For checkbox, manage array of difficulties
-        let newDifficulties;
-        if (checked) {
-          newDifficulties = [...(prev.difficulty || []), value];
-        } else {
-          newDifficulties = (prev.difficulty || []).filter((level) => level !== value);
+        if (name === 'ai') {
+          return {
+            ...prev,
+            ai: checked,
+          };
         }
-        return {
-          ...prev,
-          difficulty: newDifficulties,
-        };
+        else {
+          let newDifficulties;
+          if (checked) {
+            newDifficulties = [...(prev.difficulty || []), value];
+          } else {
+            newDifficulties = (prev.difficulty || []).filter((level) => level !== value);
+          }
+          return {
+            ...prev,
+            difficulty: newDifficulties,
+          };
+        }
       } else {
         // For dropdown/select or other inputs
         return {
@@ -43,7 +52,7 @@ const InterviewTopics = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // console.log("handleSubmit triggered");
+    // console.log("formdata", formData);
 
     if (!Array.isArray(formData.difficulty) || formData.difficulty.length === 0) {
       toast({
@@ -70,44 +79,76 @@ const InterviewTopics = () => {
       return;
     }
 
-    console.log(formData, selectedCategory.id);
-
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL}/api/filter-questions`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          name: formData.course,
-          category: selectedCategory.id,
-          difficulty: formData.difficulty,
-        }),
-      });
+      let response;
+      let data1;
 
-      let data;
-      try {
-        data = await response.json();
-      } catch {
-        data = {};
-      }
-
-      if (!response.ok) {
-        toast({
-          variant: "destructive",
-          description: data.message || "An unknown error occurred.",
+      if (formData.ai == true) {
+        // console.log("question will come from gemini");
+        // console.log("form data in ai :", formData);
+        response = await fetch(`${import.meta.env.VITE_API_URL}/api/agent/ai-generate-questions`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            name: formData.course,
+            difficulty: formData.difficulty,
+          }),
         });
-        return;
-      }
 
-      console.log("Questions received:", data.questions);
+        data1 = await response.json();
+        data1 = data1.questions;
+        // console.log("response from gemini api :", data1.questions);
+
+        if (!response.ok) {
+          toast({
+            variant: "destructive",
+            description: response.json.message || "An unknown error occurred.",
+          });
+          return;
+        }
+      }
+      else {
+        // console.log("question will come from db");
+        response = await fetch(`${import.meta.env.VITE_API_URL}/api/filter-questions`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            name: formData.course,
+            category: selectedCategory.id,
+            difficulty: formData.difficulty,
+          }),
+        });
+
+        data1 = await response.json();
+        // console.log("response from db questions :", data1.questions);
+
+        if (!response.ok) {
+          toast({
+            variant: "destructive",
+            description: response.json.message || "An unknown error occurred.",
+          });
+          // console.log("response not ok");
+          return;
+        }
+      }
+      // try {
+      //   console.log("questions received :", data1.questions);  
+
+      // } catch {
+      //   data1 = {};
+      // }
 
       navigate('/check-permissions', {
         state: {
           active: true,
           url: `/interview/session?type=${selectedCategory.id}`,
-          interviewQuestions: data.questions,
+          interviewQuestions: data1.questions,
         }
       });
 
@@ -289,7 +330,7 @@ const InterviewTopics = () => {
                             {/* <option value="System-design">System Design</option> */}
                           </select>
                         </div>
-                        <div>
+                        {/* <div>
                           <p className="uppercase tracking-wide text-xs font-semibold text-gray-500 mb-1">
                             Duration
                           </p>
@@ -304,6 +345,30 @@ const InterviewTopics = () => {
                           <p className="font-medium text-gray-900 text-sm">
                             {selectedCategory.questions}+
                           </p>
+                        </div> */}
+                        <div className="flex flex-wrap gap-2 sm:gap-4 text-sm text-gray-800">
+                          <label
+                            htmlFor="course"
+                            className="block uppercase tracking-wide text-xs font-semibold text-gray-500 mb-1"
+                          >
+                            AI INTERVIEW
+                            <br></br>
+                            <label
+                              key="ai"
+                              className="flex items-center space-x-2 bg-gray-100 px-3 py-1 rounded-full cursor-pointer"
+                            >
+                              <input
+                                type="checkbox"
+                                name="ai"
+                                // value={level}
+                                // checked={formData.difficulty.includes(level)}
+                                onChange={handleChange}
+                                className="form-checkbox text-indigo-600"
+                              />
+                              <span className="capitalize">Agentic Ai</span>
+                            </label>
+                          </label>
+
                         </div>
                       </div>
                       <div>
