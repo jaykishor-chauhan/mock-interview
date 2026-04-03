@@ -42,55 +42,13 @@
 // };
 
 
-
-
-
-
-
-const nodemailer = require("nodemailer");
-
-const fromAddress = process.env.MAIL_FROM || process.env.FROM_EMAIL;
-
-const requiredEnvVars = ["SMTP_HOST", "SMTP_PORT", "SMTP_USER", "SMTP_PASS", "FRONTEND_URL"];
-
-const getMissingEnvVars = () =>
-    requiredEnvVars.filter((key) => !process.env[key] || String(process.env[key]).trim() === "");
-
-const assertMailerConfigured = () => {
-    const missingEnvVars = getMissingEnvVars();
-    if (!fromAddress || String(fromAddress).trim() === "") {
-        missingEnvVars.push("MAIL_FROM (or FROM_EMAIL)");
-    }
-
-    if (missingEnvVars.length > 0) {
-        const message = `[verifyMailer] Email service misconfigured. Missing: ${missingEnvVars.join(", ")}`;
-        console.error(message);
-        const error = new Error("Email service is not configured");
-        error.code = "MAILER_NOT_CONFIGURED";
-        error.details = missingEnvVars;
-        throw error;
-    }
-};
-
-const transporter = nodemailer.createTransport({
-    host: process.env.SMTP_HOST,  
-    port: Number(process.env.SMTP_PORT),
-    secure: process.env.SMTP_SECURE === "true", // true for port 465
-    auth: {
-        user: process.env.SMTP_USER,   
-        pass: process.env.SMTP_PASS,   
-    },
-});
+const { sendEmail } = require("./emailClient");
 
 const sendVerificationEmail = async (userId, userEmail, userName, verificationToken, role) => {
-    assertMailerConfigured();
     const verificationLink = `${process.env.FRONTEND_URL}/verification?token=${verificationToken}&role=${role}&id=${userId}`;
 
-    const mailOptions = {
-        from: fromAddress,
-        to: userEmail,
-        subject: "Verify Your Email Address",
-        html: `
+    const subject = "Verify Your Email Address";
+    const html = `
             <div style="font-family: Arial, sans-serif; line-height: 1.6;">
                 <h2>Email Verification</h2>
                 <p>Hi ${userName},</p>
@@ -103,20 +61,29 @@ const sendVerificationEmail = async (userId, userEmail, userName, verificationTo
                 <p>Thanks,</p>
                 <p>The Mock Interview Team</p>
             </div>
-        `,
-    };
+        `;
 
     try {
-        await transporter.sendMail(mailOptions);
-        // console.log("Verification email sent successfully.");
-    } catch (error) {
-        console.error("[verifyMailer] Nodemailer sendMail failed:", {
-            message: error?.message,
-            code: error?.code,
-            command: error?.command,
-            responseCode: error?.responseCode,
-            response: error?.response,
+        await sendEmail({
+            to: { email: userEmail, name: userName },
+            subject,
+            html,
         });
+    } catch (error) {
+        if (error?.code === "BREVO_API_ERROR") {
+            console.error("[verifyMailer] Brevo API send failed:", {
+                status: error?.status,
+                responseBody: error?.responseBody,
+            });
+        } else {
+            console.error("[verifyMailer] Email send failed:", {
+                message: error?.message,
+                code: error?.code,
+                command: error?.command,
+                responseCode: error?.responseCode,
+                response: error?.response,
+            });
+        }
         throw new Error("Failed to send verification email.");
     }
 };
