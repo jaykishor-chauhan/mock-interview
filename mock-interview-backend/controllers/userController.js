@@ -41,7 +41,7 @@ exports.registerUser = async (req, res) => {
       await new Tokens({ id: user._id, token: verificationToken }).save();
     }
 
-    await sendVerificationEmail(user._id, user.email, user.name, verificationToken);
+    await sendVerificationEmail(user._id, user.email, user.name, verificationToken, "user");
     res.status(200).json({ message: "If user with this email exists, a verification email has been sent." })
 
   } catch (error) {
@@ -100,7 +100,6 @@ exports.loginUser = async (req, res) => {
     }
 
     const user = await User.findOne({ email });
-    // console.log("user:", user);
     if (!user) {
       return res.status(400).json({ message: "Invalid email or password" });
     }else if (!user.verified || !user.emailVerified) {

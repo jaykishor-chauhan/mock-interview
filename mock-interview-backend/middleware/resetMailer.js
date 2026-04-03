@@ -52,6 +52,8 @@
 
 const nodemailer = require("nodemailer");
 
+const fromAddress = process.env.MAIL_FROM;
+
 const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,
     port: Number(process.env.SMTP_PORT),
@@ -76,7 +78,7 @@ const sendResetMail = async (userId, userEmail, userName, resetToken) => {
     const resetLink = `${process.env.FRONTEND_URL}/new-password?token=${resetToken}`;
 
     const mailOptions = {
-        from: process.env.FROM_EMAIL,
+        from: fromAddress,
         to: userEmail,
         subject: `Password Reset Request - ${userId}`,
         html: `
