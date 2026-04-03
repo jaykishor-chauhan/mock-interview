@@ -49,7 +49,28 @@
 
 const nodemailer = require("nodemailer");
 
-const fromAddress = process.env.MAIL_FROM;
+const fromAddress = process.env.MAIL_FROM || process.env.FROM_EMAIL;
+
+const requiredEnvVars = ["SMTP_HOST", "SMTP_PORT", "SMTP_USER", "SMTP_PASS", "FRONTEND_URL"];
+
+const getMissingEnvVars = () =>
+    requiredEnvVars.filter((key) => !process.env[key] || String(process.env[key]).trim() === "");
+
+const assertMailerConfigured = () => {
+    const missingEnvVars = getMissingEnvVars();
+    if (!fromAddress || String(fromAddress).trim() === "") {
+        missingEnvVars.push("MAIL_FROM (or FROM_EMAIL)");
+    }
+
+    if (missingEnvVars.length > 0) {
+        const message = `[verifyMailer] Email service misconfigured. Missing: ${missingEnvVars.join(", ")}`;
+        console.error(message);
+        const error = new Error("Email service is not configured");
+        error.code = "MAILER_NOT_CONFIGURED";
+        error.details = missingEnvVars;
+        throw error;
+    }
+};
 
 const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,  
@@ -62,6 +83,7 @@ const transporter = nodemailer.createTransport({
 });
 
 const sendVerificationEmail = async (userId, userEmail, userName, verificationToken, role) => {
+    assertMailerConfigured();
     const verificationLink = `${process.env.FRONTEND_URL}/verification?token=${verificationToken}&role=${role}&id=${userId}`;
 
     const mailOptions = {
@@ -88,7 +110,13 @@ const sendVerificationEmail = async (userId, userEmail, userName, verificationTo
         await transporter.sendMail(mailOptions);
         // console.log("Verification email sent successfully.");
     } catch (error) {
-        // console.error("Nodemailer Error:", error);
+        console.error("[verifyMailer] Nodemailer sendMail failed:", {
+            message: error?.message,
+            code: error?.code,
+            command: error?.command,
+            responseCode: error?.responseCode,
+            response: error?.response,
+        });
         throw new Error("Failed to send verification email.");
     }
 };
