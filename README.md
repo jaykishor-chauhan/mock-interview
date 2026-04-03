@@ -9,7 +9,7 @@ mock-interview-backend/   # Node.js/Express backend API
 mock-interview-frontend/  # Modern frontend (React + Vite + Tailwind CSS)
 ```
 
-### Backend (`mock-interview-backend`)
+### Backend (`mock-interview-backend`) 
 - **index.js**: Entry point for the Express server
 - **config/db.js**: Database configuration
 - **controllers/**: Route logic for users, courses, and password reset

@@ -52,37 +52,16 @@
 
 const nodemailer = require("nodemailer");
 
-const smtpHost = process.env.SMTP_HOST;
-const smtpPort = parseInt(process.env.SMTP_PORT, 10) || 587;
-const smtpSecure = process.env.SMTP_SECURE === "true";
-const smtpUser = process.env.SMTP_USER;
-const smtpPass = process.env.SMTP_PASS;
-
-if (!smtpHost) {
-    console.warn("[resetMailer] WARNING: SMTP_HOST is not set. Mail may fail in production.");
-}
-if (!smtpUser || !smtpPass) {
-    console.warn("[resetMailer] WARNING: SMTP_USER or SMTP_PASS not set. Attempting connection without auth (may be rejected).");
-}
+const fromAddress = process.env.MAIL_FROM;
 
 const transporter = nodemailer.createTransport({
-    host: smtpHost,
-    port: smtpPort,
-    secure: smtpSecure, // true for 465, false for other ports
-    auth: smtpUser && smtpPass ? { user: smtpUser, pass: smtpPass } : undefined,
-    tls: {
-        // In non-production environments you may need to allow self-signed certs.
-        rejectUnauthorized: process.env.NODE_ENV === "production",
+    host: process.env.SMTP_HOST,
+    port: Number(process.env.SMTP_PORT),
+    secure: process.env.SMTP_SECURE === "true", // true = 465, false = 587
+    auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
     },
-});
-
-// Verify transporter connectivity and auth at startup — this logs helpful info for debugging.
-transporter.verify((err, success) => {
-    if (err) {
-        console.error("[resetMailer] SMTP verification failed:", err && err.message ? err.message : err);
-    } else {
-        console.log("[resetMailer] SMTP transporter verified");
-    }
 });
 
 const sendResetMail = async (userId, userEmail, userName, resetToken) => {
@@ -99,7 +78,7 @@ const sendResetMail = async (userId, userEmail, userName, resetToken) => {
     const resetLink = `${process.env.FRONTEND_URL}/new-password?token=${resetToken}`;
 
     const mailOptions = {
-        from: process.env.FROM_EMAIL,
+        from: fromAddress,
         to: userEmail,
         subject: `Password Reset Request - ${userId}`,
         html: `
@@ -137,19 +116,11 @@ const sendResetMail = async (userId, userEmail, userName, resetToken) => {
 
     try {
         const info = await transporter.sendMail(mailOptions);
-        console.log("[resetMailer] Reset Email Sent:", info && info.messageId ? info.messageId : info);
-        return info;
+        // console.log("Reset Email Sent:", info.messageId);
     } catch (error) {
-        console.error("[resetMailer] SMTP Error sending reset email:", error && error.message ? error.message : error);
-        // Some providers include a response or response.body with details
-        if (error.response) {
-            console.error("[resetMailer] SMTP Response:", error.response);
-        }
-        if (error.stack) {
-            console.error(error.stack);
-        }
+        // console.error("SMTP Error:", error.message);
         throw new Error("Failed to send password reset email.");
     }
 };
 
-module.exports = { sendResetMail, transporter };
+module.exports = { sendResetMail };

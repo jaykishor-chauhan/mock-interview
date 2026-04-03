@@ -49,9 +49,11 @@
 
 const nodemailer = require("nodemailer");
 
+const fromAddress = process.env.MAIL_FROM;
+
 const transporter = nodemailer.createTransport({
     host: process.env.SMTP_HOST,  
-    port: process.env.SMTP_PORT,   
+    port: Number(process.env.SMTP_PORT),
     secure: process.env.SMTP_SECURE === "true", // true for port 465
     auth: {
         user: process.env.SMTP_USER,   
@@ -63,7 +65,7 @@ const sendVerificationEmail = async (userId, userEmail, userName, verificationTo
     const verificationLink = `${process.env.FRONTEND_URL}/verification?token=${verificationToken}&role=${role}&id=${userId}`;
 
     const mailOptions = {
-        from: process.env.FROM_EMAIL,
+        from: fromAddress,
         to: userEmail,
         subject: "Verify Your Email Address",
         html: `
