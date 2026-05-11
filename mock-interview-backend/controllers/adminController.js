@@ -252,3 +252,71 @@ exports.accountActivationDeactivation = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
+
+
+// ── Upload a knowledge document for RAG ingestion (Part 2 — Pinecone) ──────────
+const UploadDoc = require('../models/UploadDoc');
+
+exports.uploadDoc = async (req, res) => {
+  try {
+    const file = req.file;
+    if (!file) {
+      return res.status(400).json({ ok: false, error: { code: 'NO_FILE', message: 'No file uploaded' } });
+    }
+
+    let rawText = '';
+    if (file.mimetype === 'application/pdf') {
+      // pdf-parse is an optional dependency; fall back gracefully if not installed
+      try {
+        const pdfParse = require('pdf-parse');
+        const parsed = await pdfParse(file.buffer);
+        rawText = parsed.text;
+      } catch (pdfErr) {
+        console.warn('[adminController] pdf-parse not available or failed:', pdfErr.message);
+        rawText = '[PDF text extraction unavailable — install pdf-parse]';
+      }
+    } else {
+      rawText = file.buffer.toString('utf-8');
+    }
+
+    const doc = await UploadDoc.create({
+      uploadedBy: req.user.id,
+      filename:   file.originalname,
+      mimeType:   file.mimetype,
+      rawText,
+      courseId:   req.body.courseId || null,
+    });
+
+    return res.status(201).json({
+      ok: true,
+      data: { docId: doc._id, filename: doc.filename, charCount: rawText.length },
+    });
+  } catch (err) {
+    console.error('[adminController] uploadDoc error:', err.message);
+    return res.status(500).json({ ok: false, error: { code: 'INTERNAL_ERROR', message: 'Upload failed' } });
+  }
+};
+
+
+// ── List uploaded documents ────────────────────────────────────────────────────
+exports.listDocs = async (req, res) => {
+  try {
+    const page  = Math.max(1, parseInt(req.query.page)  || 1);
+    const limit = Math.min(50, parseInt(req.query.limit) || 20);
+    const skip  = (page - 1) * limit;
+
+    const [docs, total] = await Promise.all([
+      UploadDoc.find()
+        .sort({ createdAt: -1 })
+        .skip(skip)
+        .limit(limit)
+        .select('filename mimeType courseId ingestedAt chunkCount createdAt uploadedBy'),
+      UploadDoc.countDocuments(),
+    ]);
+
+    return res.json({ ok: true, data: { docs, total } });
+  } catch (err) {
+    console.error('[adminController] listDocs error:', err.message);
+    return res.status(500).json({ ok: false, error: { code: 'INTERNAL_ERROR', message: 'Failed to list docs' } });
+  }
+};

@@ -1,4 +1,4 @@
-# AI Powered Mock Intervew
+# AI Powered Mock Interview
 
 Welcome to the AI Powered Mock Interview project! This repository contains a full-stack application designed to help users practice and prepare for interviews using AI-driven questions and feedback.
 

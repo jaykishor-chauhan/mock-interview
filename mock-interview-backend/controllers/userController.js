@@ -1,5 +1,7 @@
+const crypto = require("crypto");
 const User = require("../models/User");
 const Tokens = require("../models/Token");
+const RefreshToken = require("../models/RefreshToken");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { sendVerificationEmail } = require("../middleware/verifyMailer");
@@ -111,22 +113,138 @@ exports.loginUser = async (req, res) => {
       return res.status(400).json({ message: "Invalid email or password" });
     }
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ id: user._id, role: user.role || 'candidate' }, process.env.JWT_SECRET, {
       expiresIn: "1h",
     });
+
+    // Issue a refresh token additively alongside the existing access token
+    const rawRefresh = crypto.randomBytes(40).toString("hex");
+    const tokenHash  = await bcrypt.hash(rawRefresh, 10);
+    await RefreshToken.create({ userId: user._id, tokenHash });
 
     res.status(200).json({
       message: "User logged in successfully",
       token,
+      refreshToken: rawRefresh,
       user: {
         id: user._id,
         name: user.name,
         email: user.email,
+        role: user.role || 'candidate',
         created_at: user.createdAt,
       },
     });
   } catch (error) {
     res.status(500).json({ message: error.message });
+  }
+};
+
+
+// ── Refresh token — rotate and issue a new access + refresh pair ───────────────
+exports.refreshToken = async (req, res) => {
+  const { refreshToken } = req.body;
+  if (!refreshToken) {
+    return res.status(400).json({ message: "Refresh token is required" });
+  }
+
+  try {
+    // Scan non-expired refresh token docs
+    const docs = await RefreshToken.find({ expiresAt: { $gt: new Date() } });
+    let matched = null;
+    for (const doc of docs) {
+      if (await bcrypt.compare(refreshToken, doc.tokenHash)) {
+        matched = doc;
+        break;
+      }
+    }
+
+    if (!matched) {
+      return res.status(401).json({ message: "Invalid or expired refresh token" });
+    }
+
+    const user = await User.findById(matched.userId);
+    if (!user) {
+      return res.status(401).json({ message: "User not found" });
+    }
+
+    // Rotate — delete old token, issue a fresh pair
+    await RefreshToken.deleteOne({ _id: matched._id });
+
+    const newToken = jwt.sign(
+      { id: user._id, role: user.role || 'candidate' },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+
+    const rawRefresh = crypto.randomBytes(40).toString("hex");
+    const tokenHash  = await bcrypt.hash(rawRefresh, 10);
+    await RefreshToken.create({ userId: user._id, tokenHash });
+
+    return res.status(200).json({
+      token: newToken,
+      refreshToken: rawRefresh,
+      user: { id: user._id, name: user.name, email: user.email, role: user.role || 'candidate' },
+    });
+  } catch (error) {
+    console.error("[userController] refreshToken error:", error.message);
+    return res.status(500).json({ message: "Server error during token refresh" });
+  }
+};
+
+
+// ── Logout — revoke refresh token ─────────────────────────────────────────────
+exports.logout = async (req, res) => {
+  const { refreshToken } = req.body;
+  if (refreshToken) {
+    try {
+      const docs = await RefreshToken.find({ expiresAt: { $gt: new Date() } });
+      for (const doc of docs) {
+        if (await bcrypt.compare(refreshToken, doc.tokenHash)) {
+          await RefreshToken.deleteOne({ _id: doc._id });
+          break;
+        }
+      }
+    } catch (err) {
+      console.error("[userController] logout error:", err.message);
+    }
+  }
+  // Idempotent — always 200 even if token not found
+  return res.status(200).json({ message: "Logged out successfully" });
+};
+
+
+// ── Get own profile ────────────────────────────────────────────────────────────
+exports.getProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select("-password");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    return res.status(200).json({ ok: true, data: user });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+
+
+// ── Update own profile ─────────────────────────────────────────────────────────
+exports.updateProfile = async (req, res) => {
+  try {
+    const { name, avatarUrl } = req.body;
+    const updates = {};
+    if (name)      updates.name      = name;
+    if (avatarUrl) updates.avatarUrl = avatarUrl;
+    updates.updatedAt = Date.now();
+
+    const user = await User.findByIdAndUpdate(
+      req.user.id,
+      updates,
+      { new: true, runValidators: true }
+    ).select("-password");
+
+    return res.status(200).json({ ok: true, data: user });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
   }
 };
 

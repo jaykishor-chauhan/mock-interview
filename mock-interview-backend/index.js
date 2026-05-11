@@ -51,6 +51,10 @@ app.use("/api/authentication/", require("./routes/authReset")); // password rese
 // app.use("/health", require("./routes/health"));
 app.use("/api/agent", require("./routes/agentRoutes")); // agent routes
 
+// ── New modules (Part 1 — Full-stack) ─────────────────────────────────────────
+app.use("/api/interview", require("./routes/interviewRoutes")); // interview session
+app.use("/api/reports",   require("./routes/reportRoutes"));   // session reports
+
 
 
 // ---------------------- SERVER ----------------------
