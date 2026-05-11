@@ -1,0 +1,22 @@
+# Temporary files (intermediate processing, regeneratable)
+.tmp/
+directives/
+execution/
+
+# Python
+__pycache__/
+*.pyc
+
+# Node
+node_modules/
+
+# Environment files (contain secrets)
+.env
+
+# OS files
+.DS_Store
+Thumbs.db
+
+AGENTS.md
+README-Fullstack.md
+README-AgenticAI.md

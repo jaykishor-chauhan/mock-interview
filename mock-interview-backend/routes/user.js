@@ -1,21 +1,34 @@
 const express = require("express");
 const router = express.Router();
-const { registerUser, verifyEmail, loginUser, getAllUsers } = require("../controllers/userController");
+const {
+  registerUser,
+  verifyEmail,
+  loginUser,
+  getAllUsers,
+  refreshToken,
+  logout,
+  getProfile,
+  updateProfile,
+} = require("../controllers/userController");
 const { filterQuestions } = require("../controllers/questionController");
+const verifyJWT = require("../middleware/verifyJWT");
 
 
-// --- User and Admin Authentication Routes ---
+// --- User Authentication Routes ---
 router.post("/user/register", registerUser);
 router.post("/verification", verifyEmail);
 router.post("/user/login", loginUser);
 
-// --- Get Users and Admins Info Routes ---
+// --- Refresh token + Logout ---
+router.post("/user/refresh", refreshToken);
+router.post("/user/logout",  logout);
+
+// --- Profile (protected) ---
+router.get("/users/me",   verifyJWT, getProfile);
+router.patch("/users/me", verifyJWT, updateProfile);
+
+// --- Get Users Info ---
 router.get("/user/getallusers", getAllUsers);
-
-
-// --- Reset Password and New Password Routes ---
-// router.post("/reset-password", resetPassword);
-// router.post("/update-password", updatePassword);
 
 // --- Interview Routes ---
 router.post("/filter-questions", filterQuestions);

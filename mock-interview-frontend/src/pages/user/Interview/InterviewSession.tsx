@@ -6,6 +6,7 @@ import { Mic, Volume2, Play, RotateCcw, Clock, Brain, MessageCircle, Monitor, Ch
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { AIAvatar } from "./AIAvatar";
+import { api } from "@/lib/api";
 
 type InterviewState = 'idle' | 'speaking_question' | 'listening_answer' | 'processing' | 'completed';
 
@@ -35,7 +36,11 @@ interface Conversation {
 const InterviewSession = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { interviewQuestions } = location.state || {};
+  const { interviewQuestions, interviewCategory, interviewCourse } = location.state || {};
+
+  // ── Backend session state (side-effect only — does not affect UI flow) ──────
+  const [backendSessionId, setBackendSessionId] = useState<string | null>(null);
+  const backendStarted = useRef(false); // prevent double-call in StrictMode
   // console.log("interviewQuestions from last page :", interviewQuestions);
 
   const [isFullscreen, setIsFullscreen] = useState(!!document.fullscreenElement);
@@ -76,6 +81,36 @@ const InterviewSession = () => {
   const shouldContinueListening = useRef(false);
 
   // console.log("Interview Questions:", interviewQuestions);
+
+  // ── Start backend session once on mount ──────────────────────────────────────
+  // Extracts courseId from the first question's `course` field (ObjectId).
+  // Falls back gracefully — if the call fails the UI interview continues offline.
+  useEffect(() => {
+    if (backendStarted.current || !interviewQuestions?.length) return;
+    backendStarted.current = true;
+
+    const courseId = interviewQuestions[0]?.course || interviewQuestions[0]?.courseId;
+    const role  = interviewCategory || 'General';
+    const topic = interviewCourse   || 'Interview Practice';
+
+    if (!courseId) {
+      console.warn('[InterviewSession] No courseId found in questions — skipping backend session start.');
+      return;
+    }
+
+    api.post('/api/interview/start', { courseId, role, topic })
+      .then(({ data }) => {
+        if (data?.ok && data?.data?.sessionId) {
+          setBackendSessionId(data.data.sessionId);
+          console.log('[InterviewSession] Backend session started:', data.data.sessionId);
+        }
+      })
+      .catch((err) => {
+        // Non-fatal — offline interview still works
+        console.warn('[InterviewSession] Failed to start backend session:', err?.response?.data?.error?.message || err.message);
+      });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const questions: Question[] = interviewQuestions.map((item, index) => ({
     // id: item._id,
@@ -520,6 +555,17 @@ const InterviewSession = () => {
       timestamp: new Date()
     };
 
+    // ── Record answer in backend session (fire-and-forget) ───────────────────
+    if (backendSessionId) {
+      api.post('/api/interview/answer', {
+        sessionId:    backendSessionId,
+        questionText: questions[currentQuestion].question,
+        answerText:   finalResponse,
+      }).catch((err) => {
+        console.warn('[InterviewSession] Failed to record answer:', err?.response?.data?.error?.message || err.message);
+      });
+    }
+
     setStoredResponses(prev => [...prev, responseData]);
     setCompletedQuestions(prev => [...prev, currentQuestion]);
 
@@ -701,7 +747,17 @@ const InterviewSession = () => {
                 <span className="font-mono text-lg font-semibold">{formatTime(timeLeft)}</span>
               </div>
               <button
-                onClick={() => navigate("/interview/results", { state: { storedResponses } }) }
+                onClick={async () => {
+                  // End backend session, then navigate (passing sessionId for real report)
+                  if (backendSessionId) {
+                    try {
+                      await api.post('/api/interview/end', { sessionId: backendSessionId });
+                    } catch (err) {
+                      console.warn('[InterviewSession] Failed to end backend session:', err);
+                    }
+                  }
+                  navigate("/interview/results", { state: { storedResponses, sessionId: backendSessionId } });
+                }}
                 className="flex items-center space-x-2 bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2 rounded-lg shadow-lg transition-colors duration-300"
               >
                 <CheckCircle className="w-5 h-5" />

@@ -148,7 +148,9 @@ const InterviewTopics = () => {
         state: {
           active: true,
           url: `/interview/session?type=${selectedCategory.id}`,
-          interviewQuestions: data1.questions,
+          interviewQuestions: data1.questions ?? data1,
+          interviewCategory: selectedCategory.id,
+          interviewCourse:   formData.course,
         }
       });
 

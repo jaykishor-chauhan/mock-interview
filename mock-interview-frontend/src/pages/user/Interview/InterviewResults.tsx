@@ -4,6 +4,8 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Link, useLocation } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useEffect, useState } from "react";
+import { api } from "@/lib/api";
 import { 
   Trophy, 
   Target, 
@@ -20,11 +22,39 @@ import {
 const InterviewResults = () => {
   const location = useLocation();
   const receivedResponses = (location.state as any)?.storedResponses ?? [];
+  const passedSessionId   = (location.state as any)?.sessionId ?? null;
 
-  const overallScore = 87;
-  const totalTime = "1 min";
-  const questionsAnswered =  receivedResponses.length || 3;
-  console.log("Received Responses:", receivedResponses);
+  // ── Real report fetched from backend when sessionId is available ──────────
+  const [report, setReport] = useState<any>(null);
+  const [reportLoading, setReportLoading] = useState(false);
+
+  useEffect(() => {
+    if (!passedSessionId) return;
+    setReportLoading(true);
+    api.get(`/api/reports/${passedSessionId}`)
+      .then(({ data }) => {
+        if (data?.ok) setReport(data.data);
+      })
+      .catch((err) => {
+        console.warn('[InterviewResults] Failed to fetch report:', err?.response?.data?.error?.message || err.message);
+      })
+      .finally(() => setReportLoading(false));
+  }, [passedSessionId]);
+
+  // Use real backend data when available; fall back to static placeholders
+  const overallScore     = report ? Math.round((report.overallScore ?? 0) * 10) : 87;
+  const totalTime        = report ? (() => {
+    if (!report.startedAt || !report.endedAt) return '—';
+    const ms = new Date(report.endedAt).getTime() - new Date(report.startedAt).getTime();
+    const mins = Math.round(ms / 60000);
+    return `${mins} min`;
+  })() : '1 min';
+  const questionsAnswered = report
+    ? report.questions.length
+    : (receivedResponses.length || 3);
+
+  // Real per-question results from backend (or fall back to empty)
+  const backendQuestions: any[] = report?.questions ?? [];
   
   const categoryScores = [
     { category: "Technical", score: 92, description: "JavaScript, algorithms" },
@@ -108,6 +138,9 @@ const InterviewResults = () => {
           </div>
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3">Interview Complete!</h1>
           <p className="text-lg sm:text-xl text-muted-foreground">Here's how you performed</p>
+          {reportLoading && (
+            <p className="text-sm text-muted-foreground mt-2 animate-pulse">Loading your report...</p>
+          )}
         </div>
 
         {/* Overall Score Card */}
@@ -183,8 +216,38 @@ const InterviewResults = () => {
           </TabsList>
 
           <TabsContent value="questions" className="space-y-6">
-            {/* Render responses passed from navigation state (if any) */}
-            {receivedResponses.length > 0 && receivedResponses.map((resp: any, idx: number) => {
+            {/* Show real backend Q&A when report is fetched */}
+            {backendQuestions.length > 0 && backendQuestions.map((q: any, idx: number) => (
+              <Card key={`bq-${idx}`} className="shadow-lg">
+                <CardHeader>
+                  <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
+                    <div className="flex-1">
+                      <CardTitle className="text-base sm:text-lg leading-relaxed mb-2">{q.question}</CardTitle>
+                      <p className="text-sm text-muted-foreground mb-2">
+                        <span className="font-medium">Your answer: </span>{q.answer}
+                      </p>
+                      {q.feedback && (
+                        <p className="text-sm bg-muted/30 rounded-lg p-3 text-muted-foreground">
+                          <span className="font-medium text-primary">AI Feedback: </span>{q.feedback}
+                        </p>
+                      )}
+                      {q.scores && (
+                        <div className="flex gap-4 mt-3 text-xs text-muted-foreground">
+                          {Object.entries(q.scores as Record<string, number>).map(([k, v]) => (
+                            <span key={k} className="bg-muted/40 px-2 py-1 rounded capitalize">
+                              {k}: <strong>{v}</strong>/10
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </CardHeader>
+              </Card>
+            ))}
+
+            {/* Fall back: responses from navigation state (offline / AI mode) */}
+            {backendQuestions.length === 0 && receivedResponses.length > 0 && receivedResponses.map((resp: any, idx: number) => {
               const timeStr = resp?.timestamp
                 ? (typeof resp.timestamp === "string" ? new Date(resp.timestamp).toLocaleString() : resp.timestamp.toLocaleString())
                 : "";
